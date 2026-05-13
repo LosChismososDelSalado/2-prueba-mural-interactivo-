@@ -412,26 +412,9 @@ function efectoFutbolista(vfx) {
     function playCrystal(){[1800,2600,3400,1100,2200,3000].forEach((f,i)=>setTimeout(()=>fbeep(f,0.16,'sine',0.08,f*0.15),i*22));}
     function playKick(){fbeep(160,0.14,'sine',0.18,55);}
 
-    // Ambiente crowd
-    let ambientFt=null;
-    function startAmbient(){
-        if(!_fac||ambientFt)return;
-        try{
-            const buf=_fac.createBuffer(1,_fac.sampleRate*2,_fac.sampleRate);
-            const d=buf.getChannelData(0);
-            for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.25;
-            const src=_fac.createBufferSource();src.buffer=buf;src.loop=true;
-            const f=_fac.createBiquadFilter();f.type='bandpass';f.frequency.value=500;f.Q.value=0.4;
-            const g=_fac.createGain();g.gain.value=0.1;
-            src.connect(f);f.connect(g);g.connect(_fac.destination);src.start();
-            ambientFt={src,g};
-        }catch(e){}
-    }
-    function stopAmbient(){
-        if(!ambientFt)return;
-        try{ambientFt.g.gain.setTargetAtTime(0,_fac.currentTime,0.3);
-        setTimeout(()=>{try{ambientFt.src.stop();}catch(e){}ambientFt=null;},400);}catch(e){ambientFt=null;}
-    }
+    // Ambiente: usar el audio principal ambiente.mp3 (ya pausado por modo niña — lo reactivamos aquí)
+    function startAmbient(){ reanudarAmbiente(); }
+    function stopAmbient(){  pausarAmbiente();   }
 
     // ── IMAGEN BALÓN ─────────────────────────────────────────────
     const balonImg=new Image();balonImg.src='assets/centro-balon-loader.png';
@@ -468,34 +451,98 @@ function efectoFutbolista(vfx) {
         }
     }
 
-    // ── EXPLOSIÓN CRISTAL ────────────────────────────────────────
+    // ── EXPLOSIÓN TIPO VIDRIO CON FRAGMENTOS DE IMAGEN ───────────
     function explodeBall(b){
         playCrystal();
-        // 6 fragmentos de vidrio
+
+        // Capturar fragmento de imagen del balón en offscreen canvas
+        const offC = document.createElement('canvas');
+        offC.width = offC.height = b.r * 2;
+        const offCtx = offC.getContext('2d');
+        if(balonImg.complete && balonImg.naturalWidth){
+            offCtx.drawImage(balonImg, 0, 0, b.r*2, b.r*2);
+        } else {
+            offCtx.fillStyle='#f0f0f0';
+            offCtx.beginPath();offCtx.arc(b.r,b.r,b.r,0,Math.PI*2);offCtx.fill();
+        }
+
+        // 6 fragmentos: cada uno es un sector triangular con textura del balón
         for(let i=0;i<6;i++){
-            const ang=(i/6)*Math.PI*2+Math.random()*.5,sp=2+Math.random()*4.5;
-            parts.push({type:'shard',x:b.x,y:b.y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-1,
-                rot:Math.random()*Math.PI,rsp:(Math.random()-.5)*.14,
-                size:b.r*(.28+Math.random()*.3),life:1,dec:.017});
+            const ang    = (i/6)*Math.PI*2 + Math.random()*0.5;
+            const sp     = 2.5 + Math.random()*5;
+            const fragC  = document.createElement('canvas');
+            const fSize  = b.r * (0.55 + Math.random()*0.35);
+            fragC.width  = fragC.height = fSize*2+4;
+            const fCtx   = fragC.getContext('2d');
+
+            // Clip en forma de triángulo irregular
+            fCtx.save();
+            fCtx.beginPath();
+            const pts = 3;
+            for(let p=0;p<pts;p++){
+                const pa = (p/pts)*Math.PI*2 + (i/6)*Math.PI*2;
+                const pr = fSize*(0.5+Math.random()*0.5);
+                const px = fSize+1 + Math.cos(pa)*pr;
+                const py = fSize+1 + Math.sin(pa)*pr;
+                p===0?fCtx.moveTo(px,py):fCtx.lineTo(px,py);
+            }
+            fCtx.closePath();fCtx.clip();
+
+            // Dibujar porción de la imagen del balón
+            const srcX = (b.r - fSize + Math.random()*fSize*0.8);
+            const srcY = (b.r - fSize + Math.random()*fSize*0.8);
+            fCtx.drawImage(offC, srcX, srcY, fSize*1.4, fSize*1.4, 0, 0, fSize*2, fSize*2);
+
+            // Borde brillante de cristal
+            fCtx.restore();
+            fCtx.strokeStyle = 'rgba(180,230,255,0.8)';
+            fCtx.lineWidth = 1.5;
+            fCtx.beginPath();
+            for(let p2=0;p2<pts;p2++){
+                const pa2 = (p2/pts)*Math.PI*2 + (i/6)*Math.PI*2;
+                const pr2 = fSize*(0.5+Math.random()*0.5);
+                const px2 = fSize+1 + Math.cos(pa2)*pr2;
+                const py2 = fSize+1 + Math.sin(pa2)*pr2;
+                p2===0?fCtx.moveTo(px2,py2):fCtx.lineTo(px2,py2);
+            }
+            fCtx.closePath();fCtx.stroke();
+
+            parts.push({
+                type:'fragment',
+                img: fragC,
+                x:b.x, y:b.y,
+                vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp - 1.5,
+                rot:Math.random()*Math.PI*2,
+                rsp:(Math.random()-.5)*0.18,
+                size:fSize,
+                life:1, dec:0.014+Math.random()*0.012
+            });
         }
-        // Partículas de colores
-        const cols=['#ff4400','#ff9900','#ffdd00','#00ffcc','#ff3399','#aa44ff','#00aaff','#fff','#88ffee'];
-        for(let i=0;i<26;i++){
-            const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*5.5;
-            parts.push({type:'dot',x:b.x,y:b.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,
-                r:2+Math.random()*5,c:cols[Math.floor(Math.random()*cols.length)],life:1,dec:.02+Math.random()*.018});
+
+        // Partículas de colores adicionales
+        const cols=['#ff4400','#ff9900','#ffdd00','#00ffcc','#ff3399','#aa44ff','#00aaff','#fff','#88ffee','#ff6688'];
+        for(let i=0;i<20;i++){
+            const a=Math.random()*Math.PI*2, sp=1+Math.random()*5;
+            parts.push({type:'dot',x:b.x,y:b.y,
+                vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,
+                r:1.5+Math.random()*4,
+                c:cols[Math.floor(Math.random()*cols.length)],
+                life:1,dec:.022+Math.random()*.018});
         }
-        // Repeler otros
+
+        // Repeler otros balones
         balls.forEach(o=>{
             if(o===b||!o.alive)return;
             const dx=o.x-b.x,dy=o.y-b.y,d=Math.hypot(dx,dy)||1;
-            const f=Math.min(6,180/d)*.07;
+            const f=Math.min(6,200/d)*.07;
             o.vx+=(dx/d)*f;o.vy+=(dy/d)*f;
             const sp=Math.hypot(o.vx,o.vy);if(sp>5){o.vx=(o.vx/sp)*5;o.vy=(o.vy/sp)*5;}
         });
+
         b.alive=false;
-        if(balls.every(x=>!x.alive))setTimeout(spawn,1200);
+        if(balls.every(x=>!x.alive)) setTimeout(spawn,1400);
     }
+
 
     function getXY(e){
         const rect=canvas.getBoundingClientRect();
@@ -548,8 +595,18 @@ function efectoFutbolista(vfx) {
     function drawParts(){
         parts.forEach(p=>{
             p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.life-=p.dec;
-            ctx.globalAlpha=Math.max(0,p.life);
-            if(p.type==='shard'){
+            const alpha=Math.max(0,p.life);
+            ctx.globalAlpha=alpha;
+            if(p.type==='fragment'){
+                p.rot+=p.rsp;
+                ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+                ctx.drawImage(p.img,-p.size,-p.size,p.size*2,p.size*2);
+                // Brillo cristal
+                ctx.globalAlpha=alpha*0.35;
+                ctx.fillStyle='rgba(200,240,255,0.5)';
+                ctx.beginPath();ctx.arc(0,0,p.size*0.5,0,Math.PI*2);ctx.fill();
+                ctx.restore();
+            } else if(p.type==='shard'){
                 p.rot+=p.rsp;
                 ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
                 ctx.fillStyle='rgba(220,240,255,0.88)';ctx.strokeStyle='rgba(150,220,255,0.7)';ctx.lineWidth=1;
@@ -576,6 +633,20 @@ function efectoFutbolista(vfx) {
         drawParts();raf=requestAnimationFrame(loop);
     }
 
+    // Resize para cambios de orientación en móvil
+    function onResize(){
+        W=canvas.width=vfx.offsetWidth;
+        H=canvas.height=vfx.offsetHeight;
+        initSnow();
+        // Reposicionar balones fuera de bordes
+        balls.forEach(b=>{
+            b.x=Math.min(Math.max(b.x,b.r),W-b.r);
+            b.y=Math.min(Math.max(b.y,b.r),H-b.r);
+        });
+    }
+    const _resizeObs = new ResizeObserver(onResize);
+    _resizeObs.observe(vfx);
+
     initSnow();spawn();loop();
 
     return{cleanup:()=>{
@@ -591,7 +662,8 @@ function efectoFutbolista(vfx) {
 
 // ─── 2. ASTRONAUTA — sistema solar completo sin fondo negro ──────
 function efectoAstronauta(vfx) {
-    var GOLD = 97000;
+    // Apagar audio ambiente al entrar en astronauta
+    pausarAmbiente();
     var P = [
         {n:"Sol",      isSun:true,     img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/sun.jpg",      g:27.9, s:"40s",tilt:"0°",    day:"~600 h",  year:"—",          d:"La estrella de nuestro sistema. Un plasma ardiente de hidrógeno y helio que ilumina todo a su alrededor."},
         {n:"Mercurio",                 img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/mercury2.jpg", g:.38,  s:"18s",tilt:"0.034°",day:"1,407 h", year:"88 días",    d:"El más cercano al Sol, cubierto de cráteres. Sin atmósfera real, temperaturas entre -180 y 430°C."},
@@ -1978,4 +2050,3 @@ screen.orientation?.addEventListener('change', () => {
 window.addEventListener('orientationchange', () => {
     setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
 });
-
