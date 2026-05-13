@@ -337,8 +337,8 @@ function efectoFutbolista(vfx) {
     
     if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
     if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
-    if(elBombera)   {elBombera.style.zIndex='64';   elBombera.style.position='absolute';}
 
+    
     // ── KEYFRAMES ───────────────────────────────────────────────
     if(!document.getElementById('ft-keyframes')){
         const st=document.createElement('style');st.id='ft-keyframes';
