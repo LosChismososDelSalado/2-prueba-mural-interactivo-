@@ -364,7 +364,7 @@ function efectoFutbolista(vfx) {
 
     // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:42%;left:-50%;bottom:0%;
+    field.style.cssText=`position:absolute;width:200%;height:62%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
@@ -378,7 +378,7 @@ function efectoFutbolista(vfx) {
     // Texto "Estadio Azteca 1971"
     const label=document.createElement('div');
     label.style.cssText=`position:absolute;top:clamp(5px,1.5%,12px);left:50%;transform:translateX(-50%);
-        z-index:70;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
+        z-index:62;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
         backdrop-filter:blur(8px);padding:clamp(3px,0.8%,7px) clamp(8px,2%,18px);border-radius:20px;
         font-size:clamp(8px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
         pointer-events:none;animation:ftGlow 2s infinite alternate;`;
