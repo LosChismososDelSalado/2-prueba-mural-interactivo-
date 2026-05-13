@@ -364,12 +364,12 @@ function efectoFutbolista(vfx) {
     stadiumDiv.appendChild(lights);
 
     // Cancha 3D — borde inferior de las profesionistas
+    // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-field.style.cssText=`position:absolute;width:220%;height:38%;left:-60%;bottom:0%;
-    transform-origin:center bottom;
-    transform:rotateX(68deg) translateZ(-80px);
-    background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
-    box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
+    field.style.cssText=`position:absolute;width:200%;height:55%;left:50%;bottom:0%;
+        transform:rotateX(68deg) translateZ(-80px);
+        background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
+        box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
     const fl=document.createElement('div');
     fl.style.cssText=`position:absolute;inset:0;
         background:linear-gradient(white,white) center/3px 100% no-repeat,
