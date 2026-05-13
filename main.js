@@ -379,11 +379,11 @@ function efectoFutbolista(vfx) {
     // Texto "Estadio Azteca 1971"
     const label=document.createElement('div');
     label.style.cssText=`position:absolute;top:clamp(5px,1.5%,12px);left:50%;transform:translateX(-50%);
-        z-index:70;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
+        z-index:62;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
         backdrop-filter:blur(8px);padding:clamp(3px,0.8%,7px) clamp(8px,2%,18px);border-radius:20px;
         font-size:clamp(8px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
         pointer-events:none;animation:ftGlow 2s infinite alternate;`;
-    label.textContent='🏟️ Estadio Azteca 1971 ⚽';
+    label.textContent='⚽ Estadio Azteca 1971 ⚽';
     stadiumDiv.appendChild(label);
     vfx.appendChild(stadiumDiv);
 
@@ -583,7 +583,7 @@ function efectoFutbolista(vfx) {
         canvas.remove();stadiumDiv.remove();
         if(elFutbolista){elFutbolista.style.zIndex='';elFutbolista.style.position='';}
         if(elNina){elNina.style.zIndex='';elNina.style.position='';}
-        if(elBombera){elBombera.style.zIndex='';elBombera.style.position='';}
+        
     }};
 }
 
