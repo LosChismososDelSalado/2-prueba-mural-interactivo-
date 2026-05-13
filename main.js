@@ -334,7 +334,7 @@ function efectoFutbolista(vfx) {
     // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
     const elFutbolista = document.getElementById('glow-futbolista');
     const elNina       = document.getElementById('glow-nina');
-    const elBombera    = document.getElementById('glow-bombera');
+    
     if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
     if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
     if(elBombera)   {elBombera.style.zIndex='64';   elBombera.style.position='absolute';}
