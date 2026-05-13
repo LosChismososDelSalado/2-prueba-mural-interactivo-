@@ -364,7 +364,7 @@ function efectoFutbolista(vfx) {
 
     // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:75%;left:-50%;bottom:-38%;
+    field.style.cssText=`position:absolute;width:200%;height:50%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
@@ -582,7 +582,6 @@ function efectoFutbolista(vfx) {
         canvas.remove();stadiumDiv.remove();
         if(elFutbolista){elFutbolista.style.zIndex='';elFutbolista.style.position='';}
         if(elNina){elNina.style.zIndex='';elNina.style.position='';}
-        if(elBombera){elBombera.style.zIndex='';elBombera.style.position='';}
     }};
 }
 
