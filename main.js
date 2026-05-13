@@ -1,3 +1,6 @@
+
+Copiar
+
 // ==========================================
 // LINKS POR ZONA — solo edita esta sección
 // tipo: 'video' | 'audio' | 'imagen' | 'creditos' | 'url' | 'carrusel'
@@ -28,17 +31,17 @@ const zonaData = {
         ]
     },
     'zona-azteca':      { tipo: 'video',   src: 'assets/azteca.webm' },
-    'zona-bombera':     { tipo: 'video',   src: 'assets/bombera.webm' },
-    'zona-repartidora': { tipo: 'video',   src: 'assets/repartidora.webm' },
-    'zona-maestra':     { tipo: 'audio',   src: 'assets/maestra.mp3' },
     'zona-futbolista':  { tipo: 'video',   src: 'assets/futbolista.webm' },
     'zona-doctora':     { tipo: 'video',   src: 'assets/doctora.webm' },
     'zona-ingeniera':   { tipo: 'imagen',  src: 'assets/ingeniera.jpg' },
+    'zona-maestra':     { tipo: 'audio',   src: 'assets/maestra.mp3' },
+    'zona-bombera':     { tipo: 'video',   src: 'assets/bombera.webm' },
+    'zona-repartidora': { tipo: 'video',   src: 'assets/repartidora.webm' },
     'zona-nosotras':    { tipo: 'galaxia' },
     'zona-nina':        { tipo: 'nina' },
     'zona-creditos':    { tipo: 'creditos' },
 };
-
+ 
 // --- ELEMENTOS ---
 const balon          = document.getElementById('balon-loader');
 const grietaVerde    = document.getElementById('grieta-verde');
@@ -47,7 +50,7 @@ const mediaContenido = document.getElementById('media-contenido');
 const btnCerrarMedia = document.getElementById('cerrar-media');
 const modalCreditos  = document.getElementById('modal-creditos');
 const btnCerrar      = document.getElementById('cerrar-creditos');
-
+ 
 // --- ESTADOS INICIALES ---
 balon.classList.remove('girando');
 modalCreditos.style.display    = 'none';
@@ -56,24 +59,24 @@ modalMedia.style.display       = 'none';
 modalMedia.style.visibility    = 'hidden';
 grietaVerde.style.clipPath     = 'inset(50% 0% 50% 0%)';
 grietaVerde.style.opacity      = '0';
-
+ 
 // --- AUDIO AMBIENTE ---
 const audioAmbiente = new Audio('assets/ambiente.mp3');
 audioAmbiente.loop   = true;
 audioAmbiente.volume = 0.5;
-
+ 
 let ambienteIniciado = false;
-
+ 
 function iniciarAmbiente() {
     if (ambienteIniciado) return;
     audioAmbiente.play().then(() => {
         ambienteIniciado = true;
     }).catch(() => {});
 }
-
+ 
 function pausarAmbiente()   { audioAmbiente.pause(); }
 function reanudarAmbiente() { if (ambienteIniciado) audioAmbiente.play().catch(() => {}); }
-
+ 
 // Intentar autoplay al cargar
 window.addEventListener('load', () => {
     audioAmbiente.play().then(() => {
@@ -84,12 +87,12 @@ window.addEventListener('load', () => {
         document.addEventListener('touchstart', iniciarAmbiente, { once: true });
     });
 });
-
-
+ 
+ 
 document.querySelectorAll('.zona').forEach(zona => {
     const targetId = zona.dataset.target;
     const targetEl = targetId ? document.getElementById(targetId) : null;
-
+ 
     function encender() {
         if (targetEl) {
             targetEl.style.animation = 'none';
@@ -102,14 +105,14 @@ document.querySelectorAll('.zona').forEach(zona => {
             targetEl.style.animation = '';
         }
     }
-
+ 
     zona.addEventListener('mouseenter', encender);
     zona.addEventListener('mouseleave', apagar);
     zona.addEventListener('touchstart', encender, { passive: true });
     zona.addEventListener('touchend',   apagar);
     zona.addEventListener('touchcancel',apagar);
 });
-
+ 
 // --- BALÓN Y GRIETA ---
 function iniciarCarga(duracionEstimada = 3) {
     balon.classList.add('girando');
@@ -118,7 +121,7 @@ function iniciarCarga(duracionEstimada = 3) {
     void grietaVerde.offsetWidth;
     grietaVerde.classList.add('cargando');
 }
-
+ 
 function terminarCarga() {
     balon.classList.remove('girando');
     grietaVerde.classList.remove('cargando');
@@ -129,27 +132,27 @@ function terminarCarga() {
         grietaVerde.style.opacity  = '0';
     }, 400);
 }
-
+ 
 // --- ABRIR SEGÚN TIPO ---
 function abrirContenido(data) {
     mediaContenido.innerHTML = '';
-
+ 
     if (data.tipo === 'creditos') {
         abrirCreditos();
         return;
     }
-
+ 
     if (data.tipo === 'url') {
         window.open(data.src, '_blank');
         return;
     }
-
+ 
     if (data.tipo === 'carrusel') {
         iniciarCarga(4);
         abrirCarrusel(data.videos);
         return;
     }
-
+ 
     if (data.tipo === 'imagen') {
         iniciarCarga(1);
         const img = document.createElement('img');
@@ -164,7 +167,7 @@ function abrirContenido(data) {
         mediaContenido.appendChild(img);
         return;
     }
-
+ 
     if (data.tipo === 'video') {
         iniciarCarga(4);
         const video    = document.createElement('video');
@@ -187,23 +190,23 @@ function abrirContenido(data) {
         mediaContenido.appendChild(video);
         return;
     }
-
+ 
     if (data.tipo === 'galaxia') {
         activarGalaxia();
         return;
     }
-
+ 
     if (data.tipo === 'video-alpha') {
         // Video WebM con canal alpha — se reproduce SOBRE el mural sin modal oscuro
         abrirVideoAlpha(data.src);
         return;
     }
-
+ 
     if (data.tipo === 'nina') {
         activarModoNina();
         return;
     }
-    
+ 
     if (data.tipo === 'audio') {
         iniciarCarga(2);
         const audio    = document.createElement('audio');
@@ -226,20 +229,20 @@ function abrirContenido(data) {
         return;
     }
 }
-
+ 
 // ==========================================
 // --- VIDEO CON ALPHA (WebM transparente) ---
 // ==========================================
 let videoAlphaActivo = false;
-
+ 
 function abrirVideoAlpha(src) {
     if (videoAlphaActivo) return;
     videoAlphaActivo = true;
-
+ 
     iniciarCarga(3);
-
+ 
     const container = document.getElementById('mural-container');
-
+ 
     // Crear elemento video superpuesto
     const video         = document.createElement('video');
     video.id            = 'video-alpha-overlay';
@@ -250,12 +253,12 @@ function abrirVideoAlpha(src) {
         object-fit:contain; z-index:60; pointer-events:none;
         opacity:0; transition:opacity 0.4s ease;
     `;
-
+ 
     const fuente  = document.createElement('source');
     fuente.src    = src;
     fuente.type   = 'video/webm';
     video.appendChild(fuente);
-
+ 
     // Botón cerrar alpha
     const btnAlpha         = document.createElement('button');
     btnAlpha.id            = 'cerrar-alpha';
@@ -266,7 +269,7 @@ function abrirVideoAlpha(src) {
         cursor:pointer; font-size:0.9rem; border-radius:4px;
         display:none;
     `;
-
+ 
     function cerrarAlpha() {
         video.pause();
         video.remove();
@@ -274,31 +277,31 @@ function abrirVideoAlpha(src) {
         videoAlphaActivo = false;
         reanudarAmbiente();
     }
-
+ 
     btnAlpha.addEventListener('click', cerrarAlpha);
-
+ 
     video.addEventListener('canplay', () => {
         terminarCarga();
         pausarAmbiente();
         video.style.opacity = '1';
         btnAlpha.style.display = 'block';
     }, { once: true });
-
+ 
     video.addEventListener('ended', () => {
         video.style.opacity = '0';
         setTimeout(cerrarAlpha, 400);
     });
-
+ 
     video.addEventListener('error', () => {
         terminarCarga();
         videoAlphaActivo = false;
     });
-
+ 
     container.appendChild(video);
     container.appendChild(btnAlpha);
 }
-
-
+ 
+ 
 // ==========================================
 // --- MODO NIÑA — NAVEGACIÓN MANUAL + EFECTOS ---
 // ==========================================
@@ -327,8 +330,7 @@ function limpiarEfectoNina() {
     if (vfx) vfx.innerHTML = '';
     if (ninaEfectoActivo && ninaEfectoActivo.cleanup) ninaEfectoActivo.cleanup();
     ninaEfectoActivo = null;
-}
- 
+
 // ─── 1. FUTBOLISTA — pelotas rebotando, click/touch para patear ───
 function efectoFutbolista(vfx) {
     // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
@@ -744,234 +746,339 @@ function efectoFutbolista(vfx) {
 }
  
 // ─── 2. ASTRONAUTA — sistema solar completo sin fondo negro ──────
-function efectoAstronauta(vfx) {
-    var GOLD = 97000;
-    var P = [
-        {n:"Sol",      isSun:true,     img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/sun.jpg",      g:27.9, s:"40s",tilt:"0°",    day:"~600 h",  year:"—",          d:"La estrella de nuestro sistema. Un plasma ardiente de hidrógeno y helio que ilumina todo a su alrededor."},
-        {n:"Mercurio",                 img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/mercury2.jpg", g:.38,  s:"18s",tilt:"0.034°",day:"1,407 h", year:"88 días",    d:"El más cercano al Sol, cubierto de cráteres. Sin atmósfera real, temperaturas entre -180 y 430°C."},
-        {n:"Venus",                    img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/venus2.jpg",   g:.91,  s:"28s",tilt:"177.3°",day:"5,832 h", year:"224.7 días", d:"Un infierno de nubes tóxicas de ácido sulfúrico. El planeta más caliente, con 465°C en promedio."},
-        {n:"Tierra",                   img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/earth.jpg",    g:1,    s:"12s",tilt:"23.26°",day:"23.9 h",  year:"365.2 días", d:"El oasis azul flotando en el vacío cósmico. Único planeta con vida conocida, agua líquida y luna estabilizadora."},
-        {n:"Marte",                    img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/mars.jpg",     g:.38,  s:"15s",tilt:"25.2°", day:"24.6 h",  year:"687 días",   d:"Desiertos rojos, tormentas globales y el Olimpo: volcán de 22 km de altura, el más alto del sistema solar."},
-        {n:"Júpiter",                  img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/jupiter.jpg",  g:2.34, s:"8s", tilt:"3.1°",  day:"9.9 h",   year:"4,331 días", d:"El monstruo gaseoso. Su Gran Mancha Roja es una tormenta activa desde hace siglos, más grande que la Tierra."},
-        {n:"Saturno",  ring:1,         img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/saturn.jpg",   g:1.06, s:"10s",tilt:"26.7°", day:"10.7 h",  year:"10,747 días",d:"Sus anillos de hielo y roca se extienden 282,000 km. Si lo pusiéramos en agua, flotaría."},
-        {n:"Urano",                    img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/uranus2.jpg",  g:.92,  s:"20s",tilt:"97.8°", day:"17.2 h",  year:"30,589 días",d:"El gigante helado que rota de lado, inclinación de 98°. Sus vientos alcanzan 900 km/h."},
-        {n:"Neptuno",                  img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/neptune.jpg",  g:1.19, s:"16s",tilt:"28.3°", day:"16.1 h",  year:"59,800 días",d:"El más lejano y ventoso. Tormentas de 2,100 km/h. Un azul profundo de metano helado."},
-        {n:"Plutón",                   img:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/pluto.jpg",    g:.063, s:"35s",tilt:"122.5°",day:"153.3 h", year:"90,560 días",d:"El planeta enano al borde del sistema solar. En 2006 perdió su título de planeta oficial."},
-        {n:"Balón",    isFootball:true, img:"assets/centro-balon-loader.png", g:null,s:null,tilt:"—",day:"—",year:"—",d:"El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 km/h al patear. Once contra once."}
-    ];
-    var cur=0, isSpeaking=false;
- 
-    // ── CONTENEDOR ──────────────────────────────────────────────
-    vfx.innerHTML='';
-    vfx.style.pointerEvents='auto';
- 
-    // Keyframe fadeUp (una vez)
-    if(!document.getElementById('as2-kf')){
-        var sk=document.createElement('style');sk.id='as2-kf';
-        sk.textContent='@keyframes as2FadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}';
-        document.head.appendChild(sk);
-    }
- 
-    // ── HTML INTERNO ─────────────────────────────────────────────
-    var wrap=document.createElement('div');
-    wrap.style.cssText=`position:absolute;inset:0;display:flex;flex-direction:column;
-        align-items:center;justify-content:center;
-        gap:clamp(3px,1vh,8px);overflow:hidden;`;
- 
-    wrap.innerHTML=`
-    <canvas id="as2-stars" style="position:absolute;inset:0;pointer-events:none;z-index:0;"></canvas>
- 
-    <!-- Botón TTS -->
-    <button id="as2-tts" title="Leer descripción" style="position:absolute;top:clamp(6px,2%,12px);left:clamp(6px,2%,12px);z-index:20;
-        width:clamp(28px,6vw,40px);height:clamp(28px,6vw,40px);border-radius:50%;
-        border:1.5px solid rgba(255,255,255,.35);background:rgba(0,0,0,.55);
-        backdrop-filter:blur(6px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
-        transition:background .2s;touch-action:manipulation;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            style="width:clamp(12px,3vw,18px);height:clamp(12px,3vw,18px);">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-        </svg>
-    </button>
- 
-    <!-- Dots -->
-    <div id="as2-dots" style="display:flex;gap:clamp(3px,1vw,7px);flex-wrap:wrap;justify-content:center;
-        max-width:min(340px,88vw);z-index:3;position:relative;padding:0 6px;"></div>
- 
-    <!-- Row navegación + planeta -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,22px);position:relative;z-index:3;">
-        <button id="as2-prev" style="width:clamp(32px,8vw,46px);height:clamp(32px,8vw,46px);border-radius:50%;
-            border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.07);color:#fff;cursor:pointer;
-            display:flex;align-items:center;justify-content:center;touch-action:manipulation;transition:background .2s;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
- 
-        <div id="as2-pw" style="position:relative;flex-shrink:0;width:clamp(100px,25vw,170px);height:clamp(100px,25vw,170px);">
-            <div id="as2-pl" style="border-radius:50%;background-size:200% 100%;background-repeat:repeat-x;
-                width:100%;height:100%;animation:spin 12s linear infinite;
-                box-shadow:inset -25px -12px 45px rgba(0,0,0,.85),inset 8px 6px 18px rgba(255,255,255,.08);
-                position:relative;"></div>
-            <!-- Balón -->
-            <div id="as2-fw" style="width:100%;height:100%;border-radius:50%;display:none;
-                align-items:center;justify-content:center;position:absolute;inset:0;">
-                <img id="as2-fimg" src="assets/centro-balon-loader.png" style="width:88%;height:88%;
-                    object-fit:contain;animation:fsp 2.5s linear infinite;transform-origin:center;border-radius:50%;"
-                    onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Soccerball.svg/240px-Soccerball.svg.png'">
-            </div>
-            <!-- Anillo Saturno -->
-            <div id="as2-rw" style="position:absolute;top:50%;left:50%;width:165%;height:37%;
-                transform:translate(-50%,-50%) rotateX(76deg);opacity:0;transition:.3s;pointer-events:none;">
-                <div style="width:100%;height:100%;border-radius:50%;
-                    border:clamp(5px,1.4vw,11px) solid rgba(214,192,145,.52);
-                    animation:rspin 18s linear infinite;"></div>
-            </div>
-        </div>
- 
-        <button id="as2-next" style="width:clamp(32px,8vw,46px);height:clamp(32px,8vw,46px);border-radius:50%;
-            border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.07);color:#fff;cursor:pointer;
-            display:flex;align-items:center;justify-content:center;touch-action:manipulation;transition:background .2s;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-    </div>
- 
-    <!-- Info -->
-    <div id="as2-info" style="text-align:center;z-index:3;position:relative;padding:0 clamp(8px,3vw,16px);max-width:min(380px,90vw);">
-        <h2 id="as2-pn" style="font-size:clamp(.8rem,3vw,1.15rem);font-weight:700;margin-bottom:2px;font-family:Georgia,serif;letter-spacing:.03em;"></h2>
-        <p  id="as2-pd" style="font-size:clamp(.55rem,2vw,.7rem);opacity:.85;line-height:1.5;font-family:Georgia,serif;"></p>
-        <div id="as2-stats" style="display:flex;gap:clamp(6px,2.5vw,16px);justify-content:center;margin-top:4px;
-            font-size:clamp(.5rem,1.6vw,.62rem);opacity:.75;font-family:Arial,sans-serif;"></div>
-    </div>
- 
-    <!-- Peso -->
-    <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);
-        padding:clamp(5px,1.2vh,9px) clamp(8px,2.5vw,14px);border-radius:12px;
-        font-size:clamp(.6rem,2vw,.73rem);z-index:3;position:relative;text-align:center;
-        min-width:min(180px,56vw);font-family:Arial,sans-serif;">
-        <div id="as2-wbl">Tu peso en otros mundos</div>
-        <input type="number" id="as2-kg" value="70" placeholder="kg"
-            style="width:clamp(80px,22vw,120px);padding:clamp(4px,1vh,6px);border:none;border-radius:8px;
-            background:rgba(255,255,255,.14);color:#fff;text-align:center;
-            font-size:clamp(.65rem,2vw,.75rem);margin:3px auto 0;display:block;">
-        <div id="as2-res" style="margin-top:4px;font-size:clamp(.65rem,2vw,.75rem);font-weight:700;color:#9fd4ff;min-height:16px;"></div>
-    </div>`;
- 
-    vfx.appendChild(wrap);
- 
-    // ── ESTRELLAS 3D (fondo transparente — se ve el mural) ──────
-    var cv=document.getElementById('as2-stars');
-    function rsz(){cv.width=wrap.offsetWidth;cv.height=wrap.offsetHeight;}
-    rsz();
-    var sctx=cv.getContext('2d'),stars=[],raf2;
-    function initStars(){
-        stars=[];var W2=cv.width,H2=cv.height;
-        for(var i=0;i<440;i++) stars.push({x:(Math.random()-.5)*W2*4,y:(Math.random()-.5)*H2*4,z:Math.random()*W2,pz:0,op:Math.random(),od:Math.random()>.5?1:-1,os:Math.random()*.025+.004});
-    }
-    initStars();
-    function drawStars(){
-        var W2=cv.width,H2=cv.height;
-        sctx.fillStyle='rgba(0,0,0,0.18)';sctx.fillRect(0,0,W2,H2);
-        stars.forEach(function(s){
-            s.op+=s.od*s.os;if(s.op>=1){s.op=1;s.od=-1;}if(s.op<=.04){s.op=.04;s.od=1;}
-            s.pz=s.z;s.z-=2.8;
-            if(s.z<=0){s.x=(Math.random()-.5)*W2*4;s.y=(Math.random()-.5)*H2*4;s.z=W2;s.pz=W2;return;}
-            var sx=(s.x/s.z)*W2+W2/2,sy=(s.y/s.z)*H2+H2/2;
-            var px=(s.x/s.pz)*W2+W2/2,py=(s.y/s.pz)*H2+H2/2;
-            var r=Math.max(.1,(1-s.z/W2)*2.8),prog=1-s.z/W2;
-            sctx.beginPath();sctx.moveTo(px,py);sctx.lineTo(sx,sy);
-            sctx.strokeStyle='rgba(255,255,255,'+(s.op*.55*prog).toFixed(2)+')';
-            sctx.lineWidth=r*.6;sctx.stroke();
-            sctx.beginPath();sctx.arc(sx,sy,r,0,6.2832);
-            sctx.fillStyle='rgba(255,255,255,'+s.op.toFixed(2)+')';sctx.fill();
-        });
-        raf2=requestAnimationFrame(drawStars);
-    }
-    drawStars();
- 
-    // ── DOTS ────────────────────────────────────────────────────
-    var dotsEl=document.getElementById('as2-dots');
-    P.forEach(function(_,i){
-        var d=document.createElement('div');
-        d.style.cssText='width:clamp(5px,1.4vw,8px);height:clamp(5px,1.4vw,8px);border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:.2s;flex-shrink:0;';
-        d.addEventListener('click',function(){go(i);});dotsEl.appendChild(d);
-    });
- 
-    // ── TTS ─────────────────────────────────────────────────────
-    function speak(text){
-        if(!('speechSynthesis' in window))return;
-        window.speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance(text);u.lang='es-MX';u.rate=0.95;u.pitch=1;
-        var voices=window.speechSynthesis.getVoices();
-        var v=voices.find(function(x){return x.lang.startsWith('es');});if(v)u.voice=v;
-        var btn=document.getElementById('as2-tts');
-        u.onstart=function(){isSpeaking=true;if(btn)btn.style.background='rgba(100,160,255,.35)';};
-        u.onend=function(){isSpeaking=false;if(btn)btn.style.background='';};
-        u.onerror=function(){isSpeaking=false;if(btn)btn.style.background='';};
-        window.speechSynthesis.speak(u);
-    }
-    var ttsBtn=document.getElementById('as2-tts');
-    if(ttsBtn) ttsBtn.addEventListener('click',function(){
-        if(isSpeaking){window.speechSynthesis.cancel();isSpeaking=false;this.style.background='';}
-        else{speak(P[cur].n+'. '+P[cur].d);}
-    });
- 
-    // ── PESO ────────────────────────────────────────────────────
-    function wt(){
-        var v=parseFloat(document.getElementById('as2-kg').value)||0;
-        var p=P[cur];
-        var wbl=document.getElementById('as2-wbl'),res=document.getElementById('as2-res');
-        if(p.isFootball){wbl.textContent='Tu peso en oro';wbl.style.color='#ffd700';res.innerHTML='<b>$'+(v*GOLD).toLocaleString('es-MX')+' USD</b>';}
-        else{wbl.textContent='Tu peso en otros mundos';wbl.style.color='';res.innerHTML='En <b>'+p.n+'</b>: <b>'+(v*p.g).toFixed(1)+' kg</b>';}
-    }
-    var kgEl=document.getElementById('as2-kg');if(kgEl)kgEl.oninput=wt;
- 
-    // ── RENDER ──────────────────────────────────────────────────
-    function render(i){
-        var p=P[i];
-        var pl=document.getElementById('as2-pl');
-        var fw=document.getElementById('as2-fw');
-        var rw=document.getElementById('as2-rw');
-        var info=document.getElementById('as2-info');
-        if(!pl)return;
-        if(p.isFootball){pl.style.display='none';fw.style.display='flex';}
-        else{pl.style.display='';fw.style.display='none';pl.style.backgroundImage='url('+p.img+')';pl.style.animationDuration=p.s;
-            if(p.isSun)pl.style.boxShadow='inset -25px -12px 45px rgba(255,160,0,.3),0 0 60px 18px rgba(255,180,0,.5)';
-            else pl.style.boxShadow='inset -25px -12px 45px rgba(0,0,0,.85),inset 8px 6px 18px rgba(255,255,255,.08)';}
-        rw.className=p.ring?'':'';rw.style.opacity=p.ring?'1':'0';
-        info.style.animation='none';void info.offsetWidth;info.style.animation='as2FadeUp .4s ease';
-        document.getElementById('as2-pn').textContent=p.n;
-        document.getElementById('as2-pd').textContent=p.d;
-        var st=document.getElementById('as2-stats');
-        if(!p.isFootball){st.innerHTML='<span>Inclinación<br><b>'+p.tilt+'</b></span><span>Día<br><b>'+p.day+'</b></span><span>Año<br><b>'+p.year+'</b></span>';}
-        else{st.innerHTML='';}
-        dotsEl.querySelectorAll('div').forEach(function(d,j){
-            d.style.background=j===i?'#fff':'rgba(255,255,255,.28)';
-            d.style.boxShadow=j===i?'0 0 7px #fff':'';
-        });
-        wt();
-        setTimeout(function(){speak(p.n+'. '+p.d);},300);
-    }
- 
-    function go(i){cur=(i+P.length)%P.length;render(cur);}
- 
-    var prevBtn=document.getElementById('as2-prev');
-    var nextBtn=document.getElementById('as2-next');
-    if(prevBtn)prevBtn.addEventListener('click',function(){go(cur-1);});
-    if(nextBtn)nextBtn.addEventListener('click',function(){go(cur+1);});
- 
-    // Swipe táctil
-    var tx2=0;
-    wrap.addEventListener('touchstart',function(e){tx2=e.touches[0].clientX;},{passive:true});
-    wrap.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx2;if(Math.abs(dx)>40)go(cur+(dx<0?1:-1));},{passive:true});
- 
-    render(0);
- 
-    return {cleanup:function(){
-        cancelAnimationFrame(raf2);
-        if(window.speechSynthesis)window.speechSynthesis.cancel();
-        vfx.innerHTML='';
-    }};
+// ═══════════════════════════════
+//  DATOS PLANETAS
+// ═══════════════════════════════
+var GOLD = 97000; // USD por kg (precio del oro aprox)
 
+var P = [
+  {
+    n: "Sol", isSun: true,
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/sun.jpg",
+    g: 27.9, s: "40s", tilt: "0°", day: "~600 h", year: "—",
+    d: "La estrella de nuestro sistema. Un plasma ardiente de hidrógeno y helio que ilumina todo a su alrededor."
+  },
+  {
+    n: "Mercurio",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/mercury2.jpg",
+    g: .38, s: "18s", tilt: "0.034°", day: "1,407 h", year: "88 días",
+    d: "El más cercano al Sol, cubierto de cráteres. Sin atmósfera real, sus temperaturas oscilan entre menos 180 y 430 grados Celsius."
+  },
+  {
+    n: "Venus",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/venus2.jpg",
+    g: .91, s: "28s", tilt: "177.3°", day: "5,832 h", year: "224.7 días",
+    d: "Un infierno cubierto de nubes tóxicas de ácido sulfúrico. El planeta más caliente del sistema solar, con 465 grados en promedio."
+  },
+  {
+    n: "Tierra",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/earth.jpg",
+    g: 1, s: "12s", tilt: "23.26°", day: "23.9 h", year: "365.2 días",
+    d: "El oasis azul flotando en el vacío cósmico. El único planeta con vida conocida, agua líquida y una luna que estabiliza su eje."
+  },
+  {
+    n: "Marte",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/mars.jpg",
+    g: .38, s: "15s", tilt: "25.2°", day: "24.6 h", year: "687 días",
+    d: "Desiertos rojos, tormentas globales y el volcán más alto del sistema solar: el Olimpo, de 22 kilómetros de altura."
+  },
+  {
+    n: "Júpiter",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/jupiter.jpg",
+    g: 2.34, s: "8s", tilt: "3.1°", day: "9.9 h", year: "4,331 días",
+    d: "El monstruo gaseoso del sistema. Su Gran Mancha Roja es una tormenta activa desde hace siglos, más grande que la Tierra entera."
+  },
+  {
+    n: "Saturno", ring: 1,
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/saturn.jpg",
+    g: 1.06, s: "10s", tilt: "26.7°", day: "10.7 h", year: "10,747 días",
+    d: "Sus majestuosos anillos de hielo y roca se extienden 282 mil kilómetros. Si lo pusiéramos en agua, flotaría."
+  },
+  {
+    n: "Urano",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/uranus2.jpg",
+    g: .92, s: "20s", tilt: "97.8°", day: "17.2 h", year: "30,589 días",
+    d: "El gigante helado que rota casi de lado, con una inclinación de 98 grados. Sus vientos alcanzan los 900 kilómetros por hora."
+  },
+  {
+    n: "Neptuno",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/neptune.jpg",
+    g: 1.19, s: "16s", tilt: "28.3°", day: "16.1 h", year: "59,800 días",
+    d: "El más lejano y ventoso. Sus tormentas alcanzan 2 mil 100 kilómetros por hora. Un azul profundo de metano helado."
+  },
+  {
+    n: "Plutón",
+    img: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/pluto.jpg",
+    g: .063, s: "35s", tilt: "122.5°", day: "153.3 h", year: "90,560 días",
+    d: "El planeta enano al borde del sistema solar. Frío, pequeño y lejano. En 2006 perdió su título de planeta oficial."
+  },
+  {
+    n: "Balón", isFootball: true,
+    g: null, s: null, tilt: "—", day: "—", year: "—",
+    d: "El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 kilómetros por hora al patear. Once contra once, gana el más hábil."
+  }
+];
+
+// ═══════════════════════════════
+//  ESTADO
+// ═══════════════════════════════
+var cur = 0;
+var isSpeaking = false;
+
+// ═══════════════════════════════
+//  TTS - LECTOR DE VOZ
+// ═══════════════════════════════
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang  = 'es-MX';
+  utter.rate  = 0.95;
+  utter.pitch = 1;
+
+  var ttsBtn = document.getElementById('tts-btn');
+
+  // Buscar voz en español disponible
+  var voices   = window.speechSynthesis.getVoices();
+  var esVoice  = voices.find(function(v){ return v.lang.startsWith('es'); });
+  if (esVoice) utter.voice = esVoice;
+
+  utter.onstart = function(){ isSpeaking = true;  ttsBtn.classList.add('speaking'); };
+  utter.onend   = function(){ isSpeaking = false; ttsBtn.classList.remove('speaking'); };
+  utter.onerror = function(){ isSpeaking = false; ttsBtn.classList.remove('speaking'); };
+
+  window.speechSynthesis.speak(utter);
+}
+
+// Botón TTS: toggle parar/leer
+document.getElementById('tts-btn').addEventListener('click', function() {
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    this.classList.remove('speaking');
+  } else {
+    speak(P[cur].n + '. ' + P[cur].d);
+  }
+});
+
+// ═══════════════════════════════
+//  CÁLCULO DE PESO
+// ═══════════════════════════════
+function wt() {
+  var v   = parseFloat(document.getElementById('kg').value) || 0;
+  var p   = P[cur];
+  var lbl = document.getElementById('wbl');
+  var res = document.getElementById('res');
+
+  if (p.isFootball) {
+    lbl.textContent  = 'Tu peso en oro';
+    lbl.className    = 'wb-lbl gold';
+    res.innerHTML    = '<b>$' + (v * GOLD).toLocaleString('es-MX') + ' USD</b>';
+  } else {
+    lbl.textContent  = 'Tu peso en otros mundos';
+    lbl.className    = 'wb-lbl';
+    res.innerHTML    = 'En <b>' + p.n + '</b>: <b>' + (v * p.g).toFixed(1) + ' kg</b>';
+  }
+}
+
+// ═══════════════════════════════
+//  RENDER PLANETA
+// ═══════════════════════════════
+function render(i) {
+  var p    = P[i];
+  var pl   = document.getElementById('pl');
+  var fw   = document.getElementById('fw');
+  var rw   = document.getElementById('rw');
+  var info = document.getElementById('info');
+
+  // Esfera vs balón
+  if (p.isFootball) {
+    pl.style.display = 'none';
+    fw.style.display = 'flex';
+  } else {
+    pl.style.display = '';
+    fw.style.display = 'none';
+    pl.style.backgroundImage    = 'url(' + p.img + ')';
+    pl.style.animationDuration  = p.s;
+    if (p.isSun) pl.classList.add('sun-mode');
+    else         pl.classList.remove('sun-mode');
+  }
+
+  // Anillo
+  rw.className = 'rw' + (p.ring ? ' on' : '');
+
+  // Animación entrada info
+  info.style.animation = 'none';
+  void info.offsetWidth; // reflow
+  info.style.animation = 'fadeUp .4s ease';
+
+  // Textos
+  document.getElementById('pn').textContent = p.n;
+  document.getElementById('pd').textContent = p.d;
+
+  // Estadísticas
+  var st = document.getElementById('stats');
+  if (!p.isFootball) {
+    st.innerHTML =
+      '<span>Inclinación<br><b>' + p.tilt + '</b></span>' +
+      '<span>Día<br><b>'         + p.day  + '</b></span>' +
+      '<span>Año<br><b>'         + p.year + '</b></span>';
+  } else {
+    st.innerHTML = '';
+  }
+
+  // Dots activos
+  document.querySelectorAll('.dot').forEach(function(d, j){
+    d.className = 'dot' + (j === i ? ' on' : '');
+  });
+
+  wt();
+
+  // Auto-leer al cambiar planeta (delay para que el DOM esté listo)
+  setTimeout(function(){ speak(p.n + '. ' + p.d); }, 300);
+}
+
+function go(i) {
+  cur = (i + P.length) % P.length;
+  render(cur);
+}
+
+// ═══════════════════════════════
+//  DOTS
+// ═══════════════════════════════
+var dotsEl = document.getElementById('dots');
+P.forEach(function(p, i) {
+  var d       = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.title     = p.n;
+  d.onclick   = function(){ go(i); };
+  dotsEl.appendChild(d);
+});
+
+// ═══════════════════════════════
+//  CONTROLES
+// ═══════════════════════════════
+document.getElementById('prev').onclick = function(){ go(cur - 1); };
+document.getElementById('next').onclick = function(){ go(cur + 1); };
+document.getElementById('kg').oninput   = wt;
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowLeft')  go(cur - 1);
+  if (e.key === 'ArrowRight') go(cur + 1);
+  if (e.key === ' ') {
+    e.preventDefault();
+    document.getElementById('tts-btn').click();
+  }
+});
+
+// Swipe táctil
+var tx   = 0;
+var wrap = document.getElementById('wrap');
+wrap.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, { passive: true });
+wrap.addEventListener('touchend',   function(e){
+  var dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+}, { passive: true });
+
+// ═══════════════════════════════
+//  ESTRELLAS 3D ZOOM (x2)
+// ═══════════════════════════════
+(function() {
+  var cv  = document.getElementById('c');
+  var wr  = document.getElementById('wrap');
+  var ctx = cv.getContext('2d');
+  var stars = [];
+  var af;
+  var W, H;
+  var SPD = 2.8;
+
+  function rsz() {
+    cv.width  = wr.offsetWidth;
+    cv.height = wr.offsetHeight;
+  }
+  rsz();
+  window.addEventListener('resize', rsz);
+
+  function init() {
+    W = cv.width; H = cv.height; stars = [];
+    // 440 estrellas — el doble del original
+    for (var i = 0; i < 440; i++) {
+      stars.push({
+        x:  (Math.random() - .5) * W * 4,
+        y:  (Math.random() - .5) * H * 4,
+        z:  Math.random() * W,
+        pz: 0,
+        op: Math.random(),
+        od: Math.random() > .5 ? 1 : -1,
+        os: Math.random() * .025 + .004
+      });
+    }
+  }
+  init();
+  window.addEventListener('resize', init);
+
+  function draw() {
+    // Fondo negro con trail suave
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0, 0, W, H);
+
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+
+      // Parpadeo
+      s.op += s.od * s.os;
+      if (s.op >= 1)  { s.op = 1;   s.od = -1; }
+      if (s.op <= .04){ s.op = .04; s.od =  1; }
+
+      s.pz = s.z;
+      s.z -= SPD;
+      if (s.z <= 0) {
+        s.x  = (Math.random() - .5) * W * 4;
+        s.y  = (Math.random() - .5) * H * 4;
+        s.z  = W; s.pz = W; continue;
+      }
+
+      var sx = (s.x / s.z)  * W + W / 2;
+      var sy = (s.y / s.z)  * H + H / 2;
+      var px = (s.x / s.pz) * W + W / 2;
+      var py = (s.y / s.pz) * H + H / 2;
+      var r  = Math.max(.1, (1 - s.z / W) * 2.8);
+      var prog = 1 - s.z / W;
+
+      // Estela
+      ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(sx, sy);
+      ctx.strokeStyle = 'rgba(255,255,255,' + (s.op * .55 * prog).toFixed(2) + ')';
+      ctx.lineWidth   = r * .6;
+      ctx.stroke();
+
+      // Punto
+      ctx.beginPath();
+      ctx.arc(sx, sy, r, 0, 6.2832);
+      ctx.fillStyle = 'rgba(255,255,255,' + s.op.toFixed(2) + ')';
+      ctx.fill();
+    }
+    af = requestAnimationFrame(draw);
+  }
+  draw();
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) cancelAnimationFrame(af); else draw();
+  });
+})();
+
+// ═══════════════════════════════
+//  INIT
+// ═══════════════════════════════
+
+// Esperar voces del sistema (necesario en Chrome)
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = function() {};
+}
+
+render(0);
+    
 // ─── 3. DOCTORA — virus flotantes, click para explotar ──────────
 function efectoDoctora(vfx) {
     const cont=document.createElement('div');
