@@ -364,7 +364,7 @@ function efectoFutbolista(vfx) {
 
     // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:62%;left:-50%;bottom:0%;
+    field.style.cssText=`position:absolute;width:200%;height:55%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
@@ -462,8 +462,9 @@ function efectoFutbolista(vfx) {
             const r=sizes[Math.floor(Math.random()*sizes.length)];
             let x,y,ok,t=0;
             do{x=r+Math.random()*(W-r*2);y=r+Math.random()*(H-r*2);ok=balls.every(b=>Math.hypot(b.x-x,b.y-y)>r+b.r+4);t++;}while(!ok&&t<100);
-            const sp=.28+Math.random()*.55,ang=Math.random()*Math.PI*2;
-            balls.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,r,rot:0,rsp:(Math.random()-.5)*.05,alive:true});
+            const sp = .15 + Math.random() * 1.8;
+            const ang = Math.random() * Math.PI * 2;
+            balls.push({ ..., vx: Math.cos(ang) * sp * (Math.random() > 0.5 ? 1 : -1), ... });
         }
     }
 
@@ -516,17 +517,20 @@ function efectoFutbolista(vfx) {
     canvas.addEventListener('mousedown',tap);
     canvas.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
 
-    function physics(){
-        const alive=balls.filter(b=>b.alive);
-        alive.forEach(b=>{
-            b.x+=b.vx;b.y+=b.vy;b.vx*=.999;b.vy*=.999;b.rot+=b.rsp;
-            if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx);}
-            if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx);}
-            if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy);}
-            if(b.y+b.r>H){b.y=H-b.r;b.vy=-Math.abs(b.vy);}
-        });
-        const now=performance.now();
-        for(let i=0;i<alive.length;i++){for(let j=i+1;j<alive.length;j++){
+   function physics(){
+    const alive=balls.filter(b=>b.alive);
+    alive.forEach(b=>{
+        b.vx += (Math.random() - 0.5) * 0.04;
+        b.vy += (Math.random() - 0.5) * 0.04;
+        b.x+=b.vx;b.y+=b.vy;b.vx*=.999;b.vy*=.999;b.rot+=b.rsp;
+        if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx);}
+        if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx);}
+        if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy);}
+        if(b.y+b.r>H){b.y=H-b.r;b.vy=-Math.abs(b.vy);}
+    });
+    const now=performance.now();
+    for(let i=0;i<alive.length;i++){
+        for(let j=i+1;j<alive.length;j++){
             const a=alive[i],b=alive[j];
             const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),md=a.r+b.r;
             if(d<md&&d>.01){
@@ -535,15 +539,17 @@ function efectoFutbolista(vfx) {
                 const ad=a.vx*nx+a.vy*ny,bd=b.vx*nx+b.vy*ny;
                 if(ad-bd>0){
                     a.vx+=(bd-ad)*nx;a.vy+=(bd-ad)*ny;b.vx+=(ad-bd)*nx;b.vy+=(ad-bd)*ny;
-                    const sa=Math.hypot(a.vx,a.vy)||1,sb=Math.hypot(b.vx,b.vy)||1;
-                    const ta=.28+Math.random()*.35,tb=.28+Math.random()*.35;
-                    a.vx=(a.vx/sa)*ta;a.vy=(a.vy/sa)*ta;b.vx=(b.vx/sb)*tb;b.vy=(b.vy/sb)*tb;
+                    const MAX_SPEED=2.5;
+                    const sa=Math.hypot(a.vx,a.vy)||1;
+                    const sb=Math.hypot(b.vx,b.vy)||1;
+                    if(sa>MAX_SPEED){a.vx=(a.vx/sa)*MAX_SPEED;a.vy=(a.vy/sa)*MAX_SPEED;}
+                    if(sb>MAX_SPEED){b.vx=(b.vx/sb)*MAX_SPEED;b.vy=(b.vy/sb)*MAX_SPEED;}
                     if(now-lastCol>75){lastCol=now;playKick();}
                 }
             }
-        }}
+        }
     }
-
+}
     function drawParts(){
         parts.forEach(p=>{
             p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.life-=p.dec;
