@@ -334,10 +334,9 @@ function efectoFutbolista(vfx) {
     // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
     const elFutbolista = document.getElementById('glow-futbolista');
     const elNina       = document.getElementById('glow-nina');
-    const elBombera    = document.getElementById('glow-bombera');
-    if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
+       if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
     if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
-    if(elBombera)   {elBombera.style.zIndex='64';   elBombera.style.position='absolute';}
+    
 
     // ── KEYFRAMES ───────────────────────────────────────────────
     if(!document.getElementById('ft-keyframes')){
@@ -383,7 +382,7 @@ function efectoFutbolista(vfx) {
         backdrop-filter:blur(8px);padding:clamp(3px,0.8%,7px) clamp(8px,2%,18px);border-radius:20px;
         font-size:clamp(8px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
         pointer-events:none;animation:ftGlow 2s infinite alternate;`;
-    label.textContent='🏟️ Estadio Azteca 1971 ⚽';
+    label.textContent='⚽ Estadio Azteca 1971 ⚽';
     stadiumDiv.appendChild(label);
     vfx.appendChild(stadiumDiv);
 
