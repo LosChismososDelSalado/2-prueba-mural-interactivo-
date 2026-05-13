@@ -227,6 +227,77 @@ function abrirContenido(data) {
     }
 }
 
+// ==========================================
+// --- VIDEO CON ALPHA (WebM transparente) ---
+// ==========================================
+let videoAlphaActivo = false;
+
+function abrirVideoAlpha(src) {
+    if (videoAlphaActivo) return;
+    videoAlphaActivo = true;
+
+    iniciarCarga(3);
+
+    const container = document.getElementById('mural-container');
+
+    // Crear elemento video superpuesto
+    const video         = document.createElement('video');
+    video.id            = 'video-alpha-overlay';
+    video.autoplay      = true;
+    video.playsInline   = true;
+    video.style.cssText = `
+        position:absolute; top:0; left:0; width:100%; height:100%;
+        object-fit:contain; z-index:60; pointer-events:none;
+        opacity:0; transition:opacity 0.4s ease;
+    `;
+
+    const fuente  = document.createElement('source');
+    fuente.src    = src;
+    fuente.type   = 'video/webm';
+    video.appendChild(fuente);
+
+    // Botón cerrar alpha
+    const btnAlpha         = document.createElement('button');
+    btnAlpha.id            = 'cerrar-alpha';
+    btnAlpha.textContent   = 'CERRAR';
+    btnAlpha.style.cssText = `
+        position:absolute; top:20px; right:20px; z-index:70;
+        background:red; color:#fff; border:none; padding:10px;
+        cursor:pointer; font-size:0.9rem; border-radius:4px;
+        display:none;
+    `;
+
+    function cerrarAlpha() {
+        video.pause();
+        video.remove();
+        btnAlpha.remove();
+        videoAlphaActivo = false;
+        reanudarAmbiente();
+    }
+
+    btnAlpha.addEventListener('click', cerrarAlpha);
+
+    video.addEventListener('canplay', () => {
+        terminarCarga();
+        pausarAmbiente();
+        video.style.opacity = '1';
+        btnAlpha.style.display = 'block';
+    }, { once: true });
+
+    video.addEventListener('ended', () => {
+        video.style.opacity = '0';
+        setTimeout(cerrarAlpha, 400);
+    });
+
+    video.addEventListener('error', () => {
+        terminarCarga();
+        videoAlphaActivo = false;
+    });
+
+    container.appendChild(video);
+    container.appendChild(btnAlpha);
+}
+
 
 // ==========================================
 // --- MODO NIÑA — NAVEGACIÓN MANUAL + EFECTOS ---
@@ -293,7 +364,7 @@ function efectoFutbolista(vfx) {
 
     // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:75%;left:-50%;bottom:-38%;
+    field.style.cssText=`position:absolute;width:200%;height:75%;left:-50%;bottom:-1%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
@@ -307,11 +378,11 @@ function efectoFutbolista(vfx) {
     // Texto "Estadio Azteca 1971"
     const label=document.createElement('div');
     label.style.cssText=`position:absolute;top:clamp(5px,1.5%,12px);left:50%;transform:translateX(-50%);
-        z-index:70;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
+        z-index:62;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
         backdrop-filter:blur(8px);padding:clamp(3px,0.8%,7px) clamp(8px,2%,18px);border-radius:20px;
         font-size:clamp(8px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
         pointer-events:none;animation:ftGlow 2s infinite alternate;`;
-    label.textContent='🏟️ Estadio Azteca 1971 ⚽';
+    label.textContent=' ⚽ Estadio Azteca 1971 ⚽';
     stadiumDiv.appendChild(label);
     vfx.appendChild(stadiumDiv);
 
