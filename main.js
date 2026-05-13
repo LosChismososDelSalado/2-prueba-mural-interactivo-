@@ -311,6 +311,7 @@ let ninaIndex        = 0;
 let ninaModoActivo   = false;
 let ninaEfectoActivo = null;
  
+// CAMBIO: profesionistas con brillo suave + respiracion, sin glow intenso
 const elementosBrillantes = [
     'glow-doctora','glow-ingeniera','glow-maestra','glow-bombera',
     'glow-repartidora','glow-jugadoras','glow-futbolista'
@@ -330,14 +331,15 @@ function limpiarEfectoNina() {
  
 // ─── 1. FUTBOLISTA — pelotas rebotando, click/touch para patear ───
 function efectoFutbolista(vfx) {
- 
+    // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
     const elFutbolista = document.getElementById('glow-futbolista');
     const elNina       = document.getElementById('glow-nina');
-   
-    if (elFutbolista) { elFutbolista.style.zIndex = '62'; elFutbolista.style.position = 'absolute'; }
-    if (elNina)       { elNina.style.zIndex = '63';       elNina.style.position = 'absolute'; }
+    const elBombera    = document.getElementById('glow-bombera');
+    if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
+    if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
+    if(elBombera)   {elBombera.style.zIndex='64';   elBombera.style.position='absolute';}
  
- 
+     // ── KEYFRAMES ───────────────────────────────────────────────
     if (!document.getElementById('ft-keyframes')) {
         const st = document.createElement('style'); st.id = 'ft-keyframes';
         st.textContent = `
@@ -366,7 +368,7 @@ function efectoFutbolista(vfx) {
     field.style.cssText = `
         position:absolute;
         width:220%;
-        height:55%;
+        height:50%;
         left:-60%;
         bottom:0%;
         z-index:4;
@@ -741,11 +743,6 @@ function efectoFutbolista(vfx) {
     };
 }
  
-
-
-
-
-
 // ─── 2. ASTRONAUTA — sistema solar completo sin fondo negro ──────
 function efectoAstronauta(vfx) {
     var GOLD = 97000;
