@@ -263,7 +263,6 @@ function efectoFutbolista(vfx) {
     // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
     const elFutbolista = document.getElementById('glow-futbolista');
     const elNina       = document.getElementById('glow-nina');
-    const elBombera    = document.getElementById('glow-bombera');
     if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
     if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
     if(elBombera)   {elBombera.style.zIndex='64';   elBombera.style.position='absolute';}
@@ -294,7 +293,7 @@ function efectoFutbolista(vfx) {
 
     // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:20%;left:-50%;bottom:20%;
+    field.style.cssText=`position:absolute;width:200%;height:55%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
