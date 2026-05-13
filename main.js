@@ -329,17 +329,15 @@ function limpiarEfectoNina() {
     ninaEfectoActivo = null;
 }
 
-// ─── 1. FUTBOLISTA — pelotas rebotando, click/touch para patear ───
+// ─── 1. FUTBOLISTA — colores vivos, onda expansiva, rebote elástico ─
 function efectoFutbolista(vfx) {
-    // ── TRAER CAPAS AL FRENTE ───────────────────────────────────
+    // ── CAPAS AL FRENTE ─────────────────────────────────────────
     const elFutbolista = document.getElementById('glow-futbolista');
     const elNina       = document.getElementById('glow-nina');
-    
     if(elFutbolista){elFutbolista.style.zIndex='62';elFutbolista.style.position='absolute';}
     if(elNina)      {elNina.style.zIndex='63';      elNina.style.position='absolute';}
 
-    
-    // ── KEYFRAMES ───────────────────────────────────────────────
+    // ── KEYFRAMES (una vez) ──────────────────────────────────────
     if(!document.getElementById('ft-keyframes')){
         const st=document.createElement('style');st.id='ft-keyframes';
         st.textContent=`
@@ -363,9 +361,8 @@ function efectoFutbolista(vfx) {
         filter:blur(20px);animation:ftLights 8s linear infinite alternate;`;
     stadiumDiv.appendChild(lights);
 
-    // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
-    field.style.cssText=`position:absolute;width:200%;height:60%;left:-50%;bottom:-0%;
+    field.style.cssText=`position:absolute;width:200%;height:60%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
         background:repeating-linear-gradient(90deg,rgba(31,106,55,0.62) 0px,rgba(31,106,55,0.62) 80px,rgba(44,138,73,0.62) 80px,rgba(44,138,73,0.62) 160px);
         box-shadow:0 0 80px rgba(0,255,120,.18);animation:ftField 6s linear infinite;`;
@@ -376,14 +373,13 @@ function efectoFutbolista(vfx) {
         opacity:.80;`;
     field.appendChild(fl);stadiumDiv.appendChild(field);
 
-    // Texto "Estadio Azteca 1971"
     const label=document.createElement('div');
-    label.style.cssText=`position:absolute;top:clamp(5px,1.5%,12px);left:50%;transform:translateX(-50%);
+    label.style.cssText=`position:absolute;top:clamp(4px,1.5%,12px);left:50%;transform:translateX(-50%);
         z-index:62;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
-        backdrop-filter:blur(8px);padding:clamp(3px,0.8%,7px) clamp(8px,2%,18px);border-radius:20px;
-        font-size:clamp(8px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
+        backdrop-filter:blur(8px);padding:clamp(2px,0.8%,7px) clamp(6px,2%,18px);border-radius:20px;
+        font-size:clamp(7px,1.6vw,13px);letter-spacing:2px;white-space:nowrap;font-family:Arial,sans-serif;
         pointer-events:none;animation:ftGlow 2s infinite alternate;`;
-    label.textContent='⚽ Estadio Azteca 1971 ⚽';
+    label.textContent='⚽ ¡Patea los balones! ⚽';
     stadiumDiv.appendChild(label);
     vfx.appendChild(stadiumDiv);
 
@@ -393,13 +389,14 @@ function efectoFutbolista(vfx) {
     vfx.appendChild(canvas);
     let W=canvas.width=vfx.offsetWidth, H=canvas.height=vfx.offsetHeight;
     const ctx=canvas.getContext('2d');
-    let balls=[],parts=[],snow=[],raf,lastCol=0;
+    let balls=[],parts=[],raf,lastCol=0;
 
     // ── AUDIO ────────────────────────────────────────────────────
-    const _fac=window.AudioContext?new AudioContext():null;
+    const _fac=window.AudioContext?new (window.AudioContext||window.webkitAudioContext)():null;
     function fbeep(freq,dur,type,vol,rampTo){
         if(!_fac)return;
         try{
+            if(_fac.state==='suspended')_fac.resume();
             const o=_fac.createOscillator(),g=_fac.createGain();
             o.type=type||'sine';
             o.frequency.setValueAtTime(freq,_fac.currentTime);
@@ -409,181 +406,299 @@ function efectoFutbolista(vfx) {
             o.connect(g);g.connect(_fac.destination);o.start();o.stop(_fac.currentTime+dur+0.05);
         }catch(e){}
     }
-    function playCrystal(){[1800,2600,3400,1100,2200,3000].forEach((f,i)=>setTimeout(()=>fbeep(f,0.16,'sine',0.08,f*0.15),i*22));}
-    function playKick(){fbeep(160,0.14,'sine',0.18,55);}
+    // Onda expansiva: tono ascendente en capas
+    function playWaveSound(){[280,420,560,700].forEach((f,i)=>setTimeout(()=>fbeep(f,0.22,'triangle',0.06,f*1.6),i*28));}
+    // Patada: golpe seco grave
+    function playKick(){fbeep(160,0.13,'sine',0.20,50);}
+    // Colisión suave
+    function playBump(){fbeep(320,0.08,'triangle',0.05,200);}
 
-    // Ambiente crowd
-    let ambientFt=null;
-    function startAmbient(){
-        if(!_fac||ambientFt)return;
-        try{
-            const buf=_fac.createBuffer(1,_fac.sampleRate*2,_fac.sampleRate);
-            const d=buf.getChannelData(0);
-            for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*0.25;
-            const src=_fac.createBufferSource();src.buffer=buf;src.loop=true;
-            const f=_fac.createBiquadFilter();f.type='bandpass';f.frequency.value=500;f.Q.value=0.4;
-            const g=_fac.createGain();g.gain.value=0.1;
-            src.connect(f);f.connect(g);g.connect(_fac.destination);src.start();
-            ambientFt={src,g};
-        }catch(e){}
-    }
-    function stopAmbient(){
-        if(!ambientFt)return;
-        try{ambientFt.g.gain.setTargetAtTime(0,_fac.currentTime,0.3);
-        setTimeout(()=>{try{ambientFt.src.stop();}catch(e){}ambientFt=null;},400);}catch(e){ambientFt=null;}
+    // ── PALETA DE COLORES VIVOS — 24 tonos bien distribuidos ────
+    const VIVID_HUES=[0,15,30,45,60,80,100,130,160,180,200,220,240,260,280,300,315,330,345,
+                      50,170,210,270,350];
+    let _hueIdx=Math.floor(Math.random()*VIVID_HUES.length);
+    function nextVividColor(){
+        const h=VIVID_HUES[_hueIdx];
+        _hueIdx=(_hueIdx+Math.floor(VIVID_HUES.length/3)+1)%VIVID_HUES.length;
+        const s=85+Math.floor(Math.random()*15);
+        const l=50+Math.floor(Math.random()*10);
+        return{hue:h, main:`hsl(${h},${s}%,${l}%)`, glow:`hsl(${h},100%,70%)`, dark:`hsl(${h},80%,25%)`};
     }
 
     // ── IMAGEN BALÓN ─────────────────────────────────────────────
-    const balonImg=new Image();balonImg.src='assets/centro-balon-loader.png';
+    const balonImg=new Image(); balonImg.src='assets/centro-balon-loader.png';
 
-    // ── NIEVE ─────────────────────────────────────────────────────
-    function initSnow(){
-        snow=[];
-        const n=Math.round((W*H)/7000);
-        for(let i=0;i<n;i++)snow.push({x:Math.random()*W,y:Math.random()*H,r:.7+Math.random()*2,sp:.35+Math.random()*.7,dx:(Math.random()-.5)*.35,op:.25+Math.random()*.55});
+    // ── TAMAÑOS Y CONTEO ADAPTATIVO (móvil / escritorio) ─────────
+    function bSizes(){
+        const min=Math.min(W,H);
+        // Más pequeños en pantallas estrechas (portrait móvil)
+        const base= W<500 ? [.055,.07,.085] : [.045,.06,.075];
+        return base.map(f=>Math.max(12,Math.round(min*f)));
     }
-    function drawSnow(){
-        snow.forEach(s=>{
-            s.y+=s.sp;s.x+=s.dx;
-            if(s.y>H+5){s.y=-5;s.x=Math.random()*W;}
-            if(s.x<0)s.x=W;if(s.x>W)s.x=0;
-            ctx.globalAlpha=s.op;ctx.fillStyle='#fff';
-            ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-        });ctx.globalAlpha=1;
+    function bCount(){
+        const a=W*H;
+        return a<80000?9 : a<200000?14 : a<400000?18 : 22;
     }
 
-    // ── BALONES ──────────────────────────────────────────────────
-    function bSizes(){return [.05,.065,.08].map(f=>Math.round(Math.min(W,H)*f));}
-    function bCount(){const a=W*H;return a<90000?8:a<250000?13:18;}
-
+    // ── SPAWN ────────────────────────────────────────────────────
     function spawn(){
         balls=[];parts=[];
         const sizes=bSizes(),n=bCount();
         for(let i=0;i<n;i++){
             const r=sizes[Math.floor(Math.random()*sizes.length)];
             let x,y,ok,t=0;
-            do{x=r+Math.random()*(W-r*2);y=r+Math.random()*(H-r*2);ok=balls.every(b=>Math.hypot(b.x-x,b.y-y)>r+b.r+4);t++;}while(!ok&&t<100);
-            const sp=.28+Math.random()*.55,ang=Math.random()*Math.PI*2;
-            balls.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,r,rot:0,rsp:(Math.random()-.5)*.05,alive:true});
+            do{
+                x=r+Math.random()*(W-r*2);
+                y=r+Math.random()*(H-r*2);
+                ok=balls.every(b=>Math.hypot(b.x-x,b.y-y)>r+b.r+6);
+                t++;
+            }while(!ok&&t<120);
+            const sp=1.0+Math.random()*1.6, ang=Math.random()*Math.PI*2;
+            balls.push({
+                x,y,
+                vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp,
+                r, rot:0, rsp:(Math.random()-.5)*.06,
+                color:nextVividColor(),
+                alive:true
+            });
         }
     }
 
-    // ── EXPLOSIÓN CRISTAL ────────────────────────────────────────
+    // ── EXPLOSIÓN CON ONDA EXPANSIVA ─────────────────────────────
     function explodeBall(b){
-        playCrystal();
-        // 6 fragmentos de vidrio
-        for(let i=0;i<6;i++){
-            const ang=(i/6)*Math.PI*2+Math.random()*.5,sp=2+Math.random()*4.5;
-            parts.push({type:'shard',x:b.x,y:b.y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-1,
-                rot:Math.random()*Math.PI,rsp:(Math.random()-.5)*.14,
-                size:b.r*(.28+Math.random()*.3),life:1,dec:.017});
+        playWaveSound();
+        // Onda expansiva que empuja físicamente los demás balones
+        parts.push({
+            type:'wave', x:b.x, y:b.y,
+            r:b.r*0.3, maxRadius:Math.max(W,H)*0.55,
+            color:b.color, life:3.0, dec:0.07
+        });
+        // Chispas neón que vuelan con gravedad
+        for(let i=0;i<18;i++){
+            const ang=Math.random()*Math.PI*2, sp=3+Math.random()*5.5;
+            parts.push({
+                type:'spark', x:b.x, y:b.y,
+                vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp-1,
+                size:Math.max(2,b.r*0.09+Math.random()*4),
+                color:b.color, life:1.0, dec:0.016+Math.random()*0.025
+            });
         }
-        // Partículas de colores
-        const cols=['#ff4400','#ff9900','#ffdd00','#00ffcc','#ff3399','#aa44ff','#00aaff','#fff','#88ffee'];
-        for(let i=0;i<26;i++){
-            const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*5.5;
-            parts.push({type:'dot',x:b.x,y:b.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.5,
-                r:2+Math.random()*5,c:cols[Math.floor(Math.random()*cols.length)],life:1,dec:.02+Math.random()*.018});
-        }
-        // Repeler otros
-        balls.forEach(o=>{
-            if(o===b||!o.alive)return;
-            const dx=o.x-b.x,dy=o.y-b.y,d=Math.hypot(dx,dy)||1;
-            const f=Math.min(6,180/d)*.07;
-            o.vx+=(dx/d)*f;o.vy+=(dy/d)*f;
-            const sp=Math.hypot(o.vx,o.vy);if(sp>5){o.vx=(o.vx/sp)*5;o.vy=(o.vy/sp)*5;}
+        // Anillo de luz secundario con color complementario
+        const compHue=(b.color.hue+180)%360;
+        parts.push({
+            type:'wave', x:b.x, y:b.y,
+            r:b.r*0.1, maxRadius:Math.max(W,H)*0.3,
+            color:{hue:compHue,main:`hsl(${compHue},100%,60%)`,glow:`hsl(${compHue},100%,75%)`},
+            life:2.0, dec:0.10
         });
         b.alive=false;
-        if(balls.every(x=>!x.alive))setTimeout(spawn,1200);
+        if(balls.every(x=>!x.alive)) setTimeout(spawn,1400);
     }
 
+    // ── FÍSICA: rebote, fricción, velocidad mínima, colisión elástica
+    function physics(){
+        const alive=balls.filter(b=>b.alive);
+
+        alive.forEach(b=>{
+            b.x+=b.vx; b.y+=b.vy; b.rot+=b.rsp;
+            // Fricción suave — frena tras ser empujados
+            b.vx*=0.986; b.vy*=0.986;
+            // Velocidad mínima para que no queden estáticos
+            const sp=Math.hypot(b.vx,b.vy);
+            if(sp<0.5){
+                const a=Math.random()*Math.PI*2;
+                b.vx=Math.cos(a)*0.7; b.vy=Math.sin(a)*0.7;
+            }
+            // Rebote con bordes
+            if(b.x-b.r<0){b.x=b.r; b.vx=Math.abs(b.vx);}
+            if(b.x+b.r>W){b.x=W-b.r; b.vx=-Math.abs(b.vx);}
+            if(b.y-b.r<0){b.y=b.r; b.vy=Math.abs(b.vy);}
+            if(b.y+b.r>H){b.y=H-b.r; b.vy=-Math.abs(b.vy);}
+        });
+
+        // Colisiones elásticas entre balones
+        const now=performance.now();
+        for(let i=0;i<alive.length;i++){
+            for(let j=i+1;j<alive.length;j++){
+                const a=alive[i],b=alive[j];
+                const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),md=a.r+b.r;
+                if(d<md&&d>0.01){
+                    const nx=dx/d,ny=dy/d,ov=(md-d)/2+0.5;
+                    a.x-=nx*ov; a.y-=ny*ov; b.x+=nx*ov; b.y+=ny*ov;
+                    const ad=a.vx*nx+a.vy*ny, bd=b.vx*nx+b.vy*ny;
+                    if(ad-bd>0){
+                        a.vx+=(bd-ad)*nx; a.vy+=(bd-ad)*ny;
+                        b.vx+=(ad-bd)*nx; b.vy+=(ad-bd)*ny;
+                        if(now-lastCol>80){lastCol=now; playBump();}
+                    }
+                }
+            }
+        }
+
+        // Procesar partículas + DETECTAR IMPACTO DE ONDA CONTRA BALONES
+        for(let i=parts.length-1;i>=0;i--){
+            const p=parts[i];
+            p.life-=p.dec;
+
+            if(p.type==='wave'){
+                // Crecimiento progresivo — onda se expande hacia afuera
+                p.r+=(p.maxRadius-p.r)*0.09;
+
+                // Empuje físico: el contorno dinámico de la onda impacta a los balones
+                alive.forEach(b=>{
+                    const dx=b.x-p.x, dy=b.y-p.y, dist=Math.hypot(dx,dy);
+                    // Solo si el balón está en el borde frontal de la onda expansiva
+                    if(dist>p.r-20 && dist<p.r+b.r+5){
+                        const angle=Math.atan2(dy,dx);
+                        // Fuerza inversamente proporcional a qué tan expandida está la onda
+                        const force=(1.0-(p.r/p.maxRadius))*14;
+                        if(force>0.4){
+                            b.vx+=Math.cos(angle)*force;
+                            b.vy+=Math.sin(angle)*force;
+                            // Cap de velocidad máxima tras onda
+                            const bsp=Math.hypot(b.vx,b.vy);
+                            if(bsp>9){b.vx=(b.vx/bsp)*9; b.vy=(b.vy/bsp)*9;}
+                        }
+                    }
+                });
+
+            } else if(p.type==='spark'){
+                p.x+=p.vx; p.y+=p.vy;
+                p.vy+=0.10; // gravedad suave
+            }
+
+            if(p.life<=0) parts.splice(i,1);
+        }
+    }
+
+    // ── INTERACCIÓN: patear o onda de fuerza ─────────────────────
     function getXY(e){
         const rect=canvas.getBoundingClientRect();
         const src=e.touches?e.touches[0]:e;
-        return{x:(src.clientX-rect.left)*(W/rect.width),y:(src.clientY-rect.top)*(H/rect.height)};
+        return{x:(src.clientX-rect.left)*(W/rect.width), y:(src.clientY-rect.top)*(H/rect.height)};
     }
     function tap(e){
         e.preventDefault();
-        if(_fac)_fac.resume().then(()=>startAmbient());
-        const{x,y}=getXY(e);let hit=false;
-        for(const b of balls){if(!b.alive)continue;if(Math.hypot(b.x-x,b.y-y)<b.r+8){explodeBall(b);hit=true;break;}}
-        if(!hit){balls.forEach(b=>{
-            if(!b.alive)return;
-            const dx=b.x-x,dy=b.y-y,d=Math.hypot(dx,dy);
-            if(d<b.r*4.5){const f=(b.r*4.5-d)/(b.r*4.5);b.vx+=(dx/(d||1))*f*11;b.vy+=(dy/(d||1))*f*11;
-            const sp=Math.hypot(b.vx,b.vy);if(sp>6){b.vx=(b.vx/sp)*6;b.vy=(b.vy/sp)*6;}playKick();}
-        });}
+        const{x,y}=getXY(e); let hit=false;
+        for(const b of balls){
+            if(!b.alive)continue;
+            if(Math.hypot(b.x-x,b.y-y)<b.r+12){
+                explodeBall(b); hit=true; break;
+            }
+        }
+        // Si no hay hit directo: onda de fuerza que empuja balones cercanos
+        if(!hit){
+            balls.forEach(b=>{
+                if(!b.alive)return;
+                const dx=b.x-x,dy=b.y-y,d=Math.hypot(dx,dy)||1;
+                if(d<b.r*5){
+                    const f=(b.r*5-d)/(b.r*5);
+                    b.vx+=(dx/d)*f*12; b.vy+=(dy/d)*f*12;
+                    const sp=Math.hypot(b.vx,b.vy); if(sp>8){b.vx=(b.vx/sp)*8; b.vy=(b.vy/sp)*8;}
+                    playKick();
+                }
+            });
+        }
     }
     canvas.addEventListener('mousedown',tap);
     canvas.addEventListener('touchstart',e=>{e.preventDefault();tap(e);},{passive:false});
 
-    function physics(){
-        const alive=balls.filter(b=>b.alive);
-        alive.forEach(b=>{
-            b.x+=b.vx;b.y+=b.vy;b.vx*=.999;b.vy*=.999;b.rot+=b.rsp;
-            if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx);}
-            if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx);}
-            if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy);}
-            if(b.y+b.r>H){b.y=H-b.r;b.vy=-Math.abs(b.vy);}
-        });
-        const now=performance.now();
-        for(let i=0;i<alive.length;i++){for(let j=i+1;j<alive.length;j++){
-            const a=alive[i],b=alive[j];
-            const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),md=a.r+b.r;
-            if(d<md&&d>.01){
-                const nx=dx/d,ny=dy/d,ov=(md-d)/2+.5;
-                a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
-                const ad=a.vx*nx+a.vy*ny,bd=b.vx*nx+b.vy*ny;
-                if(ad-bd>0){
-                    a.vx+=(bd-ad)*nx;a.vy+=(bd-ad)*ny;b.vx+=(ad-bd)*nx;b.vy+=(ad-bd)*ny;
-                    const sa=Math.hypot(a.vx,a.vy)||1,sb=Math.hypot(b.vx,b.vy)||1;
-                    const ta=.28+Math.random()*.35,tb=.28+Math.random()*.35;
-                    a.vx=(a.vx/sa)*ta;a.vy=(a.vy/sa)*ta;b.vx=(b.vx/sb)*tb;b.vy=(b.vy/sb)*tb;
-                    if(now-lastCol>75){lastCol=now;playKick();}
-                }
-            }
-        }}
-    }
-
-    function drawParts(){
-        parts.forEach(p=>{
-            p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.life-=p.dec;
-            ctx.globalAlpha=Math.max(0,p.life);
-            if(p.type==='shard'){
-                p.rot+=p.rsp;
-                ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
-                ctx.fillStyle='rgba(220,240,255,0.88)';ctx.strokeStyle='rgba(150,220,255,0.7)';ctx.lineWidth=1;
-                ctx.beginPath();ctx.moveTo(0,-p.size);ctx.lineTo(p.size*.7,p.size*.55);ctx.lineTo(-p.size*.7,p.size*.55);
-                ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
-            } else {
-                ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.5,p.r*p.life),0,Math.PI*2);ctx.fill();
-            }
-        });
-        parts=parts.filter(p=>p.life>0);ctx.globalAlpha=1;
-    }
-
+    // ── RENDER ───────────────────────────────────────────────────
     function loop(){
         ctx.clearRect(0,0,W,H);
-        drawSnow();physics();
+        physics();
+
+        // Dibujar balones con color vivo + glow + textura
         balls.filter(b=>b.alive).forEach(b=>{
-            ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);
-            ctx.shadowColor='rgba(0,255,120,.35)';ctx.shadowBlur=10;
-            if(balonImg.complete&&balonImg.naturalWidth){ctx.drawImage(balonImg,-b.r,-b.r,b.r*2,b.r*2);}
-            else{ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);ctx.fillStyle='#f0f0f0';ctx.fill();
-                ctx.fillStyle='#111';for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.arc(Math.cos(a)*b.r*.55,Math.sin(a)*b.r*.55,b.r*.22,0,Math.PI*2);ctx.fill();}}
-            ctx.shadowBlur=0;ctx.restore();
+            ctx.save();
+            ctx.translate(b.x,b.y);
+            ctx.rotate(b.rot);
+
+            // Glow exterior del color del balón
+            ctx.shadowColor=b.color.glow;
+            ctx.shadowBlur=b.r*0.55;
+
+            // Imagen del balón o fallback con color vivo
+            if(balonImg.complete&&balonImg.naturalWidth){
+                // Tinte de color: fill circular con blending
+                ctx.globalCompositeOperation='source-over';
+                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
+                ctx.fillStyle=b.color.main.replace('hsl','hsla').replace(')',',0.35)');
+                ctx.fill();
+                // Imagen encima
+                ctx.globalCompositeOperation='multiply';
+                ctx.drawImage(balonImg,-b.r,-b.r,b.r*2,b.r*2);
+                ctx.globalCompositeOperation='source-over';
+            } else {
+                // Fallback: círculo con degradado vivo
+                const grd=ctx.createRadialGradient(-b.r*.3,-b.r*.3,b.r*.1,0,0,b.r);
+                grd.addColorStop(0,b.color.glow);
+                grd.addColorStop(0.6,b.color.main);
+                grd.addColorStop(1,b.color.dark);
+                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
+                ctx.fillStyle=grd; ctx.fill();
+                // Patrón de balón
+                ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=b.r*0.03;
+                ctx.beginPath();ctx.arc(0,0,b.r*0.42,0,Math.PI*2);ctx.stroke();
+                for(let k=0;k<5;k++){
+                    const a=(k/5)*Math.PI*2-Math.PI/2;
+                    ctx.beginPath();ctx.arc(Math.cos(a)*b.r*.55,Math.sin(a)*b.r*.55,b.r*.2,0,Math.PI*2);
+                    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.fill();
+                }
+            }
+            ctx.shadowBlur=0;
+            ctx.restore();
         });
-        drawParts();raf=requestAnimationFrame(loop);
+
+        // Dibujar partículas: ondas y chispas
+        ctx.save();
+        ctx.globalCompositeOperation='screen';
+        parts.forEach(p=>{
+            ctx.save();
+            if(p.type==='wave'){
+                // Gradiente radial: contorno luminoso difuminado y limpio
+                const grad=ctx.createRadialGradient(p.x,p.y,p.r*0.72,p.x,p.y,p.r);
+                grad.addColorStop(0,`hsla(${p.color.hue},100%,50%,0.05)`);
+                grad.addColorStop(0.65,`hsla(${p.color.hue},100%,60%,${(p.life*0.85).toFixed(2)})`);
+                grad.addColorStop(0.88,`rgba(255,255,255,${Math.min(1,p.life).toFixed(2)})`);
+                grad.addColorStop(1,`hsla(${p.color.hue},100%,55%,0)`);
+                ctx.fillStyle=grad;
+                ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+            } else if(p.type==='spark'){
+                ctx.shadowBlur=12; ctx.shadowColor=p.color.glow;
+                ctx.fillStyle=p.color.main;
+                ctx.globalAlpha=Math.max(0,p.life);
+                ctx.beginPath();ctx.arc(p.x,p.y,Math.max(0.5,p.size*p.life),0,Math.PI*2);ctx.fill();
+            }
+            ctx.restore();
+        });
+        ctx.restore();
+
+        raf=requestAnimationFrame(loop);
     }
 
-    initSnow();spawn();loop();
+    // ── RESIZE ADAPTATIVO (portrait/landscape en móvil) ─────────
+    let _resizeTimer;
+    function onResize(){
+        clearTimeout(_resizeTimer);
+        _resizeTimer=setTimeout(()=>{
+            const nW=vfx.offsetWidth, nH=vfx.offsetHeight;
+            if(!nW||!nH) return;
+            W=canvas.width=nW; H=canvas.height=nH;
+            spawn();
+        },120);
+    }
+    const _ro=new ResizeObserver(onResize);
+    _ro.observe(vfx);
+
+    spawn(); loop();
 
     return{cleanup:()=>{
-        cancelAnimationFrame(raf);raf=null;stopAmbient();
-        canvas.remove();stadiumDiv.remove();
+        cancelAnimationFrame(raf); raf=null;
+        _ro.disconnect();
+        canvas.remove(); stadiumDiv.remove();
         if(elFutbolista){elFutbolista.style.zIndex='';elFutbolista.style.position='';}
         if(elNina){elNina.style.zIndex='';elNina.style.position='';}
-        
     }};
 }
 
@@ -604,7 +719,7 @@ function efectoAstronauta(vfx) {
         {n:"Urano",                 img:"assets/urano.jpg",      fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/uranus2.jpg",  g:.92,  s:"20s", tilt:"97.8°",  day:"17.2 h",  year:"30,589 días", d:"El gigante helado que rota de lado, inclinación de 98°. Sus vientos alcanzan 900 km/h."},
         {n:"Neptuno",               img:"assets/neptuno.jpg",    fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/neptune.jpg",  g:1.19, s:"16s", tilt:"28.3°",  day:"16.1 h",  year:"59,800 días", d:"El más lejano y ventoso. Tormentas de 2,100 km/h. Un azul profundo de metano helado."},
         {n:"Plutón",                img:"assets/pluton.jpg",     fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/pluto.jpg",    g:.063, s:"35s", tilt:"122.5°", day:"153.3 h", year:"90,560 días", d:"El planeta enano al borde del sistema solar. En 2006 perdió su título de planeta oficial."},
-        {n:"Balón", isFootball:true, img:"assets/centro-balon-loader.png", fb:"", g:null, s:null, tilt:"—", day:"—", year:"—", d:"El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 km/h al patear. Once contra once."}
+        {n:"Balón", isFootball:true, img:"assets/centro-balon-loader.png", fb:"", g:null, s:null, tilt:"—",                                                             day:"—",       year:"—",           d:"El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 km/h al patear. Once contra once."}
     ];
     var cur=0, isSpeaking=false;
 
@@ -730,7 +845,7 @@ function efectoAstronauta(vfx) {
         font-size:clamp(.58rem,1.9vw,.72rem);z-index:3;position:relative;text-align:center;
         min-width:min(170px,54vw);font-family:Arial,sans-serif;backdrop-filter:blur(6px);
         box-shadow:0 0 12px rgba(0,0,0,.5);">
-        <div id="as2-wbl" style="color:#9fd4ff;margin-bottom:3px;">Tu peso en otros mundos</div>
+        <div id="as2-wbl" style="color:#63d69e;margin-bottom:3px;">Tu peso en otros mundos</div>
         <input type="number" id="as2-kg" value="70" placeholder="kg"
             style="width:clamp(76px,20vw,115px);padding:clamp(3px,.8vh,5px);border:1px solid rgba(255,255,255,.2);
             border-radius:8px;background:rgba(255,255,255,.1);color:#fff;text-align:center;
@@ -838,7 +953,7 @@ function efectoAstronauta(vfx) {
         var wbl = document.getElementById('as2-wbl');
         var res = document.getElementById('as2-res');
         if (p.isFootball) {
-            wbl.textContent='Tu precio en oro'; wbl.style.color='#ffd700';
+            wbl.textContent='Tu peso en oro'; wbl.style.color='#ffd700';
             res.innerHTML='<b>$' + (v*GOLD).toLocaleString('es-MX') + ' USD</b>';
         } else {
             wbl.textContent='Tu peso en otros mundos'; wbl.style.color='#9fd4ff';
@@ -2103,4 +2218,3 @@ screen.orientation?.addEventListener('change', () => {
 window.addEventListener('orientationchange', () => {
     setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
 });
-
