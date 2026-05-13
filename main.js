@@ -745,6 +745,7 @@ function efectoFutbolista(vfx) {
 
 
 
+
 // ─── 2. ASTRONAUTA — sistema solar completo sin fondo negro ──────
 function efectoAstronauta(vfx) {
     var GOLD = 97000;
@@ -973,7 +974,7 @@ function efectoAstronauta(vfx) {
         if(window.speechSynthesis)window.speechSynthesis.cancel();
         vfx.innerHTML='';
     }};
-}
+
 // ─── 3. DOCTORA — virus flotantes, click para explotar ──────────
 function efectoDoctora(vfx) {
     const cont=document.createElement('div');
