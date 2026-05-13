@@ -236,66 +236,95 @@ function abrirVideoAlpha(src) {
     if (videoAlphaActivo) return;
     videoAlphaActivo = true;
 
-    iniciarCarga(3);
+    let videoAlphaActivo = false;
 
-    const container = document.getElementById('mural-container');
+function abrirVideoAlpha(src) {
+    if (videoAlphaActivo) return;
+    videoAlphaActivo = true;
+    iniciarCarga(2);
 
-    // Crear elemento video superpuesto
-    const video         = document.createElement('video');
-    video.id            = 'video-alpha-overlay';
-    video.autoplay      = true;
-    video.playsInline   = true;
-    video.style.cssText = `
-        position:absolute; top:0; left:0; width:100%; height:100%;
-        object-fit:contain; z-index:60; pointer-events:none;
-        opacity:0; transition:opacity 0.4s ease;
-    `;
-
-    const fuente  = document.createElement('source');
-    fuente.src    = src;
-    fuente.type   = 'video/webm';
-    video.appendChild(fuente);
-
-    // Botón cerrar alpha
-    const btnAlpha         = document.createElement('button');
-    btnAlpha.id            = 'cerrar-alpha';
-    btnAlpha.textContent   = 'CERRAR';
-    btnAlpha.style.cssText = `
-        position:absolute; top:20px; right:20px; z-index:70;
-        background:red; color:#fff; border:none; padding:10px;
-        cursor:pointer; font-size:0.9rem; border-radius:4px;
-        display:none;
-    `;
-
-    function cerrarAlpha() {
-        video.pause();
-        video.remove();
-        btnAlpha.remove();
-        videoAlphaActivo = false;
-        reanudarAmbiente();
-    }
-
-    btnAlpha.addEventListener('click', cerrarAlpha);
-
-    video.addEventListener('canplay', () => {
+    const vAlpha = document.createElement('video');
+    vAlpha.src = src;
+    vAlpha.autoplay = true;
+    vAlpha.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:10; pointer-events:none;';
+    
+    vAlpha.addEventListener('canplay', () => {
         terminarCarga();
         pausarAmbiente();
-        video.style.opacity = '1';
-        btnAlpha.style.display = 'block';
-    }, { once: true });
-
-    video.addEventListener('ended', () => {
-        video.style.opacity = '0';
-        setTimeout(cerrarAlpha, 400);
+        document.body.appendChild(vAlpha);
     });
 
-    video.addEventListener('error', () => {
+    vAlpha.addEventListener('ended', () => {
+        vAlpha.remove();
+        videoAlphaActivo = false;
+        reanudarAmbiente();
+    });
+
+    vAlpha.addEventListener('error', () => {
         terminarCarga();
+        vAlpha.remove();
         videoAlphaActivo = false;
     });
+}
 
-    container.appendChild(video);
-    container.appendChild(btnAlpha);
+// --- SOPORTE DE CARRUSEL DE JUGADORAS ---
+function abrirCarrusel(videosArr) {
+    if(!videosArr || !videosArr.length) return;
+    terminarCarga();
+    pausarAmbiente();
+    
+    let index = 0;
+    modalMedia.style.display    = 'flex';
+    modalMedia.style.visibility = 'visible';
+
+    function renderVideo() {
+        mediaContenido.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; color:#fff; width:100%;">
+                <video src="${videosArr[index].src}" controls autoplay style="max-width:90%; max-height:60vh;"></video>
+                <h3 style="margin-top:10px; font-size:1.2rem;">${videosArr[index].titulo}</h3>
+                <p style="opacity:0.7; margin:2px 0 15px 0;">${videosArr[index].subtitulo}</p>
+                <div style="display:flex; gap:20px;">
+                    <button id="car-prev" style="background:rgba(255,255,255,0.2); border:none; color:#fff; padding:8px 16px; cursor:pointer; border-radius:4px;">◀ Ant</button>
+                    <button id="car-next" style="background:rgba(255,255,255,0.2); border:none; color:#fff; padding:8px 16px; cursor:pointer; border-radius:4px;">Sig ▶</button>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('car-prev').onclick = () => {
+            index = (index === 0) ? videosArr.length - 1 : index - 1;
+            renderVideo();
+        };
+        document.getElementById('car-next').onclick = () => {
+            index = (index === videosArr.length - 1) ? 0 : index + 1;
+            renderVideo();
+        };
+    }
+    renderVideo();
+}
+
+// --- MANEJADORES PARA CERRAR MODALES ---
+function abrirCreditos() {
+    if(!modalCreditos) return;
+    pausarAmbiente();
+    modalCreditos.style.display = 'flex';
+    modalCreditos.style.visibility = 'visible';
+}
+
+if(btnCerrar) {
+    btnCerrar.addEventListener('click', () => {
+        modalCreditos.style.display = 'none';
+        modalCreditos.style.visibility = 'hidden';
+        reanudarAmbiente();
+    });
+}
+
+if(btnCerrarMedia) {
+    btnCerrarMedia.addEventListener('click', () => {
+        modalMedia.style.display = 'none';
+        modalMedia.style.visibility = 'hidden';
+        mediaContenido.innerHTML = ''; 
+        reanudarAmbiente();
+    });
 }
 
 
@@ -754,143 +783,75 @@ function efectoAstronauta(vfx) {
     </div>
 
     <!-- Info -->
-    <div id="as2-info" style="text-align:center;z-index:3;position:relative;padding:0 clamp(8px,3vw,16px);max-width:min(380px,90vw);">
-        <h2 id="as2-pn" style="font-size:clamp(.8rem,3vw,1.15rem);font-weight:700;margin-bottom:2px;font-family:Georgia,serif;letter-spacing:.03em;"></h2>
-        <p  id="as2-pd" style="font-size:clamp(.55rem,2vw,.7rem);opacity:.85;line-height:1.5;font-family:Georgia,serif;"></p>
-        <div id="as2-stats" style="display:flex;gap:clamp(6px,2.5vw,16px);justify-content:center;margin-top:4px;
-            font-size:clamp(.5rem,1.6vw,.62rem);opacity:.75;font-family:Arial,sans-serif;"></div>
-    </div>
-
-    <!-- Peso -->
-    <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);
-        padding:clamp(5px,1.2vh,9px) clamp(8px,2.5vw,14px);border-radius:12px;
-        font-size:clamp(.6rem,2vw,.73rem);z-index:3;position:relative;text-align:center;
-        min-width:min(180px,56vw);font-family:Arial,sans-serif;">
-        <div id="as2-wbl">Tu peso en otros mundos</div>
-        <input type="number" id="as2-kg" value="70" placeholder="kg"
-            style="width:clamp(80px,22vw,120px);padding:clamp(4px,1vh,6px);border:none;border-radius:8px;
-            background:rgba(255,255,255,.14);color:#fff;text-align:center;
-            font-size:clamp(.65rem,2vw,.75rem);margin:3px auto 0;display:block;">
-        <div id="as2-res" style="margin-top:4px;font-size:clamp(.65rem,2vw,.75rem);font-weight:700;color:#9fd4ff;min-height:16px;"></div>
-    </div>`;
+    <div id="as2-info" style="text-align:center;z-index:3;position:relative;padding:0 clamp(8px,3vw,16px);max-width:min(380px,95vw);color:#fff;"></div>
+    `;
 
     vfx.appendChild(wrap);
 
-    // ── ESTRELLAS 3D (fondo transparente — se ve el mural) ──────
-    var cv=document.getElementById('as2-stars');
-    function rsz(){cv.width=wrap.offsetWidth;cv.height=wrap.offsetHeight;}
-    rsz();
-    var sctx=cv.getContext('2d'),stars=[],raf2;
-    function initStars(){
-        stars=[];var W2=cv.width,H2=cv.height;
-        for(var i=0;i<440;i++) stars.push({x:(Math.random()-.5)*W2*4,y:(Math.random()-.5)*H2*4,z:Math.random()*W2,pz:0,op:Math.random(),od:Math.random()>.5?1:-1,os:Math.random()*.025+.004});
+    // ── 1. ANIMACIÓN DE ESTRELLAS 3D (Fondo transparente) ──────
+    var canvas = wrap.querySelector('#as2-stars');
+    var ctx = canvas.getContext('2d');
+    var numStars = 95;
+    var stars = [];
+    var animId;
+
+    function resizeCanvas() {
+        canvas.width = wrap.clientWidth;
+        canvas.height = wrap.clientHeight;
     }
-    initStars();
-    function drawStars(){
-        var W2=cv.width,H2=cv.height;
-        sctx.fillStyle='rgba(0,0,0,0.18)';sctx.fillRect(0,0,W2,H2);
-        stars.forEach(function(s){
-            s.op+=s.od*s.os;if(s.op>=1){s.op=1;s.od=-1;}if(s.op<=.04){s.op=.04;s.od=1;}
-            s.pz=s.z;s.z-=2.8;
-            if(s.z<=0){s.x=(Math.random()-.5)*W2*4;s.y=(Math.random()-.5)*H2*4;s.z=W2;s.pz=W2;return;}
-            var sx=(s.x/s.z)*W2+W2/2,sy=(s.y/s.z)*H2+H2/2;
-            var px=(s.x/s.pz)*W2+W2/2,py=(s.y/s.pz)*H2+H2/2;
-            var r=Math.max(.1,(1-s.z/W2)*2.8),prog=1-s.z/W2;
-            sctx.beginPath();sctx.moveTo(px,py);sctx.lineTo(sx,sy);
-            sctx.strokeStyle='rgba(255,255,255,'+(s.op*.55*prog).toFixed(2)+')';
-            sctx.lineWidth=r*.6;sctx.stroke();
-            sctx.beginPath();sctx.arc(sx,sy,r,0,6.2832);
-            sctx.fillStyle='rgba(255,255,255,'+s.op.toFixed(2)+')';sctx.fill();
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    for (var i = 0; i < numStars; i++) {
+        stars.push({
+            x: Math.random() * 2 - 1,
+            y: Math.random() * 2 - 1,
+            z: Math.random()
         });
-        raf2=requestAnimationFrame(drawStars);
+    }
+
+    function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var cx = canvas.width / 2;
+        var cy = canvas.height / 2;
+
+        for (var i = 0; i < numStars; i++) {
+            var s = stars[i];
+            s.z -= 0.012; // Velocidad de las estrellas hacia adelante
+            if (s.z <= 0) {
+                s.x = Math.random() * 2 - 1;
+                s.y = Math.random() * 2 - 1;
+                s.z = 1;
+            }
+
+            var px = (s.x / s.z) * cx + cx;
+            var py = (s.y / s.z) * cy + cy;
+
+            if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                var size = (1 - s.z) * 2.5;
+                var alpha = (1 - s.z);
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        animId = requestAnimationFrame(drawStars);
     }
     drawStars();
 
-    // ── DOTS ────────────────────────────────────────────────────
-    var dotsEl=document.getElementById('as2-dots');
-    P.forEach(function(_,i){
-        var d=document.createElement('div');
-        d.style.cssText='width:clamp(5px,1.4vw,8px);height:clamp(5px,1.4vw,8px);border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:.2s;flex-shrink:0;';
-        d.addEventListener('click',function(){go(i);});dotsEl.appendChild(d);
+    // Limpieza automática del loop de animación al cambiar de sección
+    var observer = new MutationObserver(function(mutations, obs) {
+        if (!document.body.contains(wrap)) {
+            cancelAnimationFrame(animId);
+            window.removeEventListener('resize', resizeCanvas);
+            obs.disconnect();
+        }
     });
-
-    // ── TTS ─────────────────────────────────────────────────────
-    function speak(text){
-        if(!('speechSynthesis' in window))return;
-        window.speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance(text);u.lang='es-MX';u.rate=0.95;u.pitch=1;
-        var voices=window.speechSynthesis.getVoices();
-        var v=voices.find(function(x){return x.lang.startsWith('es');});if(v)u.voice=v;
-        var btn=document.getElementById('as2-tts');
-        u.onstart=function(){isSpeaking=true;if(btn)btn.style.background='rgba(100,160,255,.35)';};
-        u.onend=function(){isSpeaking=false;if(btn)btn.style.background='';};
-        u.onerror=function(){isSpeaking=false;if(btn)btn.style.background='';};
-        window.speechSynthesis.speak(u);
-    }
-    var ttsBtn=document.getElementById('as2-tts');
-    if(ttsBtn) ttsBtn.addEventListener('click',function(){
-        if(isSpeaking){window.speechSynthesis.cancel();isSpeaking=false;this.style.background='';}
-        else{speak(P[cur].n+'. '+P[cur].d);}
-    });
-
-    // ── PESO ────────────────────────────────────────────────────
-    function wt(){
-        var v=parseFloat(document.getElementById('as2-kg').value)||0;
-        var p=P[cur];
-        var wbl=document.getElementById('as2-wbl'),res=document.getElementById('as2-res');
-        if(p.isFootball){wbl.textContent='Tu peso en oro';wbl.style.color='#ffd700';res.innerHTML='<b>$'+(v*GOLD).toLocaleString('es-MX')+' USD</b>';}
-        else{wbl.textContent='Tu peso en otros mundos';wbl.style.color='';res.innerHTML='En <b>'+p.n+'</b>: <b>'+(v*p.g).toFixed(1)+' kg</b>';}
-    }
-    var kgEl=document.getElementById('as2-kg');if(kgEl)kgEl.oninput=wt;
-
-    // ── RENDER ──────────────────────────────────────────────────
-    function render(i){
-        var p=P[i];
-        var pl=document.getElementById('as2-pl');
-        var fw=document.getElementById('as2-fw');
-        var rw=document.getElementById('as2-rw');
-        var info=document.getElementById('as2-info');
-        if(!pl)return;
-        if(p.isFootball){pl.style.display='none';fw.style.display='flex';}
-        else{pl.style.display='';fw.style.display='none';pl.style.backgroundImage='url('+p.img+')';pl.style.animationDuration=p.s;
-            if(p.isSun)pl.style.boxShadow='inset -25px -12px 45px rgba(255,160,0,.3),0 0 60px 18px rgba(255,180,0,.5)';
-            else pl.style.boxShadow='inset -25px -12px 45px rgba(0,0,0,.85),inset 8px 6px 18px rgba(255,255,255,.08)';}
-        rw.className=p.ring?'':'';rw.style.opacity=p.ring?'1':'0';
-        info.style.animation='none';void info.offsetWidth;info.style.animation='as2FadeUp .4s ease';
-        document.getElementById('as2-pn').textContent=p.n;
-        document.getElementById('as2-pd').textContent=p.d;
-        var st=document.getElementById('as2-stats');
-        if(!p.isFootball){st.innerHTML='<span>Inclinación<br><b>'+p.tilt+'</b></span><span>Día<br><b>'+p.day+'</b></span><span>Año<br><b>'+p.year+'</b></span>';}
-        else{st.innerHTML='';}
-        dotsEl.querySelectorAll('div').forEach(function(d,j){
-            d.style.background=j===i?'#fff':'rgba(255,255,255,.28)';
-            d.style.boxShadow=j===i?'0 0 7px #fff':'';
-        });
-        wt();
-        setTimeout(function(){speak(p.n+'. '+p.d);},300);
-    }
-
-    function go(i){cur=(i+P.length)%P.length;render(cur);}
-
-    var prevBtn=document.getElementById('as2-prev');
-    var nextBtn=document.getElementById('as2-next');
-    if(prevBtn)prevBtn.addEventListener('click',function(){go(cur-1);});
-    if(nextBtn)nextBtn.addEventListener('click',function(){go(cur+1);});
-
-    // Swipe táctil
-    var tx2=0;
-    wrap.addEventListener('touchstart',function(e){tx2=e.touches[0].clientX;},{passive:true});
-    wrap.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx2;if(Math.abs(dx)>40)go(cur+(dx<0?1:-1));},{passive:true});
-
-    render(0);
-
-    return {cleanup:function(){
-        cancelAnimationFrame(raf2);
-        if(window.speechSynthesis)window.speechSynthesis.cancel();
-        vfx.innerHTML='';
-    }};
+    observer.observe(vfx, { childList: true });
 }
 
+// ─── . DOCTORA
 function efectoDoctora(vfx) {
     const cont=document.createElement('div');
     cont.style.cssText='position:absolute;inset:0;overflow:hidden;background-image:linear-gradient(rgba(255,0,0,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,0,.07) 1px,transparent 1px);background-size:50px 50px;';
