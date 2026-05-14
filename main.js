@@ -428,49 +428,7 @@ function efectoFutbolista(vfx) {
     // ── IMAGEN BALÓN ─────────────────────────────────────────────
     const balonImg=new Image(); balonImg.src='assets/centro-balon-loader.png';
 
-    let snow = [];
-
-     // ── NIEVE (Funciones adaptadas) ───────────────────────────────
-    function initSnow() {  snow = [];  const n = Math.round((W * H) / 7000);    for (let i = 0; i < n; i++) {  snow.push({
-                x: Math.random() * W,  y: Math.random() * H,   r: 0.7 + Math.random() * 2,  sp: 0.35 + Math.random() * 0.7,
-                dx: (Math.random() - 0.5) * 0.35,   op: 0.25 + Math.random() * 0.55
-            });
-        }
-    }
-
-    function drawSnow() {  snow.forEach(s => {  s.y += s.sp;   s.x += s.dx;  if (s.y > H + 5) { s.y = -5; s.x = Math.random() * W; }
-            if (s.x < 0) s.x = W;   if (s.x > W) s.x = 0;  
-            ctx.save(); // Usamos save/restore para no afectar otros dibujos
-            ctx.globalAlpha = s.op;
-            ctx.fillStyle = '#fff';
-            ctx.shadowBlur = 5; // Brillo opcional para la nieve
-            ctx.shadowColor = '#fff';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        });
-    }
-
-    // ── LOOP DE ANIMACIÓN ACTUALIZADO ────────────────────────────
-    function loop() {
-        ctx.clearRect(0, 0, W, H);
-        // 1. Lógica de Balones
-        if (balls.length < BALL_COUNT && Math.random() < 0.02) {  balls.push(new Ball());
-        }
-     balls.forEach(b => {  b.update(); b.draw();
-        });
-        // 2. Lógica de Partículas (impactos)
-        parts = parts.filter(p => {  p.update();  p.draw();   return p.life > 0;
-        });
-        // 3. Lógica de Nieve (se dibuja al final para estar al frente)
-        drawSnow();  raf = requestAnimationFrame(loop);
-    }
-
-    // ── INICIALIZACIÓN ──────────────────────────────────────────
-    initSnow(); // Llamar antes de empezar el loop
-    loop();
-   
+  
     // ── TAMAÑOS Y CONTEO ADAPTATIVO (móvil / escritorio) ─────────
     function bSizes(){
         const min=Math.min(W,H);
