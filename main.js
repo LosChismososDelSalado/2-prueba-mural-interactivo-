@@ -110,6 +110,11 @@ document.querySelectorAll('.zona').forEach(zona => {
     zona.addEventListener('touchcancel',apagar);
 });
 
+// Pantalla completa al primer toque
+document.addEventListener('click', () => {
+    document.documentElement.requestFullscreen?.();
+}, { once: true });
+
 // --- BALÓN Y GRIETA ---
 function iniciarCarga(duracionEstimada = 3) {
     balon.classList.add('girando');
