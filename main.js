@@ -428,6 +428,22 @@ function efectoFutbolista(vfx) {
     // ── IMAGEN BALÓN ─────────────────────────────────────────────
     const balonImg=new Image(); balonImg.src='assets/centro-balon-loader.png';
 
+     // ── NIEVE ─────────────────────────────────────────────────────
+    function initSnow(){
+        snow=[];
+        const n=Math.round((W*H)/7000);
+        for(let i=0;i<n;i++)snow.push({x:Math.random()*W,y:Math.random()*H,r:.7+Math.random()*2,sp:.35+Math.random()*.7,dx:(Math.random()-.5)*.35,op:.25+Math.random()*.55});
+    }
+    function drawSnow(){
+        snow.forEach(s=>{
+            s.y+=s.sp;s.x+=s.dx;
+            if(s.y>H+5){s.y=-5;s.x=Math.random()*W;}
+            if(s.x<0)s.x=W;if(s.x>W)s.x=0;
+            ctx.globalAlpha=s.op;ctx.fillStyle='#fff';
+            ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+        });ctx.globalAlpha=1;
+    }
+
     // ── TAMAÑOS Y CONTEO ADAPTATIVO (móvil / escritorio) ─────────
     function bSizes(){
         const min=Math.min(W,H);
@@ -675,10 +691,9 @@ function efectoFutbolista(vfx) {
     const _ro=new ResizeObserver(onResize);
     _ro.observe(vfx);
 
-    spawn(); loop();
+    initSnow();spawn();loop();
 
-    return{cleanup:()=>{
-        cancelAnimationFrame(raf); raf=null;
+    return{cleanup:()=>{cancelAnimationFrame(raf); raf=null;
         _ro.disconnect();
         canvas.remove(); stadiumDiv.remove();
         if(elFutbolista){elFutbolista.style.zIndex='';elFutbolista.style.position='';}
