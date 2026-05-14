@@ -608,71 +608,32 @@ function efectoFutbolista(vfx) {
         ctx.clearRect(0,0,W,H);
         physics();
 
-        // Dibujar balones con color vivo + glow + textura
-        balls.filter(b=>b.alive).forEach(b=>{
+                // Dibujar balones: Imagen original con brillo exterior
+        balls.filter(b => b.alive).forEach(b => {
             ctx.save();
-            ctx.translate(b.x,b.y);
+            ctx.translate(b.x, b.y);
             ctx.rotate(b.rot);
 
-            // Glow exterior del color del balón
-            ctx.shadowColor=b.color.glow;
-            ctx.shadowBlur=b.r*0.55;
+            // Glow exterior (mantiene la estética neón del juego)
+            ctx.shadowColor = b.color.glow;
+            ctx.shadowBlur = b.r * 0.55;
 
-            // Imagen del balón o fallback con color vivo
-            if(balonImg.complete&&balonImg.naturalWidth){
-                // Tinte de color: fill circular con blending
-                ctx.globalCompositeOperation='source-over';
-                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
-                ctx.fillStyle=b.color.main.replace('hsl','hsla').replace(')',',0.35)');
-                ctx.fill();
-                // Imagen encima
-                ctx.globalCompositeOperation='multiply';
-                ctx.drawImage(balonImg,-b.r,-b.r,b.r*2,b.r*2);
-                ctx.globalCompositeOperation='source-over';
+            // Dibujado directo de la imagen
+            if (balonImg.complete && balonImg.naturalWidth) {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(balonImg, -b.r, -b.r, b.r * 2, b.r * 2);
             } else {
-                // Fallback: círculo con degradado vivo
-                const grd=ctx.createRadialGradient(-b.r*.3,-b.r*.3,b.r*.1,0,0,b.r);
-                grd.addColorStop(0,b.color.glow);
-                grd.addColorStop(0.6,b.color.main);
-                grd.addColorStop(1,b.color.dark);
-                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
-                ctx.fillStyle=grd; ctx.fill();
-                // Patrón de balón
-                ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=b.r*0.03;
-                ctx.beginPath();ctx.arc(0,0,b.r*0.42,0,Math.PI*2);ctx.stroke();
-                for(let k=0;k<5;k++){
-                    const a=(k/5)*Math.PI*2-Math.PI/2;
-                    ctx.beginPath();ctx.arc(Math.cos(a)*b.r*.55,Math.sin(a)*b.r*.55,b.r*.2,0,Math.PI*2);
-                    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.fill();
-                }
+                // Fallback de seguridad por si la imagen no carga
+                ctx.beginPath();
+                ctx.arc(0, 0, b.r, 0, Math.PI * 2);
+                ctx.fillStyle = b.color.main;
+                ctx.fill();
             }
-            ctx.shadowBlur=0;
+
+            ctx.shadowBlur = 0;
             ctx.restore();
         });
 
-        // Dibujar partículas: ondas y chispas
-        ctx.save();
-        ctx.globalCompositeOperation='screen';
-        parts.forEach(p=>{
-            ctx.save();
-            if(p.type==='wave'){
-                // Gradiente radial: contorno luminoso difuminado y limpio
-                const grad=ctx.createRadialGradient(p.x,p.y,p.r*0.72,p.x,p.y,p.r);
-                grad.addColorStop(0,`hsla(${p.color.hue},100%,50%,0.05)`);
-                grad.addColorStop(0.65,`hsla(${p.color.hue},100%,60%,${(p.life*0.85).toFixed(2)})`);
-                grad.addColorStop(0.88,`rgba(255,255,255,${Math.min(1,p.life).toFixed(2)})`);
-                grad.addColorStop(1,`hsla(${p.color.hue},100%,55%,0)`);
-                ctx.fillStyle=grad;
-                ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-            } else if(p.type==='spark'){
-                ctx.shadowBlur=12; ctx.shadowColor=p.color.glow;
-                ctx.fillStyle=p.color.main;
-                ctx.globalAlpha=Math.max(0,p.life);
-                ctx.beginPath();ctx.arc(p.x,p.y,Math.max(0.5,p.size*p.life),0,Math.PI*2);ctx.fill();
-            }
-            ctx.restore();
-        });
-        ctx.restore();
 
         raf=requestAnimationFrame(loop);
     }
