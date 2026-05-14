@@ -634,6 +634,29 @@ function efectoFutbolista(vfx) {
             ctx.restore();
         });
 
+ // Dibujar partículas: ondas y chispas
+        ctx.save();
+        ctx.globalCompositeOperation='screen';
+        parts.forEach(p=>{
+            ctx.save();
+            if(p.type==='wave'){
+                // Gradiente radial: contorno luminoso difuminado y limpio
+                const grad=ctx.createRadialGradient(p.x,p.y,p.r*0.72,p.x,p.y,p.r);
+                grad.addColorStop(0,`hsla(${p.color.hue},100%,50%,0.05)`);
+                grad.addColorStop(0.65,`hsla(${p.color.hue},100%,60%,${(p.life*0.85).toFixed(2)})`);
+                grad.addColorStop(0.88,`rgba(255,255,255,${Math.min(1,p.life).toFixed(2)})`);
+                grad.addColorStop(1,`hsla(${p.color.hue},100%,55%,0)`);
+                ctx.fillStyle=grad;
+                ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+            } else if(p.type==='spark'){
+                ctx.shadowBlur=12; ctx.shadowColor=p.color.glow;
+                ctx.fillStyle=p.color.main;
+                ctx.globalAlpha=Math.max(0,p.life);
+                ctx.beginPath();ctx.arc(p.x,p.y,Math.max(0.5,p.size*p.life),0,Math.PI*2);ctx.fill();
+            }
+            ctx.restore();
+        });
+        ctx.restore();
 
         raf=requestAnimationFrame(loop);
     }
