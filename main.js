@@ -718,13 +718,13 @@ function efectoFutbolista(vfx) {
     const _ro=new ResizeObserver(onResize);
     _ro.observe(vfx);
 
-    initSnow();spawn();loop();
+    ;spawn();loop();
 
     return{cleanup:()=>{cancelAnimationFrame(raf); raf=null;
         _ro.disconnect();
         canvas.remove(); stadiumDiv.remove();
         if(elFutbolista){elFutbolista.style.zIndex='';elFutbolista.style.position='';}
-        if(elNina){elNina.style.zIndex='';elNina.style.position='';}
+        if(elNina){elNina.style.zIndex=''
     }};
 }
 
@@ -1064,8 +1064,8 @@ function efectoAstronauta(vfx) {
 
     // Inicio
     resolveImg(P[0], function(url) { renderPlanet(0, url); });
-
-    return { cleanup: function() {
+    
+    return { cleanup: function() {                   
         cancelAnimationFrame(raf2); raf2=null;
         window.removeEventListener('resize', rsz);
         if (window.speechSynthesis) window.speechSynthesis.cancel();
