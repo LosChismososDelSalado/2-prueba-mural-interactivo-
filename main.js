@@ -60,7 +60,7 @@ grietaVerde.style.opacity      = '0';
 // --- AUDIO AMBIENTE ---
 const audioAmbiente = new Audio('assets/ambiente.mp3');
 audioAmbiente.loop   = true;
-audioAmbiente.volume = 0.5;
+audioAmbiente.volume = 0.8;
 
 let ambienteIniciado = false;
 
@@ -109,6 +109,11 @@ document.querySelectorAll('.zona').forEach(zona => {
     zona.addEventListener('touchend',   apagar);
     zona.addEventListener('touchcancel',apagar);
 });
+
+// Pantalla completa al primer toque
+document.addEventListener('click', () => {
+    document.documentElement.requestFullscreen?.();
+}, { once: true });
 
 // --- BALÓN Y GRIETA ---
 function iniciarCarga(duracionEstimada = 3) {
@@ -361,6 +366,7 @@ function efectoFutbolista(vfx) {
         filter:blur(20px);animation:ftLights 8s linear infinite alternate;`;
     stadiumDiv.appendChild(lights);
 
+    // Cancha 3D — borde inferior de las profesionistas
     const field=document.createElement('div');
     field.style.cssText=`position:absolute;width:200%;height:60%;left:-50%;bottom:0%;
         transform:rotateX(75deg) translateZ(-80px);
@@ -373,6 +379,7 @@ function efectoFutbolista(vfx) {
         opacity:.80;`;
     field.appendChild(fl);stadiumDiv.appendChild(field);
 
+   // Texto "Estadio Azteca 1971"
     const label=document.createElement('div');
     label.style.cssText=`position:absolute;top:clamp(4px,1.5%,12px);left:50%;transform:translateX(-50%);
         z-index:62;color:white;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
@@ -440,6 +447,22 @@ function efectoFutbolista(vfx) {
         return a<80000?9 : a<200000?14 : a<400000?18 : 22;
     }
 
+    // ── NIEVE ─────────────────────────────────────────────────────
+    function initSnow(){
+        snow=[];
+        const n=Math.round((W*H)/7000);
+        for(let i=0;i<n;i++)snow.push({x:Math.random()*W,y:Math.random()*H,r:.7+Math.random()*2,sp:.35+Math.random()*.7,dx:(Math.random()-.5)*.35,op:.25+Math.random()*.55});
+    }
+    function drawSnow(){
+        snow.forEach(s=>{
+            s.y+=s.sp;s.x+=s.dx;
+            if(s.y>H+5){s.y=-5;s.x=Math.random()*W;}
+            if(s.x<0)s.x=W;if(s.x>W)s.x=0;
+            ctx.globalAlpha=s.op;ctx.fillStyle='#fff';
+            ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+        });ctx.globalAlpha=1;
+    }
+
     // ── SPAWN ────────────────────────────────────────────────────
     function spawn(){
         balls=[];parts=[];
@@ -470,7 +493,7 @@ function efectoFutbolista(vfx) {
         // Onda expansiva que empuja físicamente los demás balones
         parts.push({
             type:'wave', x:b.x, y:b.y,
-            r:b.r*0.3, maxRadius:Math.max(W,H)*0.55,
+            r:b.r*0.3, maxRadius:Math.max(W,H)*0.30,
             color:b.color, life:3.0, dec:0.07
         });
         // Chispas neón que vuelan con gravedad
@@ -489,7 +512,7 @@ function efectoFutbolista(vfx) {
             type:'wave', x:b.x, y:b.y,
             r:b.r*0.1, maxRadius:Math.max(W,H)*0.3,
             color:{hue:compHue,main:`hsl(${compHue},100%,60%)`,glow:`hsl(${compHue},100%,75%)`},
-            life:2.0, dec:0.10
+            life:2.0, dec:0.8
         });
         b.alive=false;
         if(balls.every(x=>!x.alive)) setTimeout(spawn,1400);
@@ -614,42 +637,11 @@ function efectoFutbolista(vfx) {
             ctx.translate(b.x,b.y);
             ctx.rotate(b.rot);
 
-            // Glow exterior del color del balón
-            ctx.shadowColor=b.color.glow;
-            ctx.shadowBlur=b.r*0.55;
+            
 
             // Imagen del balón o fallback con color vivo
-            if(balonImg.complete&&balonImg.naturalWidth){
-                // Tinte de color: fill circular con blending
-                ctx.globalCompositeOperation='source-over';
-                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
-                ctx.fillStyle=b.color.main.replace('hsl','hsla').replace(')',',0.35)');
-                ctx.fill();
-                // Imagen encima
-                ctx.globalCompositeOperation='multiply';
-                ctx.drawImage(balonImg,-b.r,-b.r,b.r*2,b.r*2);
-                ctx.globalCompositeOperation='source-over';
-            } else {
-                // Fallback: círculo con degradado vivo
-                const grd=ctx.createRadialGradient(-b.r*.3,-b.r*.3,b.r*.1,0,0,b.r);
-                grd.addColorStop(0,b.color.glow);
-                grd.addColorStop(0.6,b.color.main);
-                grd.addColorStop(1,b.color.dark);
-                ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);
-                ctx.fillStyle=grd; ctx.fill();
-                // Patrón de balón
-                ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=b.r*0.03;
-                ctx.beginPath();ctx.arc(0,0,b.r*0.42,0,Math.PI*2);ctx.stroke();
-                for(let k=0;k<5;k++){
-                    const a=(k/5)*Math.PI*2-Math.PI/2;
-                    ctx.beginPath();ctx.arc(Math.cos(a)*b.r*.55,Math.sin(a)*b.r*.55,b.r*.2,0,Math.PI*2);
-                    ctx.fillStyle='rgba(0,0,0,0.25)';ctx.fill();
-                }
-            }
-            ctx.shadowBlur=0;
-            ctx.restore();
-        });
-
+            if(balonImg.complete&&balonImg.naturural
+               
         // Dibujar partículas: ondas y chispas
         ctx.save();
         ctx.globalCompositeOperation='screen';
@@ -719,52 +711,46 @@ function efectoAstronauta(vfx) {
         {n:"Urano",                 img:"assets/urano.jpg",      fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/uranus2.jpg",  g:.92,  s:"20s", tilt:"97.8°",  day:"17.2 h",  year:"30,589 días", d:"El gigante helado que rota de lado, inclinación de 98°. Sus vientos alcanzan 900 km/h."},
         {n:"Neptuno",               img:"assets/neptuno.jpg",    fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/neptune.jpg",  g:1.19, s:"16s", tilt:"28.3°",  day:"16.1 h",  year:"59,800 días", d:"El más lejano y ventoso. Tormentas de 2,100 km/h. Un azul profundo de metano helado."},
         {n:"Plutón",                img:"assets/pluton.jpg",     fb:"https://s3-us-west-2.amazonaws.com/s.cdpn.io/332937/pluto.jpg",    g:.063, s:"35s", tilt:"122.5°", day:"153.3 h", year:"90,560 días", d:"El planeta enano al borde del sistema solar. En 2006 perdió su título de planeta oficial."},
-        {n:"Balón", isFootball:true, img:"assets/centro-balon-loader.png", fb:"", g:null, s:null, tilt:"—", day:"—", year:"—", d:"El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 km/h al patear. Once contra once."}
+        {n:"Balón",    isFootball:true, img:"assets/centro-balon-loader.png", g:null,s:null,tilt:"—",day:"—",year:"—",d:"El planeta más popular de la Tierra. Redondo, blanco y negro, viaja a 120 km/h al patear. Once contra once."}
     ];
     var cur=0, isSpeaking=false;
 
-    // ── OCULTAR PROFESIONISTAS COMPLETAMENTE (solo nina-2 visible) ──
-    var _profOcultas = ['glow-doctora','glow-ingeniera','glow-maestra','glow-bombera','glow-repartidora','glow-futbolista'];
-    _profOcultas.forEach(function(id){
-        var el=document.getElementById(id);
-        if(el){el.style.transition='opacity 0.4s ease';el.style.opacity='0';}
-    });
 
-    // ── CONTENEDOR ─────────────────────────────────────────────────
+    // ── CONTENEDOR ──────────────────────────────────────────────
     vfx.innerHTML='';
     vfx.style.pointerEvents='auto';
-    // Fondo negro sólido para el modo astronauta (campo de estrellas 3D real)
-    vfx.style.background='#000010';
 
-    // ── KEYFRAMES (una sola vez) ─────────────────────────────────
+    // Keyframe fadeUp (una vez)
     if(!document.getElementById('as2-kf')){
         var sk=document.createElement('style');sk.id='as2-kf';
         sk.textContent=`
-        @keyframes as2FadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes as2Spin{from{background-position:0% center}to{background-position:-200% center}}
-        @keyframes as2SunGlow{0%,100%{box-shadow:inset -25px -12px 45px rgba(255,140,0,.3),0 0 55px 15px rgba(255,160,0,.45)}50%{box-shadow:inset -25px -12px 45px rgba(255,160,0,.4),0 0 75px 25px rgba(255,200,0,.6)}}
-        @keyframes as2Ring{to{transform:rotateZ(360deg)}}
-        @keyframes as2Float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+            @keyframes as2FadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+            @keyframes as2BalonSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         `;
         document.head.appendChild(sk);
     }
 
-    // ── WRAP PRINCIPAL ──────────────────────────────────────────
+    // Traer nina-2 al frente de todas las capas
+    var _elNina2 = document.getElementById('glow-nina');
+    if(_elNina2){ _elNina2.style.zIndex='65'; _elNina2.style.position='absolute'; }
+
+    // ── HTML INTERNO ─────────────────────────────────────────────
     var wrap=document.createElement('div');
-    wrap.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(2px,0.8vh,7px);overflow:hidden;';
+    wrap.style.cssText=`position:absolute;inset:0;display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        gap:clamp(3px,1vh,8px);overflow:hidden;`;
 
     wrap.innerHTML=`
-    <!-- ★ CANVAS CAMPO DE ESTRELLAS 3D ★ -->
     <canvas id="as2-stars" style="position:absolute;inset:0;pointer-events:none;z-index:0;"></canvas>
 
     <!-- Botón TTS -->
     <button id="as2-tts" title="Leer descripción" style="position:absolute;top:clamp(6px,2%,12px);left:clamp(6px,2%,12px);z-index:20;
-        width:clamp(26px,5.5vw,38px);height:clamp(26px,5.5vw,38px);border-radius:50%;
-        border:1.5px solid rgba(255,255,255,.35);background:rgba(0,0,0,.65);
+        width:clamp(28px,6vw,40px);height:clamp(28px,6vw,40px);border-radius:50%;
+        border:1.5px solid rgba(255,255,255,.35);background:rgba(0,0,0,.55);
         backdrop-filter:blur(6px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
         transition:background .2s;touch-action:manipulation;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            style="width:clamp(11px,2.8vw,16px);height:clamp(11px,2.8vw,16px);">
+            style="width:clamp(12px,3vw,18px);height:clamp(12px,3vw,18px);">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
@@ -783,6 +769,8 @@ function efectoAstronauta(vfx) {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px;"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
 
+    
+
         <!-- Planeta 3D con órbita de referencia -->
         <div id="as2-pw" style="position:relative;flex-shrink:0;width:clamp(90px,22vw,155px);height:clamp(90px,22vw,155px);">
             <!-- Elipse de órbita de fondo (decorativa) -->
@@ -797,11 +785,14 @@ function efectoAstronauta(vfx) {
                 animation:as2Spin 12s linear infinite;
                 box-shadow:inset -25px -12px 45px rgba(0,0,0,.85),inset 8px 6px 18px rgba(255,255,255,.08);
                 position:relative;z-index:1;"></div>
-            <!-- Balón (planeta fútbol) -->
-            <div id="as2-fw" style="width:100%;height:100%;border-radius:50%;display:none;
-                align-items:center;justify-content:center;position:absolute;inset:0;z-index:1;">
-                <img id="as2-fimg" src="assets/centro-balon-loader.png"
-                    style="width:88%;height:88%;object-fit:contain;animation:as2Spin 2.5s linear infinite;transform-origin:center;border-radius:50%;">
+                 <!-- Balón -->
+             <div id="as2-pl" style="border-radius:50%;background-size:200% 100%;background-repeat:repeat-x;
+                width:100%;height:100%;
+                animation:as2Spin 12s linear infinite;
+                box-shadow:inset -25px -12px 45px rgba(0,0,0,.85),inset 8px 6px 18px rgba(255,255,255,.08);
+                position:relative;z-index:1;"></div>
+                <img id="as2-fimg" src="assets/balon-tierra.png" style="width:88%;height:88%;
+                   
             </div>
             <!-- Anillo Saturno 3D -->
             <div id="as2-rw" style="position:absolute;top:50%;left:50%;width:170%;height:38%;
