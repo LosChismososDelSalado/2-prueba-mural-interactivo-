@@ -1117,8 +1117,8 @@ function efectoArquitecta(vfx) {
         .ing-barrier { position:absolute; width:10px; height:70%; background:repeating-linear-gradient(45deg,#f1c40f,#f1c40f 6px,#000 6px,#000 12px); top:50%; transform:translateY(-50%); transition:.5s; z-index:5; }
         .ing-barrier.broken { transform:translateY(400px); opacity:0; }
         .ing-board { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin:0 6px; }
-        .ing-slot  { background:#f6e4f7; border:1px solid #ff008c; padding:5px 4px; text-align:center; font-family:'Courier New',monospace;
-                     color:#d952e3; font-size:.6rem; letter-spacing:1px; border-radius:3px; }
+        .ing-slot  { background:#0a0e14; border:1px solid #ff008c; padding:5px 4px; text-align:center; font-family:'Courier New',monospace;
+                     color:##d952e3; font-size:.6rem; letter-spacing:1px; border-radius:3px; }
         .ing-slot.rev { border-color:#00f2ff; color:#00f2ff; background:rgba(0,242,255,.1); }
         .ing-slot-5 { grid-column:1/-1; }
         .ing-input { display:flex; gap:4px; margin:4px 6px; }
