@@ -47,7 +47,7 @@ body {
    BRILLO AL HOVER
    ============================================ */
 .elemento-hover {
-    filter: brightness(1.5) drop-shadow(0 0 20px rgba(255,255,255,0.9)) !important;
+    filter: brightness(1.5) drop-shadow(0 0 20px rgba(230,237,7,1.0)) !important;
     transition: filter 0.2s ease;
 }
 
