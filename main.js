@@ -690,6 +690,12 @@ function efectoFutbolista(vfx) {
 
 // ─── 2. ASTRONAUTA — sistema solar 3D con campo de estrellas profundo ──────
 function efectoAstronauta(vfx) {
+    // ── CAPAS AL FRENTE (Esto es lo que agregaste y está bien) ──
+    const elNina = document.getElementById('glow-nina');
+    if(elNina) {
+        elNina.style.zIndex = '63'; 
+        elNina.style.position = 'absolute';
+    }
     var GOLD = 97000;
     // Texturas locales con fallback a URLs externas
     var P = [
