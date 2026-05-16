@@ -87,34 +87,34 @@ body {
    2. CUADRANTE 1: FONDO Y PIONERAS (1971)
    ============================================ */
 #glow-historia {
-    --neon-color: rgba(176, 0, 255, 1);  /* Color (Morado neón - puedes usar hex o rgba) */
+    --neon-color: rgb(176, 0, 255, 1);  /* Color (Morado neón - puedes usar hex o rgba) */
     --neon-thickness: 18px;              /* Grosor / Difuminado del tubo neón */
-    --neon-bright: 1.0;                  /* Luminosidad en reposo */
-    --neon-bright-max: 1.25;             /* Luminosidad máxima al respirar */
+    --neon-bright: 0.8;                  /* Luminosidad en reposo */
+    --neon-bright-max: 1.0;             /* Luminosidad máxima al respirar */
     animation-delay: 0s;                 /* Punto de inicio del desfase */
 }
 
 #glow-azteca {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(176, 0, 255, 1);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -2s;                /* Desfase interno */
 }
 
 #glow-jugadoras {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 24px;              /* Un poco más grueso por ser un grupo grande */
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.22;
+    --neon-color: rgb(176, 0, 255, 1);
+    --neon-thickness: 15px;              /* Un poco más grueso por ser un grupo grande */
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -1s;
 }
 
 #img-creditos-btn {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 14px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.3;
+    --neon-color: rgb(176, 0, 255, 1);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8
+    --neon-bright-max: 1.0;
     animation-delay: -3s;
 }
 
@@ -122,66 +122,66 @@ body {
    3. CUADRANTE 2: PROFESIONISTAS Y NIÑA (2026)
    ============================================ */
 #glow-bombera {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rg(0,255, 255,0);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -4.5s;              /* Desfase completo frente al cuadrante 1 */
 }
 
 #glow-doctora {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(255,255,0);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -5.2s;
 }
 
 #glow-futbolista {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(0,255,0);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -6s;
 }
 
 #glow-ingeniera {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
+    --neon-color: rgb(0,255,255);
+    --neon-thickness: 0.8px;
     --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-bright-max: 1.0;
     animation-delay: -6.8s;
 }
 
 #glow-maestra {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(128,0,0);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -4.9s;
 }
 
 #glow-repartidora {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(176, 0, 255, 1);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -5.7s;
 }
 
 #glow-nosotras {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 18px;
-    --neon-bright: 1.0;
-    --neon-bright-max: 1.25;
+    --neon-color: rgb(255,136,0);
+    --neon-thickness: 10px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -7.2s;
 }
 
 #glow-nina {
-    --neon-color: rgba(176, 0, 255, 1);
-    --neon-thickness: 20px;
-    --neon-bright: 1.05;
-    --neon-bright-max: 1.32;
+    --neon-color: rgb(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 0.8;
+    --neon-bright-max: 1.0;
     animation-delay: -8s;
 }
 
@@ -190,7 +190,7 @@ body {
    ============================================ */
 .elemento-hover {
     /* Mantiene su color neón personalizado estático de fondo y añade el destello blanco puro encima */
-    filter: brightness(1.35) 
+    filter: brightness(0.80) 
             drop-shadow(0 0 calc(var(--neon-thickness) * 0.5) var(--neon-color)) 
             drop-shadow(0 0 10px #ffffff) 
             drop-shadow(0 0 25px #ffffff) !important;
