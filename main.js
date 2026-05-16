@@ -1916,333 +1916,328 @@ Object.keys(zonaData).forEach(id => {
 // ==========================================
 // --- EFECTO CORAZONES (zona-nosotras) ---
 // ==========================================
+const GalaxiaCorazones = (() => {
 
-const frasesCorazones = [
-    { t: "DEL OLVIDO A LA HISTORIA",                              s: "El rescate de la identidad de las pioneras de 1971",       c: "#00ffcc", f: "'Bebas Neue'",        mp3: "assets/del-olvido.mp3",    img: "assets/corazon-1.png"  },
-    { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si-llega-una.mp3",  img: "assets/corazon-2.png"  },
-    { t: "TU FUERZA INSPIRA A LA NIÑA QUE HOY TE MIRA",          s: "Conexión entre la niña y las mujeres del mural",           c: "#ff3399", f: "'Caveat'",            mp3: "assets/tu-fuerza.mp3",     img: "assets/corazon-3.png"  },
-    { t: "AYER REBELDES, HOY EJEMPLO",                            s: "Del estigma de 1971 al reconocimiento del 2026",           c: "#cc33ff", f: "'Playfair Display'",  mp3: "assets/ayer-rebeldes.mp3", img: "assets/corazon-4.png"  },
-    { t: "HOY NUESTRA VOZ NO TIENE SILENCIO",                     s: "El fin del anonimato histórico",                           c: "#ffff00", f: "'Montserrat'",        mp3: "assets/hoy-nuestra.mp3",   img: "assets/corazon-5.png"  },
-    { t: "EL CAMPO DE JUEGO HOY ES NUESTRO",                      s: "Reclamo de los espacios profesionales",                    c: "#00ff99", f: "'Bebas Neue'",        mp3: "assets/el-campo.mp3",      img: "assets/corazon-6.png"  },
-    { t: "CAMINAMOS SOBRE LOS PASOS DE LAS QUE NO SE RINDIERON",  s: "Homenaje a las pioneras de 1971",                         c: "#ff9900", f: "'Permanent Marker'",  mp3: "assets/caminamos.mp3",     img: "assets/corazon-7.png"  },
-    { t: "SOMOS EL GRITO DE LAS QUE NO PUDIERON ALZAR LA VOZ",    s: "Justicia histórica para las borradas",                     c: "#66ffff", f: "'Caveat'",            mp3: "assets/somos-el.mp3",      img: "assets/corazon-8.png"  },
-    { t: "ROMPE EL TECHO DE CRISTAL CON LA FUERZA DE TUS SUEÑOS", s: "Superación de barreras laborales",                        c: "#ff66cc", f: "'Montserrat'",        mp3: "assets/rompe-el.mp3",      img: "assets/corazon-9.png"  },
-    { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas Épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png" },
-    { t: "MIS SUEÑOS SON VÁLIDOS, Y MEREZCO LUCHAR POR ELLOS",    s: "Empoderamiento frente a los prejuicios",                  c: "#ff3333", f: "'Bebas Neue'",        mp3: "assets/mis-suenos.mp3",    img: "assets/corazon-11.png" },
-    { t: "NACISTE PARA HACER HISTORIA, NO PARA VERLA PASAR",      s: "Invitación a ser parte activa del cambio",                c: "#33ffcc", f: "'Permanent Marker'",  mp3: "assets/naciste.mp3",       img: "assets/corazon-12.png" },
-    { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El Éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png" },
-    { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de dÉcadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png" },
-    { t: "EL FUTURO TIENE NOMBRE DE MUJER Y FUERZA DE GUERRERA",  s: "Visión de esperanza y liderazgo",                         c: "#ffaa00", f: "'Playfair Display'",  mp3: "assets/el-futuro.mp3",     img: "assets/corazon-15.png" },
-    { t: "MUJERES DE LA PAZ, EJEMPLO DE LUCHA Y GRANDEZA",        s: "Trabajadoras, valientes y dueñas de su propio destino",   c: "#ff6699", f: "'Permanent Marker'",  mp3: "assets/historia-1.mp3",    img: "assets/corazon-base.png", esBase: true },
-];
+    // --- FRASES ---
+    const frasesCorazones = [
+        { t: "DEL OLVIDO A LA HISTORIA",                              s: "El rescate de la identidad de las pioneras de 1971",       c: "#00ffcc", f: "'Bebas Neue'",        mp3: "assets/del-olvido.mp3",    img: "assets/corazon-1.png"  },
+        { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si-llega-una.mp3",  img: "assets/corazon-2.png"  },
+        { t: "TU FUERZA INSPIRA A LA NIÑA QUE HOY TE MIRA",          s: "Conexión entre la niña y las mujeres del mural",           c: "#ff3399", f: "'Caveat'",            mp3: "assets/tu-fuerza.mp3",     img: "assets/corazon-3.png"  },
+        { t: "AYER REBELDES, HOY EJEMPLO",                            s: "Del estigma de 1971 al reconocimiento del 2026",           c: "#cc33ff", f: "'Playfair Display'",  mp3: "assets/ayer-rebeldes.mp3", img: "assets/corazon-4.png"  },
+        { t: "HOY NUESTRA VOZ NO TIENE SILENCIO",                     s: "El fin del anonimato histórico",                           c: "#ffff00", f: "'Montserrat'",        mp3: "assets/hoy-nuestra.mp3",   img: "assets/corazon-5.png"  },
+        { t: "EL CAMPO DE JUEGO HOY ES NUESTRO",                      s: "Reclamo de los espacios profesionales",                    c: "#00ff99", f: "'Bebas Neue'",        mp3: "assets/el-campo.mp3",      img: "assets/corazon-6.png"  },
+        { t: "CAMINAMOS SOBRE LOS PASOS DE LAS QUE NO SE RINDIERON",  s: "Homenaje a las pioneras de 1971",                         c: "#ff9900", f: "'Permanent Marker'",  mp3: "assets/caminamos.mp3",     img: "assets/corazon-7.png"  },
+        { t: "SOMOS EL GRITO DE LAS QUE NO PUDIERON ALZAR LA VOZ",    s: "Justicia histórica para las borradas",                    c: "#66ffff", f: "'Caveat'",            mp3: "assets/somos-el.mp3",      img: "assets/corazon-8.png"  },
+        { t: "ROMPE EL TECHO DE CRISTAL CON LA FUERZA DE TUS SUEÑOS", s: "Superación de barreras laborales",                        c: "#ff66cc", f: "'Montserrat'",        mp3: "assets/rompe-el.mp3",      img: "assets/corazon-9.png"  },
+        { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png" },
+        { t: "MIS SUEÑOS SON VÁLIDOS, Y MEREZCO LUCHAR POR ELLOS",    s: "Empoderamiento frente a los prejuicios",                  c: "#ff3333", f: "'Bebas Neue'",        mp3: "assets/mis-suenos.mp3",    img: "assets/corazon-11.png" },
+        { t: "NACISTE PARA HACER HISTORIA, NO PARA VERLA PASAR",      s: "Invitación a ser parte activa del cambio",                c: "#33ffcc", f: "'Permanent Marker'",  mp3: "assets/naciste.mp3",       img: "assets/corazon-12.png" },
+        { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png" },
+        { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de décadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png" },
+        { t: "EL FUTURO TIENE NOMBRE DE MUJER Y FUERZA DE GUERRERA",  s: "Visión de esperanza y liderazgo",                         c: "#ffaa00", f: "'Playfair Display'",  mp3: "assets/el-futuro.mp3",     img: "assets/corazon-15.png" },
+        { t: "MUJERES DE LA PAZ, EJEMPLO DE LUCHA Y GRANDEZA",        s: "Trabajadoras, valientes y dueñas de su propio destino",   c: "#ff6699", f: "'Permanent Marker'",  mp3: "assets/historia-1.mp3",    img: "assets/corazon-base.png", esBase: true },
+    ];
 
-let corazonesActivo    = false;
-let corazonesRaf       = null;
-let corazonesAbiertos  = 0;
-let audioCorazonActual = null;
-let corazonFraseVisible = false;
+    // --- ESTADO PRIVADO ---
+    let corazonesActivo     = false;
+    let corazonesRaf        = null;
+    let corazonesAbiertos   = 0;
+    let audioCorazonActual  = null;
+    let corazonFraseVisible = false;
 
-// Audio elegante de colisión entre burbujas / rebotes de fondo
-const _actx = window.AudioContext ? new AudioContext() : null;
-function sonarColision() {
-    if (!_actx) return;
-    try {
-        const o = _actx.createOscillator(), g = _actx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(1200, _actx.currentTime);
-        o.frequency.exponentialRampToValueAtTime(600, _actx.currentTime + 0.18);
-        g.gain.setValueAtTime(0.06, _actx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.22);
-        o.connect(g); g.connect(_actx.destination);
-        o.start(); o.stop(_actx.currentTime + 0.22);
-    } catch(e) {}
-}
+    // --- AUDIO ---
+    const _actx = window.AudioContext ? new AudioContext() : null;
 
-// NUEVO: Sonido característico de Burbuja Explotando (Pop) al hacer Click
-function sonarPopBurbuja() {
-    if (!_actx) return;
-    try {
-        const o = _actx.createOscillator(), g = _actx.createGain();
-        o.type = 'sine'; 
-        o.frequency.setValueAtTime(450, _actx.currentTime);
-        o.frequency.exponentialRampToValueAtTime(1300, _actx.currentTime + 0.07);
-        g.gain.setValueAtTime(0.25, _actx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.07);
-        o.connect(g); g.connect(_actx.destination);
-        o.start(); o.stop(_actx.currentTime + 0.07);
-    } catch(e) {}
-}
-
-// NUEVO: Inyección de estilos CSS dinámicos para los fragmentos de la explosión y el latido limpio
-if (!document.getElementById('estilos-explosiones-corazones')) {
-    const style = document.createElement('style');
-    style.id = 'estilos-explosiones-corazones';
-    style.textContent = `
-        @keyframes corazonLatidoLimpio {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            40% { transform: translate(-50%, -50%) scale(1.07); }
-            60% { transform: translate(-50%, -50%) scale(1.03); }
-        }
-        .fragmento-explosión {
-            position: absolute;
-            width: 7px;
-            height: 7px;
-            pointer-events: none;
-            z-index: 150;
-            animation: animarFragmento 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        @keyframes animarFragmento {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translate(var(--fx), var(--fy)) rotate(540deg) scale(0); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// NUEVO: Crea la dispersión geométrica de fragmentos sin rastros de glow borrosos
-function crearExplosionLimpia(x, y, cont) {
-    const coloresParticulas = ['#38bdf8', '#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#ff71ce'];
-    for (let i = 0; i < 24; i++) {
-        const frag = document.createElement('div');
-        frag.classList.add('fragmento-explosión');
-        
-        const angulo = Math.random() * Math.PI * 2;
-        const distancia = 40 + Math.random() * 90;
-        
-        frag.style.setProperty('--fx', Math.cos(angulo) * distancia + 'px');
-        frag.style.setProperty('--fy', Math.sin(angulo) * distancia + 'px');
-        frag.style.backgroundColor = coloresParticulas[Math.floor(Math.random() * coloresParticulas.length)];
-        frag.style.borderRadius = Math.random() > 0.5 ? '0%' : '50%'; 
-        
-        frag.style.left = `${x}px`;
-        frag.style.top = `${y}px`;
-        
-        cont.appendChild(frag);
-        setTimeout(() => frag.remove(), 750);
+    function sonarColision() {
+        if (!_actx) return;
+        try {
+            const o = _actx.createOscillator(), g = _actx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(1200, _actx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(600, _actx.currentTime + 0.18);
+            g.gain.setValueAtTime(0.06, _actx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.22);
+            o.connect(g); g.connect(_actx.destination);
+            o.start(); o.stop(_actx.currentTime + 0.22);
+        } catch(e) {}
     }
-}
 
-function activarGalaxia() {
-    if (corazonesActivo) return;
-    corazonesActivo   = true;
-    corazonesAbiertos = 0;
-    corazonFraseVisible = false;
-    pausarAmbiente();
+    function sonarPopBurbuja() {
+        if (!_actx) return;
+        try {
+            const o = _actx.createOscillator(), g = _actx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(450, _actx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(1300, _actx.currentTime + 0.07);
+            g.gain.setValueAtTime(0.25, _actx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.07);
+            o.connect(g); g.connect(_actx.destination);
+            o.start(); o.stop(_actx.currentTime + 0.07);
+        } catch(e) {}
+    }
 
-    let forzarCierreBaseGlobal = null; 
-
-    document.querySelectorAll('.layer').forEach(l => {
-        l.dataset.filtroAnterior = l.style.filter || '';
-        l.style.transition = 'filter 0.6s ease';
-        l.style.filter = 'blur(5px) brightness(0.30)';
-    });
-    document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = 'none');
-
-    const overlay   = document.getElementById('galaxia-overlay');
-    const contFr    = document.getElementById('frases-container');
-    const btnCerrar = document.getElementById('cerrar-galaxia');
-
-    overlay.style.display = 'block';
-    setTimeout(() => overlay.style.opacity = '1', 10);
-    btnCerrar.style.display = 'flex';
-    btnCerrar.onclick = cerrarGalaxia;
-
-    const cont = document.getElementById('mural-container');
-    const W    = cont.offsetWidth;
-    const H    = cont.offsetHeight;
-    const SIZE = Math.round(W * 0.07);
-
-    // Panel de frase
-    const frasePanel = document.createElement('div');
-    frasePanel.id = 'corazon-frase-panel';
-    frasePanel.style.cssText = `position:absolute;left:50%;top:25%;transform:translateX(-50%);
-        z-index:130;text-align:center;max-width:70%;pointer-events:none;
-        opacity:0;transition:opacity 0.4s ease;`;
-    contFr.appendChild(frasePanel);
-
-    // Corazón base (MODIFICADO: Se elimina el filter drop-shadow y se cambia la animación de latido a una limpia)
-    const baseData = frasesCorazones.find(f => f.esBase);
-    const baseEl   = document.createElement('div');
-    baseEl.id      = 'corazon-base-el';
-    baseEl.style.cssText = `position:absolute;left:${W/2}px;top:${H/2}px;
-        width:${SIZE*1.2}px;height:${SIZE*1.2}px;transform:translate(-50%,-50%);
-        z-index:122;pointer-events:none;cursor:default;
-        animation:corazonLatidoLimpio 1.8s ease-in-out infinite;
-        opacity:0.95;`;
-    baseEl.innerHTML = `<img src="${baseData.img}" style="width:100%;height:100%;object-fit:contain;"
-        onerror="this.style.fontSize='${SIZE*1.1}px';this.style.textAlign='center';this.style.display='block';this.textContent='💜';">`;
-    contFr.appendChild(baseEl);
-
-    const flotantes = frasesCorazones.filter(f => !f.esBase);
-    const objs = [];
-
-    flotantes.forEach((data) => {
-        const el = document.createElement('div');
-        // MODIFICADO: Limpieza completa de filtros de sombras o brillos iniciales
-        el.style.cssText = `position:absolute;
-            width:${SIZE}px;height:${SIZE}px;
-            transform:translate(-50%,-50%);
-            z-index:121;cursor:pointer;pointer-events:auto;
-            user-select:none;`;
-        
-        el.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">`;
-        contFr.appendChild(el);
-
-        // Distribución física inicial conservada intacta
-        const ang = Math.random() * Math.PI * 2;
-        const rad = (Math.min(W, H) * 0.18) + Math.random() * (Math.min(W, H) * 0.25);
-        const px  = (W / 2) + Math.cos(ang) * rad;
-        const py  = (H / 2) + Math.sin(ang) * rad;
-
-        const vel = 1.2 + Math.random() * 1.2;
-        const vAng = Math.random() * Math.PI * 2;
-
-        const o = {
-            el: el,
-            data: data,
-            x: px, y: py,
-            vx: Math.cos(vAng) * vel,
-            vy: Math.sin(vAng) * vel,
-            r: SIZE / 2,
-            explotado: false
-        };
-
-        // ACCIÓN DEL CLICK OPTIMIZADA CON LA NUEVA EXPLOSIÓN Y EL SONIDO POP
-        el.onclick = (e) => {
-            e.stopPropagation();
-            if (o.explotado) return;
-            o.explotado = true;
-
-            // 1. Ejecutar el nuevo sonido de burbuja
-            sonarPopBurbuja();
-
-            // 2. Detonar la dispersión de fragmentos geométricos en la posición del click
-            crearExplosionLimpia(o.x, o.y, contFr);
-
-            // Ocultar el elemento de manera inmediata y limpia sin transiciones borrosas
-            el.style.pointerEvents = 'none';
-            el.style.display = 'none';
-
-            // Tu lógica de negocio original para abrir la frase se mantiene intacta
-            corazonesAbiertos++;
-            mostrarFraseCorazon(o.data);
-        };
-
-        objs.push(o);
-    });
-
-    // Tu ciclo de renderizado físico (Física de rebotes) continúa trabajando exactamente igual
-    function update() {
-        if (!corazonesActivo) return;
-
-        for (let i = 0; i < objs.length; i++) {
-            const o = objs[i];
-            if (o.explotado) continue;
-
-            o.x += o.vx;
-            o.y += o.vy;
-
-            // Rebotes contra los márgenes de la pantalla
-            if (o.x - o.r < 0)   { o.x = o.r;   o.vx *= -1; sonarColision(); }
-            if (o.x + o.r > W)   { o.x = W - o.r; o.vx *= -1; sonarColision(); }
-            if (o.y - o.r < 0)   { o.y = o.r;   o.vy *= -1; sonarColision(); }
-            if (o.y + o.r > H)   { o.y = H - o.r; o.vy *= -1; sonarColision(); }
-
-            // Rebotes contra el corazón base del centro
-            const dxBase = o.x - (W / 2);
-            const dyBase = o.y - (H / 2);
-            const distBase = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
-            const minDistBase = o.r + (SIZE * 0.6);
-
-            if (distBase < minDistBase) {
-                const nx = dxBase / distBase;
-                const ny = dyBase / distBase;
-                o.x = (W / 2) + nx * minDistBase;
-                const dot = o.vx * nx + o.vy * ny;
-                o.vx -= 2 * dot * nx;
-                o.vy -= 2 * dot * ny;
-                sonarColision();
+    // --- ESTILOS CSS DINÁMICOS ---
+    if (!document.getElementById('estilos-explosiones-corazones')) {
+        const style = document.createElement('style');
+        style.id = 'estilos-explosiones-corazones';
+        style.textContent = `
+            @keyframes corazonLatidoLimpio {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                40%       { transform: translate(-50%, -50%) scale(1.07); }
+                60%       { transform: translate(-50%, -50%) scale(1.03); }
             }
+            .fragmento-explosion {
+                position: absolute;
+                width: 7px;
+                height: 7px;
+                pointer-events: none;
+                z-index: 150;
+                animation: animarFragmento 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            }
+            @keyframes animarFragmento {
+                0%   { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+                100% { transform: translate(var(--fx), var(--fy)) rotate(540deg) scale(0); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
-            // Colisiones elásticas entre los propios corazones flotantes
-            for (let j = i + 1; j < objs.length; j++) {
-                const o2 = objs[j];
-                if (o2.explotado) continue;
+    // --- EXPLOSIÓN DE FRAGMENTOS ---
+    function crearExplosionLimpia(x, y, cont) {
+        const coloresParticulas = ['#38bdf8', '#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#ff71ce'];
+        for (let i = 0; i < 24; i++) {
+            const frag = document.createElement('div');
+            frag.classList.add('fragmento-explosion');
 
-                const dx = o2.x - o.x;
-                const dy = o2.y - o.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const minDist = o.r + o2.r;
+            const angulo    = Math.random() * Math.PI * 2;
+            const distancia = 40 + Math.random() * 90;
 
-                if (dist < minDist) {
-                    const nx = dx / dist;
-                    const ny = dy / dist;
-                    const kx = o.vx - o2.vx;
-                    const ky = o.vy - o2.vy;
-                    const p = nx * kx + ny * ky;
+            frag.style.setProperty('--fx', Math.cos(angulo) * distancia + 'px');
+            frag.style.setProperty('--fy', Math.sin(angulo) * distancia + 'px');
+            frag.style.backgroundColor = coloresParticulas[Math.floor(Math.random() * coloresParticulas.length)];
+            frag.style.borderRadius     = Math.random() > 0.5 ? '0%' : '50%';
+            frag.style.left             = `${x}px`;
+            frag.style.top              = `${y}px`;
 
-                    if (p > 0) {
-                        o.vx -= p * nx;
-                        o.vy -= p * ny;
-                        o2.vx += p * nx;
-                        o2.vy += p * ny;
-                        sonarColision();
+            cont.appendChild(frag);
+            setTimeout(() => frag.remove(), 750);
+        }
+    }
+
+    // --- ACTIVAR ---
+    function activarGalaxia() {
+        if (corazonesActivo) return;
+        corazonesActivo     = true;
+        corazonesAbiertos   = 0;
+        corazonFraseVisible = false;
+        pausarAmbiente();
+
+        document.querySelectorAll('.layer').forEach(l => {
+            l.dataset.filtroAnterior = l.style.filter || '';
+            l.style.transition = 'filter 0.6s ease';
+            l.style.filter     = 'blur(5px) brightness(0.30)';
+        });
+        document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = 'none');
+
+        const overlay   = document.getElementById('galaxia-overlay');
+        const contFr    = document.getElementById('frases-container');
+        const btnCerrar = document.getElementById('cerrar-galaxia');
+
+        overlay.style.display = 'block';
+        setTimeout(() => overlay.style.opacity = '1', 10);
+        btnCerrar.style.display = 'flex';
+        btnCerrar.onclick = cerrarGalaxia;
+
+        const cont = document.getElementById('mural-container');
+        const W    = cont.offsetWidth;
+        const H    = cont.offsetHeight;
+        const SIZE = Math.round(W * 0.07);
+
+        // Panel de frase
+        const frasePanel = document.createElement('div');
+        frasePanel.id = 'corazon-frase-panel';
+        frasePanel.style.cssText = `position:absolute;left:50%;top:25%;transform:translateX(-50%);
+            z-index:130;text-align:center;max-width:70%;pointer-events:none;
+            opacity:0;transition:opacity 0.4s ease;`;
+        contFr.appendChild(frasePanel);
+
+        // Corazón base
+        const baseData = frasesCorazones.find(f => f.esBase);
+        const baseEl   = document.createElement('div');
+        baseEl.id      = 'corazon-base-el';
+        baseEl.style.cssText = `position:absolute;left:${W/2}px;top:${H/2}px;
+            width:${SIZE*1.2}px;height:${SIZE*1.2}px;transform:translate(-50%,-50%);
+            z-index:122;pointer-events:none;cursor:default;
+            animation:corazonLatidoLimpio 1.8s ease-in-out infinite;
+            opacity:0.95;`;
+        baseEl.innerHTML = `<img src="${baseData.img}" style="width:100%;height:100%;object-fit:contain;"
+            onerror="this.style.fontSize='${SIZE*1.1}px';this.style.textAlign='center';this.style.display='block';this.textContent='💜';">`;
+        contFr.appendChild(baseEl);
+
+        // Corazones flotantes
+        const flotantes = frasesCorazones.filter(f => !f.esBase);
+        const objs      = [];
+
+        flotantes.forEach((data) => {
+            const el = document.createElement('div');
+            el.style.cssText = `position:absolute;
+                width:${SIZE}px;height:${SIZE}px;
+                transform:translate(-50%,-50%);
+                z-index:121;cursor:pointer;pointer-events:auto;
+                user-select:none;`;
+            el.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">`;
+            contFr.appendChild(el);
+
+            const ang  = Math.random() * Math.PI * 2;
+            const rad  = (Math.min(W, H) * 0.18) + Math.random() * (Math.min(W, H) * 0.25);
+            const px   = (W / 2) + Math.cos(ang) * rad;
+            const py   = (H / 2) + Math.sin(ang) * rad;
+            const vel  = 1.2 + Math.random() * 1.2;
+            const vAng = Math.random() * Math.PI * 2;
+
+            const o = {
+                el: el, data: data,
+                x: px, y: py,
+                vx: Math.cos(vAng) * vel,
+                vy: Math.sin(vAng) * vel,
+                r: SIZE / 2,
+                explotado: false
+            };
+
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (o.explotado) return;
+                o.explotado = true;
+
+                sonarPopBurbuja();
+                crearExplosionLimpia(o.x, o.y, contFr);
+
+                el.style.pointerEvents = 'none';
+                el.style.display       = 'none';
+
+                corazonesAbiertos++;
+                mostrarFraseCorazon(o.data);
+            };
+
+            objs.push(o);
+        });
+
+        // Física de rebotes
+        function update() {
+            if (!corazonesActivo) return;
+
+            for (let i = 0; i < objs.length; i++) {
+                const o = objs[i];
+                if (o.explotado) continue;
+
+                o.x += o.vx;
+                o.y += o.vy;
+
+                if (o.x - o.r < 0)    { o.x = o.r;       o.vx *= -1; sonarColision(); }
+                if (o.x + o.r > W)    { o.x = W - o.r;   o.vx *= -1; sonarColision(); }
+                if (o.y - o.r < 0)    { o.y = o.r;       o.vy *= -1; sonarColision(); }
+                if (o.y + o.r > H)    { o.y = H - o.r;   o.vy *= -1; sonarColision(); }
+
+                const dxBase    = o.x - (W / 2);
+                const dyBase    = o.y - (H / 2);
+                const distBase  = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
+                const minDistBase = o.r + (SIZE * 0.6);
+
+                if (distBase < minDistBase) {
+                    const nx  = dxBase / distBase;
+                    const ny  = dyBase / distBase;
+                    o.x       = (W / 2) + nx * minDistBase;
+                    const dot = o.vx * nx + o.vy * ny;
+                    o.vx -= 2 * dot * nx;
+                    o.vy -= 2 * dot * ny;
+                    sonarColision();
+                }
+
+                for (let j = i + 1; j < objs.length; j++) {
+                    const o2 = objs[j];
+                    if (o2.explotado) continue;
+
+                    const dx      = o2.x - o.x;
+                    const dy      = o2.y - o.y;
+                    const dist    = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = o.r + o2.r;
+
+                    if (dist < minDist) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        const kx = o.vx - o2.vx;
+                        const ky = o.vy - o2.vy;
+                        const p  = nx * kx + ny * ky;
+
+                        if (p > 0) {
+                            o.vx  -= p * nx;
+                            o.vy  -= p * ny;
+                            o2.vx += p * nx;
+                            o2.vy += p * ny;
+                            sonarColision();
+                        }
                     }
                 }
+
+                o.el.style.left = o.x + 'px';
+                o.el.style.top  = o.y + 'px';
             }
 
-            o.el.style.left = o.x + 'px';
-            o.el.style.top  = o.y + 'px';
+            corazonesRaf = requestAnimationFrame(update);
         }
 
         corazonesRaf = requestAnimationFrame(update);
     }
 
-    corazonesRaf = requestAnimationFrame(update);
-}
-Usa el código con precaución.
-function cerrarGalaxia() {
-    if (!corazonesActivo) return;
-    corazonesActivo = false;
-    if (corazonesRaf) { cancelAnimationFrame(corazonesRaf); corazonesRaf = null; }
-    if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
+    // --- CERRAR ---
+    function cerrarGalaxia() {
+        if (!corazonesActivo) return;
+        corazonesActivo = false;
+        if (corazonesRaf)       { cancelAnimationFrame(corazonesRaf); corazonesRaf = null; }
+        if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
 
-    document.querySelectorAll('.layer').forEach(l => {
-        l.style.filter = l.dataset.filtroAnterior || '';
-        delete l.dataset.filtroAnterior;
-    });
+        document.querySelectorAll('.layer').forEach(l => {
+            l.style.filter = l.dataset.filtroAnterior || '';
+            delete l.dataset.filtroAnterior;
+        });
 
-    const overlay   = document.getElementById('galaxia-overlay');
-    const contFr    = document.getElementById('frases-container');
-    const btnCerrar = document.getElementById('cerrar-galaxia');
+        const overlay   = document.getElementById('galaxia-overlay');
+        const contFr    = document.getElementById('frases-container');
+        const btnCerrar = document.getElementById('cerrar-galaxia');
 
-    // Desvincular eventos para liberar memoria
-    contFr.onclick = null;
-    contFr.ontouchstart = null;
+        contFr.onclick      = null;
+        contFr.ontouchstart = null;
 
-    overlay.style.opacity = '0';
-    setTimeout(() => { 
-        overlay.style.display = 'none'; 
-        contFr.innerHTML = ''; 
-        contFr.style.pointerEvents = 'none';
-    }, 600);
-    btnCerrar.style.display = 'none';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display        = 'none';
+            contFr.innerHTML             = '';
+            contFr.style.pointerEvents   = 'none';
+        }, 600);
 
-    document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
-    reanudarAmbiente();
-}
+        btnCerrar.style.display = 'none';
+        document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
+        reanudarAmbiente();
+    }
+
+    // --- API PÚBLICA ---
     return { activar: activarGalaxia, cerrar: cerrarGalaxia };
+
 })();
 
 // ==========================================
 // --- SOPORTE MÓVIL COMPLETO ---
 // ==========================================
-const GalaxiaCorazones = (() => {
-// Prevenir zoom con doble toque en iOS
 document.addEventListener('touchstart', e => {
     if (e.touches.length > 1) e.preventDefault();
 }, { passive: false });
 
+let lastTouchEnd = 0;
+document.addEventListener('touchend', e => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) e.preventDefault();
+    lastTouchEnd = now;
+}, { passive: false });
 let lastTouchEnd = 0;
 document.addEventListener('touchend', e => {
     const now = Date.now();
