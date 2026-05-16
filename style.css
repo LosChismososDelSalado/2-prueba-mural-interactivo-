@@ -57,86 +57,145 @@ body {
     transition: filter 0.2s ease;
 }
 
-/* HOVER GRUPO PROFESIONISTAS Y NIÑA — COLOR MORADO NEÓN */
-#glow-doctora.elemento-hover,
-#glow-ingeniera.elemento-hover,
-#glow-maestra.elemento-hover,
-#glow-bombera.elemento-hover,
-#glow-repartidora.elemento-hover,
-#glow-futbolista.elemento-hover,
-#glow-nina.elemento-hover {
-    filter: brightness(1.3) 
-            drop-shadow(0 0 6px #ffffff)    /* Núcleo claro */
-            drop-shadow(0 0 18px #b000ff)   /* Aura morada viva */
-            drop-shadow(0 0 35px #7000cc) !important; /* Dispersión profunda */
-    transition: filter 0.2s ease;
+/* ============================================
+   1. ANIMACIÓN MAESTRA CONFIGURABLE (NEÓN)
+   ============================================ */
+@keyframes respiracion-configurable {
+    0%, 100% {
+        transform: scale(1);
+        /* Usa los parámetros individuales de cada ID */
+        filter: brightness(var(--neon-bright)) 
+                drop-shadow(0 0 calc(var(--neon-thickness) * 0.3) #ffffff)
+                drop-shadow(0 0 var(--neon-thickness) var(--neon-color));
+    }
+    50% {
+        transform: scale(1.012); /* Sutil pulso físico de respiración */
+        filter: brightness(var(--neon-bright-max)) 
+                drop-shadow(0 0 calc(var(--neon-thickness) * 0.5) #ffffff)
+                drop-shadow(0 0 calc(var(--neon-thickness) * 1.8) var(--neon-color));
+    }
+}
+
+/* Asignación de la animación a todos los elementos del mural */
+#glow-historia, #glow-azteca, #glow-jugadoras, #img-creditos-btn,
+#glow-bombera, #glow-doctora, #glow-futbolista, #glow-ingeniera, 
+#glow-maestra, #glow-repartidora, #glow-nosotras, #glow-nina {
+    animation: respiracion-configurable 9s ease-in-out infinite;
 }
 
 /* ============================================
-   ANIMACIONES GLOBALES
+   2. CUADRANTE 1: FONDO Y PIONERAS (1971)
    ============================================ */
-@keyframes respiracion-profunda {
-@keyframes respiracion-profunda {
-    0%, 100% { 
-        transform: scale(1); 
-        filter: brightness(1) drop-shadow(0 0 0px transparent); 
-    }
-    50% { 
-        transform: scale(1.015); /* Sutil pulso de crecimiento */
-        filter: brightness(1.25) 
-                drop-shadow(0 0 8px #ff00b7) 
-                drop-shadow(0 0 25px #ff00b7); /* Expansión rosa magenta */
-    }
+#glow-historia {
+    --neon-color: rgba(176, 0, 255, 1);  /* Color (Morado neón - puedes usar hex o rgba) */
+    --neon-thickness: 18px;              /* Grosor / Difuminado del tubo neón */
+    --neon-bright: 1.0;                  /* Luminosidad en reposo */
+    --neon-bright-max: 1.25;             /* Luminosidad máxima al respirar */
+    animation-delay: 0s;                 /* Punto de inicio del desfase */
 }
 
-@keyframes respiracion-creditos {
-    0%, 16.6%, 33.3%, 50%, 66.6%, 83.3%, 100% { 
-        transform: scale(1); 
-        filter: brightness(1) drop-shadow(0 0 0px transparent); 
-    }
-    2%, 18.6%, 35.3%, 52%, 68.6%, 85.3% { 
-        transform: scale(1.005); 
-        filter: brightness(1.05) drop-shadow(0 0 4px rgba(255, 0, 183, 0.4)); 
-    }
-    7%, 23.6%, 40.3%, 57%, 73.6%, 90.3% { 
-        transform: scale(1.007); 
-        filter: brightness(1.1) 
-                drop-shadow(0 0 6px rgba(255, 0, 183, 0.7)) 
-                drop-shadow(0 0 15px rgba(255, 0, 183, 0.4)); 
-    }
-    12%, 28.6%, 45.3%, 62%, 78.6%, 95.3% { 
-        transform: scale(1); 
-        filter: brightness(1); 
-    }
-}
+#glow-azteca {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -2s;                /* Desfase interno */
 }
 
-.glow-simple { animation: glow-simple 12s ease-in-out infinite; }
-@keyframes glow-simple {
-    0%,100% { filter:brightness(1) drop-shadow(0 0 0px transparent); }
-    8% { filter:brightness(1.4) drop-shadow(0 0 15px rgba(255,255,255,.75)); }
-    16% { filter:brightness(1) drop-shadow(0 0 0px transparent); }
-}
-.glow-double { animation: glow-double 12s ease-in-out infinite; }
-@keyframes glow-double {
-    0%,50%,100% { filter:brightness(1) drop-shadow(0 0 0px transparent); }
-    8%,58% { filter:brightness(1.4) drop-shadow(0 0 15px rgba(255,255,255,.75)); }
-    16%,66% { filter:brightness(1) drop-shadow(0 0 0px transparent); }
+#glow-jugadoras {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 24px;              /* Un poco más grueso por ser un grupo grande */
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.22;
+    animation-delay: -1s;
 }
 
-#glow-historia    { animation:respiracion-profunda 12s ease-in-out infinite; animation-delay:0s; }
-#glow-nosotras    { animation:respiracion-profunda 16s ease-in-out infinite; animation-delay:-6s; }
-#img-creditos-btn { animation:respiracion-creditos 9s ease-in-out infinite;  animation-delay:-3s; }
-#glow-jugadoras   { animation-delay:0s; }
-#glow-azteca      { animation-delay:2s; }
-#glow-bombera     { animation-delay:3s; }
-#glow-doctora     { animation-delay:4s; }
-#glow-futbolista  { animation-delay:5s; }
-#glow-ingeniera   { animation-delay:6s; }
-#glow-maestra     { animation-delay:7s; }
-#glow-repartidora { animation-delay:8s; }
-#glow-nina        { animation-delay:8s; }
+#img-creditos-btn {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 14px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.3;
+    animation-delay: -3s;
+}
 
+/* ============================================
+   3. CUADRANTE 2: PROFESIONISTAS Y NIÑA (2026)
+   ============================================ */
+#glow-bombera {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -4.5s;              /* Desfase completo frente al cuadrante 1 */
+}
+
+#glow-doctora {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -5.2s;
+}
+
+#glow-futbolista {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -6s;
+}
+
+#glow-ingeniera {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -6.8s;
+}
+
+#glow-maestra {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -4.9s;
+}
+
+#glow-repartidora {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -5.7s;
+}
+
+#glow-nosotras {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 18px;
+    --neon-bright: 1.0;
+    --neon-bright-max: 1.25;
+    animation-delay: -7.2s;
+}
+
+#glow-nina {
+    --neon-color: rgba(176, 0, 255, 1);
+    --neon-thickness: 20px;
+    --neon-bright: 1.05;
+    --neon-bright-max: 1.32;
+    animation-delay: -8s;
+}
+
+/* ============================================
+   4. INTERACCIÓN AL HOVER (NÚCLEO BLANCO SOBRE NEÓN)
+   ============================================ */
+.elemento-hover {
+    /* Mantiene su color neón personalizado estático de fondo y añade el destello blanco puro encima */
+    filter: brightness(1.35) 
+            drop-shadow(0 0 calc(var(--neon-thickness) * 0.5) var(--neon-color)) 
+            drop-shadow(0 0 10px #ffffff) 
+            drop-shadow(0 0 25px #ffffff) !important;
+    transition: filter 0.22s ease;
+}
 /* ============================================
    BALÓN
    ============================================ */
