@@ -1921,309 +1921,122 @@ const GalaxiaCorazones = (() => {
 
     // --- FRASES ---
     const frasesCorazones = [
-        { t: "DEL OLVIDO A LA HISTORIA",                              s: "El rescate de la identidad de las pioneras de 1971",       c: "#00ffcc", f: "'Bebas Neue'",        mp3: "assets/del-olvido.mp3",    img: "assets/corazon-1.png",  size: 1.10 },
-        { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si-llega-una.mp3",  img: "assets/corazon-2.png",  size: 0.80 },
-        { t: "TU FUERZA INSPIRA A LA NIÑA QUE HOY TE MIRA",          s: "Conexión entre la niña y las mujeres del mural",           c: "#ff3399", f: "'Caveat'",            mp3: "assets/tu-fuerza.mp3",     img: "assets/corazon-3.png",  size: 0.95 },
-        { t: "AYER REBELDES, HOY EJEMPLO",                            s: "Del estigma de 1971 al reconocimiento del 2026",           c: "#cc33ff", f: "'Playfair Display'",  mp3: "assets/ayer-rebeldes.mp3", img: "assets/corazon-4.png",  size: 1.20 },
-        { t: "HOY NUESTRA VOZ NO TIENE SILENCIO",                     s: "El fin del anonimato histórico",                           c: "#ffff00", f: "'Montserrat'",        mp3: "assets/hoy-nuestra.mp3",   img: "assets/corazon-5.png",  size: 0.75 },
-        { t: "EL CAMPO DE JUEGO HOY ES NUESTRO",                      s: "Reclamo de los espacios profesionales",                    c: "#00ff99", f: "'Bebas Neue'",        mp3: "assets/el-campo.mp3",      img: "assets/corazon-6.png",  size: 1.05 },
-        { t: "CAMINAMOS SOBRE LOS PASOS DE LAS QUE NO SE RINDIERON",  s: "Homenaje a las pioneras de 1971",                         c: "#ff9900", f: "'Permanent Marker'",  mp3: "assets/caminamos.mp3",     img: "assets/corazon-7.png",  size: 0.85 },
-        { t: "SOMOS EL GRITO DE LAS QUE NO PUDIERON ALZAR LA VOZ",    s: "Justicia histórica para las borradas",                    c: "#66ffff", f: "'Caveat'",            mp3: "assets/somos-el.mp3",      img: "assets/corazon-8.png",  size: 1.15 },
-        { t: "ROMPE EL TECHO DE CRISTAL CON LA FUERZA DE TUS SUEÑOS", s: "Superación de barreras laborales",                        c: "#ff66cc", f: "'Montserrat'",        mp3: "assets/rompe-el.mp3",      img: "assets/corazon-9.png",  size: 0.90 },
-        { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png", size: 1.00 },
-        { t: "MIS SUEÑOS SON VÁLIDOS, Y MEREZCO LUCHAR POR ELLOS",    s: "Empoderamiento frente a los prejuicios",                  c: "#ff3333", f: "'Bebas Neue'",        mp3: "assets/mis-suenos.mp3",    img: "assets/corazon-11.png", size: 0.78 },
-        { t: "NACISTE PARA HACER HISTORIA, NO PARA VERLA PASAR",      s: "Invitación a ser parte activa del cambio",                c: "#33ffcc", f: "'Permanent Marker'",  mp3: "assets/naciste.mp3",       img: "assets/corazon-12.png", size: 1.12 },
-        { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png", size: 0.88 },
-        { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de décadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png", size: 1.18 },
-        { t: "EL FUTURO TIENE NOMBRE DE MUJER Y FUERZA DE GUERRERA",  s: "Visión de esperanza y liderazgo",                         c: "#ffaa00", f: "'Playfair Display'",  mp3: "assets/el-futuro.mp3",     img: "assets/corazon-15.png", size: 0.92 },
-        { t: "MUJERES DE LA PAZ, EJEMPLO DE LUCHA Y GRANDEZA",        s: "Trabajadoras, valientes y dueñas de su propio destino",   c: "#ff6699", f: "'Permanent Marker'",  mp3: "assets/historia-1.mp3",   img: "assets/corazon-base.png", size: 1.0, esBase: true },
+        { t: "DEL OLVIDO A LA HISTORIA",                              s: "El rescate de la identidad de las pioneras de 1971",       c: "#00ffcc", f: "'Bebas Neue'",        mp3: "assets/del-olvido.mp3",    img: "assets/corazon-1.png"  },
+        { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si-llega-una.mp3",  img: "assets/corazon-2.png"  },
+        { t: "TU FUERZA INSPIRA A LA NIÑA QUE HOY TE MIRA",          s: "Conexión entre la niña y las mujeres del mural",           c: "#ff3399", f: "'Caveat'",            mp3: "assets/tu-fuerza.mp3",     img: "assets/corazon-3.png"  },
+        { t: "AYER REBELDES, HOY EJEMPLO",                            s: "Del estigma de 1971 al reconocimiento del 2026",           c: "#cc33ff", f: "'Playfair Display'",  mp3: "assets/ayer-rebeldes.mp3", img: "assets/corazon-4.png"  },
+        { t: "HOY NUESTRA VOZ NO TIENE SILENCIO",                     s: "El fin del anonimato histórico",                           c: "#ffff00", f: "'Montserrat'",        mp3: "assets/hoy-nuestra.mp3",   img: "assets/corazon-5.png"  },
+        { t: "EL CAMPO DE JUEGO HOY ES NUESTRO",                      s: "Reclamo de los espacios profesionales",                    c: "#00ff99", f: "'Bebas Neue'",        mp3: "assets/el-campo.mp3",      img: "assets/corazon-6.png"  },
+        { t: "CAMINAMOS SOBRE LOS PASOS DE LAS QUE NO SE RINDIERON",  s: "Homenaje a las pioneras de 1971",                         c: "#ff9900", f: "'Permanent Marker'",  mp3: "assets/caminamos.mp3",     img: "assets/corazon-7.png"  },
+        { t: "SOMOS EL GRITO DE LAS QUE NO PUDIERON ALZAR LA VOZ",    s: "Justicia histórica para las borradas",                    c: "#66ffff", f: "'Caveat'",            mp3: "assets/somos-el.mp3",      img: "assets/corazon-8.png"  },
+        { t: "ROMPE EL TECHO DE CRISTAL CON LA FUERZA DE TUS SUEÑOS", s: "Superación de barreras laborales",                        c: "#ff66cc", f: "'Montserrat'",        mp3: "assets/rompe-el.mp3",      img: "assets/corazon-9.png"  },
+        { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png" },
+        { t: "MIS SUEÑOS SON VÁLIDOS, Y MEREZCO LUCHAR POR ELLOS",    s: "Empoderamiento frente a los prejuicios",                  c: "#ff3333", f: "'Bebas Neue'",        mp3: "assets/mis-suenos.mp3",    img: "assets/corazon-11.png" },
+        { t: "NACISTE PARA HACER HISTORIA, NO PARA VERLA PASAR",      s: "Invitación a ser parte activa del cambio",                c: "#33ffcc", f: "'Permanent Marker'",  mp3: "assets/naciste.mp3",       img: "assets/corazon-12.png" },
+        { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png" },
+        { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de décadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png" },
+        { t: "EL FUTURO TIENE NOMBRE DE MUJER Y FUERZA DE GUERRERA",  s: "Visión de esperanza y liderazgo",                         c: "#ffaa00", f: "'Playfair Display'",  mp3: "assets/el-futuro.mp3",     img: "assets/corazon-15.png" },
+        { t: "MUJERES DE LA PAZ, EJEMPLO DE LUCHA Y GRANDEZA",        s: "Trabajadoras, valientes y dueñas de su propio destino",   c: "#ff6699", f: "'Permanent Marker'",  mp3: "assets/historia-1.mp3",    img: "assets/corazon-base.png", esBase: true },
     ];
 
     // --- ESTADO PRIVADO ---
     let corazonesActivo     = false;
     let corazonesRaf        = null;
+    let corazonesAbiertos   = 0;
     let audioCorazonActual  = null;
-    let fraseAbierta        = false;   // true mientras hay frase+audio activos
-    let objsGlobal          = [];      // referencia global para botón invisible
+    let corazonFraseVisible = false;
 
-    // --- AUDIO SINTÉTICO ---
-    const _actx = window.AudioContext ? new (window.AudioContext || window.webkitAudioContext)() : null;
+    // --- AUDIO ---
+    const _actx = window.AudioContext ? new AudioContext() : null;
 
-    // Brillo suave al rebotar
     function sonarColision() {
         if (!_actx) return;
         try {
             const o = _actx.createOscillator(), g = _actx.createGain();
             o.type = 'sine';
-            o.frequency.setValueAtTime(900, _actx.currentTime);
-            o.frequency.exponentialRampToValueAtTime(400, _actx.currentTime + 0.12);
-            g.gain.setValueAtTime(0.04, _actx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.14);
+            o.frequency.setValueAtTime(1200, _actx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(600, _actx.currentTime + 0.18);
+            g.gain.setValueAtTime(0.06, _actx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.22);
             o.connect(g); g.connect(_actx.destination);
-            o.start(); o.stop(_actx.currentTime + 0.14);
+            o.start(); o.stop(_actx.currentTime + 0.22);
         } catch(e) {}
     }
 
-    // Burbuja explotando — dura ~1 segundo, capas de frecuencias
-    function sonarBurbujaExplosion(colorHex) {
+    function sonarPopBurbuja() {
         if (!_actx) return;
         try {
-            if (_actx.state === 'suspended') _actx.resume();
-            // Capa 1: pop inicial suave
-            const o1 = _actx.createOscillator(), g1 = _actx.createGain();
-            o1.type = 'sine';
-            o1.frequency.setValueAtTime(300, _actx.currentTime);
-            o1.frequency.exponentialRampToValueAtTime(900, _actx.currentTime + 0.06);
-            o1.frequency.exponentialRampToValueAtTime(180, _actx.currentTime + 0.35);
-            g1.gain.setValueAtTime(0.28, _actx.currentTime);
-            g1.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.55);
-            o1.connect(g1); g1.connect(_actx.destination);
-            o1.start(); o1.stop(_actx.currentTime + 0.55);
-            // Capa 2: chispa aguda breve
-            const o2 = _actx.createOscillator(), g2 = _actx.createGain();
-            o2.type = 'triangle';
-            o2.frequency.setValueAtTime(1800, _actx.currentTime + 0.02);
-            o2.frequency.exponentialRampToValueAtTime(600, _actx.currentTime + 0.20);
-            g2.gain.setValueAtTime(0.14, _actx.currentTime + 0.02);
-            g2.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.45);
-            o2.connect(g2); g2.connect(_actx.destination);
-            o2.start(_actx.currentTime + 0.02); o2.stop(_actx.currentTime + 0.45);
-            // Capa 3: eco suave de cierre
-            const o3 = _actx.createOscillator(), g3 = _actx.createGain();
-            o3.type = 'sine';
-            o3.frequency.setValueAtTime(220, _actx.currentTime + 0.30);
-            o3.frequency.exponentialRampToValueAtTime(90, _actx.currentTime + 1.0);
-            g3.gain.setValueAtTime(0.08, _actx.currentTime + 0.30);
-            g3.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 1.0);
-            o3.connect(g3); g3.connect(_actx.destination);
-            o3.start(_actx.currentTime + 0.30); o3.stop(_actx.currentTime + 1.0);
+            const o = _actx.createOscillator(), g = _actx.createGain();
+            o.type = 'sine';
+            o.frequency.setValueAtTime(450, _actx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(1300, _actx.currentTime + 0.07);
+            g.gain.setValueAtTime(0.25, _actx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.07);
+            o.connect(g); g.connect(_actx.destination);
+            o.start(); o.stop(_actx.currentTime + 0.07);
         } catch(e) {}
     }
 
-    // --- INYECTAR ESTILOS (una sola vez) ---
-    if (!document.getElementById('gc-estilos')) {
-        const st = document.createElement('style');
-        st.id = 'gc-estilos';
-        st.textContent = `
-            /* ── Latido con degradado líquido para corazones flotantes ── */
-            @keyframes gc-latido {
-                0%   { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.0) hue-rotate(0deg); }
-                15%  { transform: translate(-50%,-50%) scale(1.13); filter: brightness(1.4) hue-rotate(25deg); }
-                30%  { transform: translate(-50%,-50%) scale(0.97); filter: brightness(1.1) hue-rotate(10deg); }
-                45%  { transform: translate(-50%,-50%) scale(1.08); filter: brightness(1.3) hue-rotate(18deg); }
-                60%  { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.0) hue-rotate(0deg); }
-                100% { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.0) hue-rotate(0deg); }
+    // --- ESTILOS CSS DINÁMICOS ---
+    if (!document.getElementById('estilos-explosiones-corazones')) {
+        const style = document.createElement('style');
+        style.id = 'estilos-explosiones-corazones';
+        style.textContent = `
+            @keyframes corazonLatidoLimpio {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                40%       { transform: translate(-50%, -50%) scale(1.07); }
+                60%       { transform: translate(-50%, -50%) scale(1.03); }
             }
-            /* ── Latido central estático — siempre activo ── */
-            @keyframes gc-latido-base {
-                0%   { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.05) hue-rotate(0deg); }
-                12%  { transform: translate(-50%,-50%) scale(1.16); filter: brightness(1.5) hue-rotate(30deg); }
-                28%  { transform: translate(-50%,-50%) scale(0.96); filter: brightness(1.1) hue-rotate(5deg); }
-                42%  { transform: translate(-50%,-50%) scale(1.10); filter: brightness(1.35) hue-rotate(20deg); }
-                60%  { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.05) hue-rotate(0deg); }
-                100% { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.05) hue-rotate(0deg); }
-            }
-            /* ── Latido base ACTIVO (cuando su frase está abierta) ── */
-            @keyframes gc-latido-base-activo {
-                0%   { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.1) hue-rotate(0deg) drop-shadow(0 0 14px #fff); }
-                12%  { transform: translate(-50%,-50%) scale(1.22); filter: brightness(1.7) hue-rotate(40deg) drop-shadow(0 0 28px #fff); }
-                28%  { transform: translate(-50%,-50%) scale(0.94); filter: brightness(1.2) hue-rotate(8deg)  drop-shadow(0 0 10px #fff); }
-                42%  { transform: translate(-50%,-50%) scale(1.14); filter: brightness(1.5) hue-rotate(25deg) drop-shadow(0 0 20px #fff); }
-                60%  { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.1) hue-rotate(0deg)  drop-shadow(0 0 14px #fff); }
-                100% { transform: translate(-50%,-50%) scale(1.00); filter: brightness(1.1) hue-rotate(0deg)  drop-shadow(0 0 14px #fff); }
-            }
-            /* ── Brillo de colisión entre corazones ── */
-            @keyframes gc-brillo-col {
-                0%   { filter: brightness(2.2) hue-rotate(60deg); }
-                100% { filter: brightness(1.0) hue-rotate(0deg); }
-            }
-            /* ── Partícula de explosión ── */
-            .gc-part {
+            .fragmento-explosion {
                 position: absolute;
-                border-radius: 50%;
+                width: 7px;
+                height: 7px;
                 pointer-events: none;
-                z-index: 155;
-                transform-origin: center;
+                z-index: 150;
+                animation: animarFragmento 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             }
-            /* ── Panel de frase ── */
-            #gc-frase-panel {
-                position: absolute;
-                left: 50%; top: 22%;
-                transform: translateX(-50%);
-                z-index: 135;
-                text-align: center;
-                max-width: clamp(200px, 72%, 620px);
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.45s ease;
-                padding: 0 10px;
-                background: rgba(0,0,0,0.38);
-                border-radius: 16px;
-                padding: 12px 18px;
-                backdrop-filter: blur(6px);
-            }
-            @media (max-width: 768px) and (orientation: portrait) {
-                #gc-frase-panel { top: 14%; max-width: 90%; }
+            @keyframes animarFragmento {
+                0%   { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+                100% { transform: translate(var(--fx), var(--fy)) rotate(540deg) scale(0); opacity: 0; }
             }
         `;
-        document.head.appendChild(st);
+        document.head.appendChild(style);
     }
 
-    // --- EXPLOSIÓN: 30 partículas multicolor en todas direcciones, 1 segundo ---
-    function explosionParticulas(x, y, colorBase, cont) {
-        const paleta = [
-            '#ff0055','#ff6600','#ffcc00','#00ff88','#00ccff',
-            '#aa00ff','#ff00cc','#ffffff','#ff3399','#33ffcc',
-            '#ffff00','#ff4400','#00ffff','#dd00ff','#99ff00',
-            '#ff8800','#0088ff','#ff0088','#44ffaa','#ff44ff'
-        ];
-        for (let i = 0; i < 30; i++) {
-            const p   = document.createElement('div');
-            p.classList.add('gc-part');
-            const ang  = (Math.PI * 2 / 30) * i + (Math.random() - 0.5) * 0.4;
-            const dist = 55 + Math.random() * 110;
-            const size = 5 + Math.random() * 9;
-            const col  = paleta[i % paleta.length];
-            const dur  = 800 + Math.random() * 400; // 0.8 – 1.2 s
-            const tx   = Math.cos(ang) * dist;
-            const ty   = Math.sin(ang) * dist;
-            const spin = (Math.random() - 0.5) * 720;
+    // --- EXPLOSIÓN DE FRAGMENTOS ---
+    function crearExplosionLimpia(x, y, cont) {
+        const coloresParticulas = ['#38bdf8', '#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#ff71ce'];
+        for (let i = 0; i < 24; i++) {
+            const frag = document.createElement('div');
+            frag.classList.add('fragmento-explosion');
 
-            p.style.cssText = `
-                width:${size}px; height:${size}px;
-                background:${col};
-                box-shadow: 0 0 ${size*1.4}px ${col};
-                left:${x}px; top:${y}px;
-                border-radius: ${Math.random() > 0.4 ? '50%' : '3px'};
-            `;
-            cont.appendChild(p);
+            const angulo    = Math.random() * Math.PI * 2;
+            const distancia = 40 + Math.random() * 90;
 
-            // Animación con Web Animations API para mayor control de duración
-            p.animate([
-                { transform: `translate(-50%,-50%) translate(0,0) rotate(0deg) scale(1)`,   opacity: 1 },
-                { transform: `translate(-50%,-50%) translate(${tx*0.6}px,${ty*0.6}px) rotate(${spin*0.5}deg) scale(1.2)`, opacity: 0.9, offset: 0.3 },
-                { transform: `translate(-50%,-50%) translate(${tx}px,${ty}px) rotate(${spin}deg) scale(0)`, opacity: 0 }
-            ], { duration: dur, easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)', fill: 'forwards' });
+            frag.style.setProperty('--fx', Math.cos(angulo) * distancia + 'px');
+            frag.style.setProperty('--fy', Math.sin(angulo) * distancia + 'px');
+            frag.style.backgroundColor = coloresParticulas[Math.floor(Math.random() * coloresParticulas.length)];
+            frag.style.borderRadius     = Math.random() > 0.5 ? '0%' : '50%';
+            frag.style.left             = `${x}px`;
+            frag.style.top              = `${y}px`;
 
-            setTimeout(() => p.remove(), dur + 50);
+            cont.appendChild(frag);
+            setTimeout(() => frag.remove(), 750);
         }
     }
 
-    // --- CANVAS: degradado líquido animado sobre el corazón (hue-rotate via CSS) ---
-    function aplicarDegradadoLiquido(el, colorHex) {
-        // El efecto de color líquido cambiante se logra combinando:
-        // 1. hue-rotate en el keyframe gc-latido (ya lo hace)
-        // 2. Un overlay canvas con gradiente radial animado encima de la img
-        const canvas = document.createElement('canvas');
-        const sz = el.offsetWidth || 60;
-        canvas.width  = sz;
-        canvas.height = sz;
-        canvas.style.cssText = `
-            position:absolute; top:0; left:0; width:100%; height:100%;
-            pointer-events:none; border-radius:50%; mix-blend-mode:color-dodge; opacity:0.55;
-        `;
-        el.style.position = 'relative';
-        el.appendChild(canvas);
-
-        // Parsear color base
-        const r = parseInt(colorHex.slice(1,3),16);
-        const g = parseInt(colorHex.slice(3,5),16);
-        const b = parseInt(colorHex.slice(5,7),16);
-
-        let ang = Math.random() * Math.PI * 2;
-        let raf;
-        function drawLiquid() {
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width, h = canvas.height;
-            ang += 0.025;
-            const cx = w/2 + Math.cos(ang) * w * 0.3;
-            const cy = h/2 + Math.sin(ang * 0.7) * h * 0.3;
-            const grad = ctx.createRadialGradient(cx, cy, 0, w/2, h/2, w * 0.7);
-            const alpha = 0.55 + Math.sin(ang * 1.3) * 0.2;
-            grad.addColorStop(0,   `rgba(${r},${g},${b},${alpha.toFixed(2)})`);
-            grad.addColorStop(0.5, `rgba(${Math.min(255,r+80)},${Math.min(255,g+40)},${b},${(alpha*0.6).toFixed(2)})`);
-            grad.addColorStop(1,   `rgba(0,0,0,0)`);
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(w/2, h/2, w/2, 0, Math.PI*2);
-            ctx.fill();
-            raf = requestAnimationFrame(drawLiquid);
-        }
-        drawLiquid();
-        return () => { cancelAnimationFrame(raf); canvas.remove(); };
-    }
-
-    // --- MOSTRAR FRASE + AUDIO ---
-    // Solo el corazón base lanza el latido activo mientras su audio corre
-    function mostrarFrase(data, baseEl, contFr, onCerrar) {
-        fraseAbierta = true;
-
-        // Latido activo en el corazón base
-        baseEl.style.animation = 'gc-latido-base-activo 1.1s ease-in-out infinite';
-
-        // Detener audio anterior
-        if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-
-        // Reproducir audio de la frase
-        if (data.mp3) {
-            audioCorazonActual = new Audio(data.mp3);
-            audioCorazonActual.play().catch(() => {});
-            audioCorazonActual.onended = () => {
-                baseEl.style.animation = 'gc-latido-base 2.2s ease-in-out infinite';
-            };
-        }
-
-        // Panel de frase
-        let panel = document.getElementById('gc-frase-panel');
-        if (!panel) {
-            panel = document.createElement('div');
-            panel.id = 'gc-frase-panel';
-            contFr.appendChild(panel);
-        }
-        panel.innerHTML = `
-            <div style="font-family:${data.f};font-size:clamp(0.85rem,2.6vw,1.5rem);
-                color:${data.c};text-shadow:0 0 20px ${data.c},0 0 8px rgba(255,255,255,0.6);
-                letter-spacing:.07em;line-height:1.25;margin-bottom:8px;">${data.t}</div>
-            <div style="font-size:clamp(0.52rem,1.5vw,0.88rem);color:rgba(255,255,255,.85);
-                font-family:'Montserrat',sans-serif;letter-spacing:.04em;">${data.s}</div>
-            <div style="margin-top:10px;font-size:clamp(0.45rem,1.2vw,0.72rem);
-                color:rgba(255,255,255,.45);font-family:sans-serif;">
-                Toca cualquier parte para continuar
-            </div>
-        `;
-        panel.style.opacity = '1';
-
-        // Tap en cualquier parte → cerrar frase y volver a corazones
-        function cerrarFrase(e) {
-            e.stopPropagation();
-            fraseAbierta = false;
-            panel.style.opacity = '0';
-            baseEl.style.animation = 'gc-latido-base 2.2s ease-in-out infinite';
-            if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-            contFr.removeEventListener('click',     cerrarFrase);
-            contFr.removeEventListener('touchstart', cerrarFrase);
-            if (onCerrar) onCerrar();
-        }
-        // Delay mínimo para que el click que explotó no dispare el cierre inmediato
-        setTimeout(() => {
-            contFr.addEventListener('click',     cerrarFrase, { once: true });
-            contFr.addEventListener('touchstart', cerrarFrase, { once: true, passive: false });
-        }, 350);
-    }
-
-    // --- ACTIVAR GALAXIA ---
+    // --- ACTIVAR ---
     function activarGalaxia() {
         if (corazonesActivo) return;
-        corazonesActivo = true;
-        fraseAbierta    = false;
+        corazonesActivo     = true;
+        corazonesAbiertos   = 0;
+        corazonFraseVisible = false;
         pausarAmbiente();
 
-        // Fondo 15% más transparente (opacity 0.85 del overlay)
         document.querySelectorAll('.layer').forEach(l => {
             l.dataset.filtroAnterior = l.style.filter || '';
             l.style.transition = 'filter 0.6s ease';
-            l.style.filter     = 'blur(4px) brightness(0.28)';
+            l.style.filter     = 'blur(5px) brightness(0.30)';
         });
         document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = 'none');
 
@@ -2231,217 +2044,139 @@ const GalaxiaCorazones = (() => {
         const contFr    = document.getElementById('frases-container');
         const btnCerrar = document.getElementById('cerrar-galaxia');
 
-        // Overlay 15% más transparente: rgba(0,0,0,0.72) vs 0.85 anterior
-        overlay.style.background = 'rgba(0,0,0,0.72)';
-        overlay.style.display    = 'block';
+        overlay.style.display = 'block';
         setTimeout(() => overlay.style.opacity = '1', 10);
-
-        contFr.style.pointerEvents = 'auto';
-        btnCerrar.style.display    = 'flex';
-        btnCerrar.onclick          = cerrarGalaxia;
+        btnCerrar.style.display = 'flex';
+        btnCerrar.onclick = cerrarGalaxia;
 
         const cont = document.getElementById('mural-container');
         const W    = cont.offsetWidth;
         const H    = cont.offsetHeight;
-        const BASE_SIZE = Math.round(W * 0.072);
+        const SIZE = Math.round(W * 0.07);
 
-        // ── BOTÓN INVISIBLE (zona clickeable extra arriba a la derecha) ──
-        const btnInvisible = document.createElement('div');
-        btnInvisible.style.cssText = `
-            position:absolute; top:2%; right:8%; width:clamp(28px,5vw,44px); height:clamp(28px,5vw,44px);
-            z-index:140; cursor:pointer; pointer-events:auto;
-            border-radius:50%; background:transparent;
-        `;
-        btnInvisible.title = '';
-        btnInvisible.addEventListener('click', cerrarGalaxia);
-        btnInvisible.addEventListener('touchstart', e => { e.preventDefault(); cerrarGalaxia(); }, { passive: false });
-        contFr.appendChild(btnInvisible);
-
-        // ── PANEL DE FRASE (pre-creado, oculto) ──
-        let frasePanel = document.getElementById('gc-frase-panel');
-        if (frasePanel) frasePanel.remove();
-        frasePanel = document.createElement('div');
-        frasePanel.id = 'gc-frase-panel';
-        frasePanel.style.opacity = '0';
+        // Panel de frase
+        const frasePanel = document.createElement('div');
+        frasePanel.id = 'corazon-frase-panel';
+        frasePanel.style.cssText = `position:absolute;left:50%;top:25%;transform:translateX(-50%);
+            z-index:130;text-align:center;max-width:70%;pointer-events:none;
+            opacity:0;transition:opacity 0.4s ease;`;
         contFr.appendChild(frasePanel);
 
-        // ── CORAZÓN BASE CENTRAL — estático, siempre latiendo ──
+        // Corazón base
         const baseData = frasesCorazones.find(f => f.esBase);
-        const baseSize = Math.round(BASE_SIZE * 1.28);
         const baseEl   = document.createElement('div');
-        baseEl.id      = 'gc-base-el';
-        baseEl.style.cssText = `
-            position:absolute; left:${W/2}px; top:${H/2}px;
-            width:${baseSize}px; height:${baseSize}px;
-            transform:translate(-50%,-50%);
-            z-index:123; pointer-events:auto; cursor:pointer;
-            animation: gc-latido-base 2.2s ease-in-out infinite;
-        `;
-        const baseImg = document.createElement('img');
-        baseImg.src   = baseData.img;
-        baseImg.style.cssText = 'width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;';
-        baseImg.onerror = () => { baseImg.style.display='none'; baseEl.textContent='💜'; baseEl.style.fontSize = baseSize*0.8+'px'; };
-        baseEl.appendChild(baseImg);
+        baseEl.id      = 'corazon-base-el';
+        baseEl.style.cssText = `position:absolute;left:${W/2}px;top:${H/2}px;
+            width:${SIZE*1.2}px;height:${SIZE*1.2}px;transform:translate(-50%,-50%);
+            z-index:122;pointer-events:none;cursor:default;
+            animation:corazonLatidoLimpio 1.8s ease-in-out infinite;
+            opacity:0.95;`;
+        baseEl.innerHTML = `<img src="${baseData.img}" style="width:100%;height:100%;object-fit:contain;"
+            onerror="this.style.fontSize='${SIZE*1.1}px';this.style.textAlign='center';this.style.display='block';this.textContent='💜';">`;
         contFr.appendChild(baseEl);
 
-        // Click en corazón base → abre su propia frase
-        baseEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (fraseAbierta) return;
-            mostrarFrase(baseData, baseEl, contFr, () => {});
-        });
-        baseEl.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-        }, { passive: true });
-
-        // ── CORAZONES FLOTANTES — tamaños variados ──
+        // Corazones flotantes
         const flotantes = frasesCorazones.filter(f => !f.esBase);
         const objs      = [];
-        const limpiezasDegradado = [];
 
         flotantes.forEach((data) => {
-            const sz  = Math.round(BASE_SIZE * data.size);
-            const r   = sz / 2;
-
-            const el  = document.createElement('div');
-            el.style.cssText = `
-                position:absolute;
-                width:${sz}px; height:${sz}px;
+            const el = document.createElement('div');
+            el.style.cssText = `position:absolute;
+                width:${SIZE}px;height:${SIZE}px;
                 transform:translate(-50%,-50%);
-                z-index:122; cursor:pointer; pointer-events:auto;
-                user-select:none;
-                animation: gc-latido ${1.6 + Math.random()*1.2}s ease-in-out infinite;
-                animation-delay: -${Math.random()*2}s;
-            `;
-            const img = document.createElement('img');
-            img.src   = data.img;
-            img.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;display:block;';
-            img.onerror = () => { img.style.display='none'; el.textContent='💜'; el.style.fontSize=sz*0.8+'px'; el.style.color=data.c; };
-            el.appendChild(img);
+                z-index:121;cursor:pointer;pointer-events:auto;
+                user-select:none;`;
+            el.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">`;
             contFr.appendChild(el);
 
-            // Degradado líquido animado
-            const stopDegradado = aplicarDegradadoLiquido(el, data.c);
-            limpiezasDegradado.push(stopDegradado);
-
-            // Posición inicial: distribuida alrededor del centro
-            const ang = Math.random() * Math.PI * 2;
-            const rad = (Math.min(W,H) * 0.17) + Math.random() * (Math.min(W,H) * 0.26);
-            const px  = W/2 + Math.cos(ang) * rad;
-            const py  = H/2 + Math.sin(ang) * rad;
-
-            // Velocidad cero gravedad — suave
-            const speed = 0.7 + Math.random() * 1.1;
-            const vAng  = Math.random() * Math.PI * 2;
+            const ang  = Math.random() * Math.PI * 2;
+            const rad  = (Math.min(W, H) * 0.18) + Math.random() * (Math.min(W, H) * 0.25);
+            const px   = (W / 2) + Math.cos(ang) * rad;
+            const py   = (H / 2) + Math.sin(ang) * rad;
+            const vel  = 1.2 + Math.random() * 1.2;
+            const vAng = Math.random() * Math.PI * 2;
 
             const o = {
-                el, data, sz, r,
+                el: el, data: data,
                 x: px, y: py,
-                vx: Math.cos(vAng) * speed,
-                vy: Math.sin(vAng) * speed,
-                explotado: false,
-                brillando: false,
+                vx: Math.cos(vAng) * vel,
+                vy: Math.sin(vAng) * vel,
+                r: SIZE / 2,
+                explotado: false
             };
 
-            // ── CLICK: explotar con 30 partículas + sonido burbuja ──
-            el.addEventListener('click', (e) => {
+            el.onclick = (e) => {
                 e.stopPropagation();
-                if (o.explotado || fraseAbierta) return;
+                if (o.explotado) return;
                 o.explotado = true;
 
-                // 1. Sonido burbuja (1 segundo)
-                sonarBurbujaExplosion(data.c);
+                sonarPopBurbuja();
+                crearExplosionLimpia(o.x, o.y, contFr);
 
-                // 2. 30 partículas multicolor
-                explosionParticulas(o.x, o.y, data.c, contFr);
-
-                // 3. Ocultar corazón inmediatamente
                 el.style.pointerEvents = 'none';
-                el.style.animation     = 'none';
                 el.style.display       = 'none';
 
-                // 4. Abrir frase + audio después de 1 segundo (termina la explosión)
-                setTimeout(() => {
-                    mostrarFrase(data, baseEl, contFr, () => {
-                        // Al cerrar la frase: corazón reaparece
-                        o.explotado        = false;
-                        el.style.display   = 'block';
-                        el.style.animation = `gc-latido ${1.6 + Math.random()*1.2}s ease-in-out infinite`;
-                        el.style.pointerEvents = 'auto';
-                    });
-                }, 1000);
-            });
-
-            el.addEventListener('touchstart', (e) => { e.stopPropagation(); }, { passive: true });
+                corazonesAbiertos++;
+                mostrarFraseCorazon(o.data);
+            };
 
             objs.push(o);
         });
 
-        objsGlobal = objs;
-
-        // ── FÍSICA: cero gravedad, rebote elástico, brillo en colisión ──
+        // Física de rebotes
         function update() {
             if (!corazonesActivo) return;
 
-            const vivos = objs.filter(o => !o.explotado);
-
-            for (let i = 0; i < vivos.length; i++) {
-                const o = vivos[i];
+            for (let i = 0; i < objs.length; i++) {
+                const o = objs[i];
+                if (o.explotado) continue;
 
                 o.x += o.vx;
                 o.y += o.vy;
 
-                // Rebote bordes
-                if (o.x - o.r < 0)   { o.x = o.r;     o.vx = Math.abs(o.vx);  sonarColision(); }
-                if (o.x + o.r > W)   { o.x = W - o.r; o.vx = -Math.abs(o.vx); sonarColision(); }
-                if (o.y - o.r < 0)   { o.y = o.r;     o.vy = Math.abs(o.vy);  sonarColision(); }
-                if (o.y + o.r > H)   { o.y = H - o.r; o.vy = -Math.abs(o.vy); sonarColision(); }
+                if (o.x - o.r < 0)    { o.x = o.r;       o.vx *= -1; sonarColision(); }
+                if (o.x + o.r > W)    { o.x = W - o.r;   o.vx *= -1; sonarColision(); }
+                if (o.y - o.r < 0)    { o.y = o.r;       o.vy *= -1; sonarColision(); }
+                if (o.y + o.r > H)    { o.y = H - o.r;   o.vy *= -1; sonarColision(); }
 
-                // Rebote corazón base central
-                const dxB = o.x - W/2, dyB = o.y - H/2;
-                const dB  = Math.sqrt(dxB*dxB + dyB*dyB);
-                const minB = o.r + (baseSize * 0.55);
-                if (dB < minB && dB > 0.01) {
-                    const nx = dxB/dB, ny = dyB/dB;
-                    o.x = W/2 + nx * minB;
-                    const dot = o.vx*nx + o.vy*ny;
-                    o.vx -= 2*dot*nx; o.vy -= 2*dot*ny;
+                const dxBase    = o.x - (W / 2);
+                const dyBase    = o.y - (H / 2);
+                const distBase  = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
+                const minDistBase = o.r + (SIZE * 0.6);
+
+                if (distBase < minDistBase) {
+                    const nx  = dxBase / distBase;
+                    const ny  = dyBase / distBase;
+                    o.x       = (W / 2) + nx * minDistBase;
+                    const dot = o.vx * nx + o.vy * ny;
+                    o.vx -= 2 * dot * nx;
+                    o.vy -= 2 * dot * ny;
                     sonarColision();
                 }
 
-                // Colisiones entre corazones → brillo
-                for (let j = i+1; j < vivos.length; j++) {
-                    const o2 = vivos[j];
-                    const dx = o2.x - o.x, dy = o2.y - o.y;
-                    const d  = Math.sqrt(dx*dx + dy*dy);
-                    const md = o.r + o2.r;
-                    if (d < md && d > 0.01) {
-                        const nx = dx/d, ny = dy/d;
-                        // Separar
-                        const ov = (md - d) * 0.52;
-                        o.x  -= nx*ov; o.y  -= ny*ov;
-                        o2.x += nx*ov; o2.y += ny*ov;
-                        // Intercambio elástico
-                        const kx = o.vx - o2.vx, ky = o.vy - o2.vy;
-                        const p  = nx*kx + ny*ky;
+                for (let j = i + 1; j < objs.length; j++) {
+                    const o2 = objs[j];
+                    if (o2.explotado) continue;
+
+                    const dx      = o2.x - o.x;
+                    const dy      = o2.y - o.y;
+                    const dist    = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = o.r + o2.r;
+
+                    if (dist < minDist) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        const kx = o.vx - o2.vx;
+                        const ky = o.vy - o2.vy;
+                        const p  = nx * kx + ny * ky;
+
                         if (p > 0) {
-                            o.vx  -= p*nx; o.vy  -= p*ny;
-                            o2.vx += p*nx; o2.vy += p*ny;
+                            o.vx  -= p * nx;
+                            o.vy  -= p * ny;
+                            o2.vx += p * nx;
+                            o2.vy += p * ny;
+                            sonarColision();
                         }
-                        // Brillo visual en colisión
-                        [o, o2].forEach(obj => {
-                            if (!obj.brillando) {
-                                obj.brillando = true;
-                                obj.el.style.animation = 'gc-brillo-col 0.35s ease-out forwards';
-                                setTimeout(() => {
-                                    if (!obj.explotado) {
-                                        obj.el.style.animation = `gc-latido ${1.6 + Math.random()*1.2}s ease-in-out infinite`;
-                                    }
-                                    obj.brillando = false;
-                                }, 350);
-                            }
-                        });
-                        sonarColision();
                     }
                 }
 
@@ -2453,25 +2188,14 @@ const GalaxiaCorazones = (() => {
         }
 
         corazonesRaf = requestAnimationFrame(update);
-
-        // Guardar limpieza de degradados para cerrarGalaxia
-        contFr._limpiezasDegradado = limpiezasDegradado;
     }
 
-    // --- CERRAR GALAXIA ---
+    // --- CERRAR ---
     function cerrarGalaxia() {
         if (!corazonesActivo) return;
         corazonesActivo = false;
-        fraseAbierta    = false;
         if (corazonesRaf)       { cancelAnimationFrame(corazonesRaf); corazonesRaf = null; }
         if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-
-        // Limpiar degradados líquidos
-        const contFr = document.getElementById('frases-container');
-        if (contFr._limpiezasDegradado) {
-            contFr._limpiezasDegradado.forEach(fn => { try { fn(); } catch(e){} });
-            contFr._limpiezasDegradado = [];
-        }
 
         document.querySelectorAll('.layer').forEach(l => {
             l.style.filter = l.dataset.filtroAnterior || '';
@@ -2479,6 +2203,7 @@ const GalaxiaCorazones = (() => {
         });
 
         const overlay   = document.getElementById('galaxia-overlay');
+        const contFr    = document.getElementById('frases-container');
         const btnCerrar = document.getElementById('cerrar-galaxia');
 
         contFr.onclick      = null;
@@ -2486,10 +2211,9 @@ const GalaxiaCorazones = (() => {
 
         overlay.style.opacity = '0';
         setTimeout(() => {
-            overlay.style.display      = 'none';
-            overlay.style.background   = '';
-            contFr.innerHTML           = '';
-            contFr.style.pointerEvents = 'none';
+            overlay.style.display        = 'none';
+            contFr.innerHTML             = '';
+            contFr.style.pointerEvents   = 'none';
         }, 600);
 
         btnCerrar.style.display = 'none';
@@ -2501,7 +2225,6 @@ const GalaxiaCorazones = (() => {
     return { activar: activarGalaxia, cerrar: cerrarGalaxia };
 
 })();
-
 
 // ==========================================
 // --- SOPORTE MÓVIL COMPLETO ---
