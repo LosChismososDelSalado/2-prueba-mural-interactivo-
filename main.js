@@ -1919,7 +1919,7 @@ Object.keys(zonaData).forEach(id => {
 
 const frasesCorazones = [
     { t: "DEL OLVIDO A LA HISTORIA",                              s: "El rescate de la identidad de las pioneras de 1971",       c: "#00ffcc", f: "'Bebas Neue'",        mp3: "assets/del-olvido.mp3",    img: "assets/corazon-1.png"  },
-    { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si -llega-una.mp3", img: "assets/corazon-2.png"  },
+    { t: "SI LLEGA UNA, LLEGAMOS TODAS",                          s: "La fuerza de la sororidad que nos une",                    c: "#ff6600", f: "'Permanent Marker'",  mp3: "assets/si-llega-una.mp3",  img: "assets/corazon-2.png"  },
     { t: "TU FUERZA INSPIRA A LA NIÑA QUE HOY TE MIRA",          s: "Conexión entre la niña y las mujeres del mural",           c: "#ff3399", f: "'Caveat'",            mp3: "assets/tu-fuerza.mp3",     img: "assets/corazon-3.png"  },
     { t: "AYER REBELDES, HOY EJEMPLO",                            s: "Del estigma de 1971 al reconocimiento del 2026",           c: "#cc33ff", f: "'Playfair Display'",  mp3: "assets/ayer-rebeldes.mp3", img: "assets/corazon-4.png"  },
     { t: "HOY NUESTRA VOZ NO TIENE SILENCIO",                     s: "El fin del anonimato histórico",                           c: "#ffff00", f: "'Montserrat'",        mp3: "assets/hoy-nuestra.mp3",   img: "assets/corazon-5.png"  },
@@ -1927,11 +1927,11 @@ const frasesCorazones = [
     { t: "CAMINAMOS SOBRE LOS PASOS DE LAS QUE NO SE RINDIERON",  s: "Homenaje a las pioneras de 1971",                         c: "#ff9900", f: "'Permanent Marker'",  mp3: "assets/caminamos.mp3",     img: "assets/corazon-7.png"  },
     { t: "SOMOS EL GRITO DE LAS QUE NO PUDIERON ALZAR LA VOZ",    s: "Justicia histórica para las borradas",                     c: "#66ffff", f: "'Caveat'",            mp3: "assets/somos-el.mp3",      img: "assets/corazon-8.png"  },
     { t: "ROMPE EL TECHO DE CRISTAL CON LA FUERZA DE TUS SUEÑOS", s: "Superación de barreras laborales",                        c: "#ff66cc", f: "'Montserrat'",        mp3: "assets/rompe-el.mp3",      img: "assets/corazon-9.png"  },
-    { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png" },
+    { t: "HEREDERAS DE UN SUEÑO QUE NUNCA DEJÓ DE LATIR",         s: "La continuidad que une ambas Épocas",                     c: "#ffcc00", f: "'Playfair Display'",  mp3: "assets/herederas.mp3",     img: "assets/corazon-10.png" },
     { t: "MIS SUEÑOS SON VÁLIDOS, Y MEREZCO LUCHAR POR ELLOS",    s: "Empoderamiento frente a los prejuicios",                  c: "#ff3333", f: "'Bebas Neue'",        mp3: "assets/mis-suenos.mp3",    img: "assets/corazon-11.png" },
     { t: "NACISTE PARA HACER HISTORIA, NO PARA VERLA PASAR",      s: "Invitación a ser parte activa del cambio",                c: "#33ffcc", f: "'Permanent Marker'",  mp3: "assets/naciste.mp3",       img: "assets/corazon-12.png" },
-    { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png" },
-    { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de décadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png" },
+    { t: "TU TRIUNFO ES EL DE TODAS",                             s: "El Éxito de una como victoria compartida",                c: "#ff99cc", f: "'Caveat'",            mp3: "assets/tu-triunfo.mp3",    img: "assets/corazon-13.png" },
+    { t: "TRANSFORMAMOS LA RESISTENCIA EN LIBERTAD",              s: "El resultado de dÉcadas de lucha por la equidad",         c: "#99ff33", f: "'Montserrat'",        mp3: "assets/transformamos.mp3", img: "assets/corazon-14.png" },
     { t: "EL FUTURO TIENE NOMBRE DE MUJER Y FUERZA DE GUERRERA",  s: "Visión de esperanza y liderazgo",                         c: "#ffaa00", f: "'Playfair Display'",  mp3: "assets/el-futuro.mp3",     img: "assets/corazon-15.png" },
     { t: "MUJERES DE LA PAZ, EJEMPLO DE LUCHA Y GRANDEZA",        s: "Trabajadoras, valientes y dueñas de su propio destino",   c: "#ff6699", f: "'Permanent Marker'",  mp3: "assets/historia-1.mp3",    img: "assets/corazon-base.png", esBase: true },
 ];
@@ -1975,6 +1975,8 @@ function activarGalaxia() {
     corazonesAbiertos = 0;
     corazonFraseVisible = false;
     pausarAmbiente();
+
+    let forzarCierreBaseGlobal = null; // Rastreará dinámicamente el salto del corazón final
 
     document.querySelectorAll('.layer').forEach(l => {
         l.dataset.filtroAnterior = l.style.filter || '';
@@ -2023,7 +2025,6 @@ function activarGalaxia() {
 
     flotantes.forEach((data) => {
         const el = document.createElement('div');
-        // Latido + brillo del color de la frase desde el inicio
         el.style.cssText = `position:absolute;
             width:${SIZE}px;height:${SIZE}px;
             transform:translate(-50%,-50%);
@@ -2035,7 +2036,6 @@ function activarGalaxia() {
             onerror="this.style.fontSize='${SIZE*.85}px';this.style.textAlign='center';this.style.lineHeight='1';this.style.display='block';this.textContent='❤️';">`;
         contFr.appendChild(el);
 
-        // Posición inicial alejada del centro
         let x, y, intentos = 0;
         do {
             x = SIZE + Math.random() * (W - SIZE*2);
@@ -2051,7 +2051,7 @@ function activarGalaxia() {
         el.style.top  = y + 'px';
 
         function abrirCorazon(e) {
-            if (e) e.stopPropagation();
+            if (e) e.stopPropagation(); // Evita disparar el clic del fondo inmediatamente
             if (obj.abierto || corazonFraseVisible) return;
             obj.abierto       = true;
             corazonFraseVisible = true;
@@ -2085,7 +2085,8 @@ function activarGalaxia() {
                     background:rgba(0,0,0,0.58);padding:3px 10px;border-radius:6px;">${data.s}</span>`;
             frasePanel.style.opacity = '1';
 
-            // Audio completo + 1 segundo de pausa antes de volver
+            contFr.style.pointerEvents = 'auto'; // HABILITA CAPTURA DE TOQUES EN EL FONDO NEGRO
+
             if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
             let ocultarLlamado = false;
             function ocultarConDelay() {
@@ -2115,6 +2116,8 @@ function activarGalaxia() {
         corazonFraseVisible = false;
         frasePanel.style.opacity = '0';
         if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
+
+        contFr.style.pointerEvents = 'none'; // Libera el fondo para no interferir con las físicas
 
         // Restaurar base
         baseEl.style.filter    = 'drop-shadow(0 0 8px rgba(255,100,180,0.6))';
@@ -2150,17 +2153,31 @@ function activarGalaxia() {
                     background:rgba(0,0,0,0.62);padding:3px 12px;border-radius:6px;">${data.s}</span>`;
             frasePanel.style.opacity = '1';
 
+            contFr.style.pointerEvents = 'auto'; // Activa el fondo para cerrar la frase final
+
+            let tId1 = null, tId2 = null;
+
+            // Lógica para saltar la frase final del corazón base inmediatamente al tocar el fondo
+            forzarCierreBaseGlobal = function() {
+                if (!corazonFraseVisible) return;
+                corazonFraseVisible = false;
+                frasePanel.style.opacity = '0';
+                if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
+                clearTimeout(tId1);
+                clearTimeout(tId2);
+                baseEl.style.filter    = `drop-shadow(0 0 20px #ff6699) drop-shadow(0 0 40px #ff669988)`;
+                baseEl.style.animation = 'corazonLatidoActivo 0.8s ease-in-out infinite';
+                contFr.style.pointerEvents = 'none';
+                forzarCierreBaseGlobal = null;
+            };
+
             if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
             let ocultarLlamado = false;
             function ocultarConDelayBase() {
                 if (ocultarLlamado) return;
                 ocultarLlamado = true;
-                setTimeout(() => {
-                    corazonFraseVisible = false;
-                    frasePanel.style.opacity = '0';
-                    if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-                    baseEl.style.filter    = `drop-shadow(0 0 20px #ff6699) drop-shadow(0 0 40px #ff669988)`;
-                    baseEl.style.animation = 'corazonLatidoActivo 0.8s ease-in-out infinite';
+                tId1 = setTimeout(() => {
+                    if (typeof forzarCierreBaseGlobal === 'function') forzarCierreBaseGlobal();
                 }, 1000);
             }
             if (data.mp3) {
@@ -2168,14 +2185,33 @@ function activarGalaxia() {
                 audio.play().catch(() => {});
                 audioCorazonActual = audio;
                 audio.onended = ocultarConDelayBase;
-                audio.onerror = () => setTimeout(ocultarConDelayBase, 3000);
+                audio.onerror = () => { tId2 = setTimeout(ocultarConDelayBase, 3000); };
             } else {
-                setTimeout(ocultarConDelayBase, 5000);
+                tId2 = setTimeout(ocultarConDelayBase, 5000);
             }
         }
         baseEl.addEventListener('click', abrirBase);
         baseEl.addEventListener('touchstart', e => { e.preventDefault(); abrirBase(e); }, {passive:false});
     }
+
+    // INTERCEPTOR DE CLICS DIRECTOS EN LA PANTALLA NEGRA
+    function manejarToqueFondo(e) {
+        if (!corazonFraseVisible) return;
+        if (typeof forzarCierreBaseGlobal === 'function') {
+            forzarCierreBaseGlobal();
+        } else {
+            ocultarFrase();
+        }
+    }
+    
+    // Al usar las propiedades directas .onclick y .ontouchstart evitamos duplicar escuchas al reentrar
+    contFr.onclick = manejarToqueFondo;
+    contFr.ontouchstart = (e) => {
+        if (corazonFraseVisible) {
+            e.preventDefault();
+            manejarToqueFondo(e);
+        }
+    };
 
     // ── FÍSICA GRAVEDAD 0 con rebote correcto sin solapamiento ──
     let lastCol = 0;
@@ -2186,7 +2222,6 @@ function activarGalaxia() {
         objs.forEach(o => {
             if (o.el.style.opacity === '0') return;
             o.x += o.vx; o.y += o.vy;
-            // Rebote contra bordes
             if (o.x - o.r < 0)   { o.x = o.r;    o.vx =  Math.abs(o.vx); }
             if (o.x + o.r > W)   { o.x = W - o.r; o.vx = -Math.abs(o.vx); }
             if (o.y - o.r < 0)   { o.y = o.r;    o.vy =  Math.abs(o.vy); }
@@ -2195,7 +2230,6 @@ function activarGalaxia() {
             o.el.style.top  = o.y + 'px';
         });
 
-        // Colisiones: rebote elástico real en diferentes direcciones, sin solapamiento
         for (let i = 0; i < objs.length; i++) {
             for (let j = i + 1; j < objs.length; j++) {
                 const a = objs[i], b = objs[j];
@@ -2209,27 +2243,21 @@ function activarGalaxia() {
                 if (dist < minD && dist > 0.01) {
                     const nx = dx / dist;
                     const ny = dy / dist;
-
-                    // Separar completamente para evitar solapamiento
                     const overlap = (minD - dist) / 2 + 0.5;
                     a.x -= nx * overlap;
                     a.y -= ny * overlap;
                     b.x += nx * overlap;
                     b.y += ny * overlap;
 
-                    // Intercambio de velocidades en la dirección normal (rebote elástico)
                     const aDot = a.vx * nx + a.vy * ny;
                     const bDot = b.vx * nx + b.vy * ny;
 
-                    // Solo si se acercan
                     if (aDot - bDot > 0) {
-                        // Intercambiar componente normal, mantener componente tangencial
                         a.vx += (bDot - aDot) * nx;
                         a.vy += (bDot - aDot) * ny;
                         b.vx += (aDot - bDot) * nx;
                         b.vy += (aDot - bDot) * ny;
 
-                        // Normalizar velocidad para mantener speed constante
                         const speedA = Math.sqrt(a.vx*a.vx + a.vy*a.vy) || 1;
                         const speedB = Math.sqrt(b.vx*b.vx + b.vy*b.vy) || 1;
                         const targetA = 0.28 + Math.random() * 0.32;
@@ -2268,11 +2296,18 @@ function cerrarGalaxia() {
     const contFr    = document.getElementById('frases-container');
     const btnCerrar = document.getElementById('cerrar-galaxia');
 
+    // Desvincular eventos para liberar memoria
+    contFr.onclick = null;
+    contFr.ontouchstart = null;
+
     overlay.style.opacity = '0';
-    setTimeout(() => { overlay.style.display = 'none'; contFr.innerHTML = ''; }, 600);
+    setTimeout(() => { 
+        overlay.style.display = 'none'; 
+        contFr.innerHTML = ''; 
+        contFr.style.pointerEvents = 'none';
+    }, 600);
     btnCerrar.style.display = 'none';
 
-    // Reactivar zonas
     document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
     reanudarAmbiente();
 }
