@@ -1941,7 +1941,7 @@ const GalaxiaCorazones = (() => {
         // Pon aquí la clase o id del elemento de la niña para que quede nítido
         // al frente sin recibir el filtro de oscurecimiento del mural.
         // Ejemplos: '.layer-nina'  |  '#nina-layer'  |  '.zona-nina'
-        selectorNina: '.layer-nina',  // ← AJUSTA ESTE VALOR al selector real
+        selectorNina: '.layer-nina-base.png',  // ← AJUSTA ESTE VALOR al selector real
         // ────────────────────────────────────────────────────────────────────────
     };
 
@@ -2677,7 +2677,6 @@ const GalaxiaCorazones = (() => {
     return { activar: activarGalaxia, cerrar: cerrarGalaxia };
 
 })();
-
 // ==========================================
 // --- SOPORTE MÓVIL COMPLETO ---
 // ==========================================
