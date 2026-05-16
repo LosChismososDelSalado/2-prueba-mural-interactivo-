@@ -1936,12 +1936,7 @@ const GalaxiaCorazones = (() => {
         // 0.78 = degradado bien visible pero el mural se transparenta detrás
         opacidadDegradado: 0.78,
         // ────────────────────────────────────────────────────────────────────────
-// OCULTAR jugadoras y profesionistas durante la galaxia
-document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l => {
-    l.dataset.visibilidadAnterior = l.style.visibility || '';
-    l.style.transition = 'opacity 0.6s ease';
-    l.style.opacity = '0.30';
-    l.style.pointerEvents = 'none';
+
 });
         // ── CLASE/ID DE LA NIÑA ─────────────────────────────────────────────────
         // Pon aquí la clase o id del elemento de la niña para que quede nítido
@@ -2237,7 +2232,7 @@ document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l =
 
     function iniciarFondo(overlay) {
         bgCanvas = document.createElement('canvas');
-        bgCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;';
+        bgCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;';
         overlay.insertBefore(bgCanvas, overlay.firstChild);
 
         function resize() {
@@ -2678,11 +2673,7 @@ document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l =
         document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
         reanudarAmbiente();
     }
-// RESTAURAR jugadoras y profesionistas
-document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l => {
-    l.style.transition = 'opacity 0.6s ease';
-    l.style.opacity = l.dataset.visibilidadAnterior !== undefined ? '1' : '';
-    delete l.dataset.visibilidadAnterior;
+
 });
     // --- API PÚBLICA ---
     return { activar: activarGalaxia, cerrar: cerrarGalaxia };
