@@ -1924,7 +1924,7 @@ const GalaxiaCorazones = (() => {
     // ══════════════════════════════════════
     const CFG = {
         velocidadMin:  0.8,   // velocidad mínima de los corazones flotantes
-        velocidadMax:  2.0,   // velocidad máxima de los corazones flotantes
+        velocidadMax:  3.0,   // velocidad máxima de los corazones flotantes
         gravedad:      0.012, // atracción suave hacia el centro (0 = sin gravedad)
         tamañoPct:     0.085, // tamaño de cada corazón flotante (% del ancho del mural)
         tamañoBasePct: 0.11,  // tamaño del corazón base central (% del ancho)
@@ -2049,7 +2049,7 @@ const GalaxiaCorazones = (() => {
                 pointer-events:auto;
                 user-select:none;
                 transform:translate(-50%,-50%);
-                z-index:121;
+                z-index:60;
                 touch-action:manipulation;
                 -webkit-tap-highlight-color:transparent;
             }
@@ -2063,7 +2063,7 @@ const GalaxiaCorazones = (() => {
                 position:absolute;
                 border-radius:50%;
                 pointer-events:none;
-                z-index:150;
+                z-index:55;
                 animation: gc-particula 1s cubic-bezier(0.2,0.8,0.4,1) forwards;
             }
         `;
@@ -2185,7 +2185,7 @@ const GalaxiaCorazones = (() => {
 
     function iniciarFondo(overlay) {
         bgCanvas = document.createElement('canvas');
-        bgCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+        bgCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;';
         overlay.insertBefore(bgCanvas, overlay.firstChild);
 
         function resize() {
