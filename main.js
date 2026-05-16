@@ -1936,7 +1936,13 @@ const GalaxiaCorazones = (() => {
         // 0.78 = degradado bien visible pero el mural se transparenta detrás
         opacidadDegradado: 0.78,
         // ────────────────────────────────────────────────────────────────────────
-
+// OCULTAR jugadoras y profesionistas durante la galaxia
+document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l => {
+    l.dataset.visibilidadAnterior = l.style.visibility || '';
+    l.style.transition = 'opacity 0.6s ease';
+    l.style.opacity = '0.30';
+    l.style.pointerEvents = 'none';
+});
         // ── CLASE/ID DE LA NIÑA ─────────────────────────────────────────────────
         // Pon aquí la clase o id del elemento de la niña para que quede nítido
         // al frente sin recibir el filtro de oscurecimiento del mural.
@@ -2672,7 +2678,12 @@ const GalaxiaCorazones = (() => {
         document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
         reanudarAmbiente();
     }
-
+// RESTAURAR jugadoras y profesionistas
+document.querySelectorAll('.layer-jugadoras, .layer-profesionistas').forEach(l => {
+    l.style.transition = 'opacity 0.6s ease';
+    l.style.opacity = l.dataset.visibilidadAnterior !== undefined ? '1' : '';
+    delete l.dataset.visibilidadAnterior;
+});
     // --- API PÚBLICA ---
     return { activar: activarGalaxia, cerrar: cerrarGalaxia };
 
