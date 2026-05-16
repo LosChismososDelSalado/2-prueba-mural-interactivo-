@@ -1913,7 +1913,6 @@ Object.keys(zonaData).forEach(id => {
     el.addEventListener('click', () => abrirContenido(zonaData[id]));
 });
 
-
 // ==========================================
 // --- EFECTO CORAZONES (zona-nosotras) ---
 // ==========================================
@@ -1929,6 +1928,21 @@ const GalaxiaCorazones = (() => {
         tamañoPct:     0.085, // tamaño de cada corazón flotante (% del ancho del mural)
         tamañoBasePct: 0.11,  // tamaño del corazón base central (% del ancho)
         particulas:    36,    // nº de partículas al explotar un corazón
+
+        // ── AJUSTE DE OPACIDAD DEL EFECTO ──────────────────────────────────────
+        // Qué tan visible queda el mural detrás (0 = negro total, 1 = sin cambio)
+        brilloMural:   0.20,  // brightness de las capas del mural (0.20 = 80% oscuro)
+        // Opacidad del degradado animado que flota encima del mural (0–1)
+        // 0.78 = degradado bien visible pero el mural se transparenta detrás
+        opacidadDegradado: 0.78,
+        // ────────────────────────────────────────────────────────────────────────
+
+        // ── CLASE/ID DE LA NIÑA ─────────────────────────────────────────────────
+        // Pon aquí la clase o id del elemento de la niña para que quede nítido
+        // al frente sin recibir el filtro de oscurecimiento del mural.
+        // Ejemplos: '.layer-nina'  |  '#nina-layer'  |  '.zona-nina'
+        selectorNina: '.layer-nina',  // ← AJUSTA ESTE VALOR al selector real
+        // ────────────────────────────────────────────────────────────────────────
     };
 
     // --- FRASES (imagen siempre 'assets/corazon.png' para las 15, 'assets/corazon-base.png' para la base) ---
@@ -2066,13 +2080,47 @@ const GalaxiaCorazones = (() => {
                 z-index:55;
                 animation: gc-particula 1s cubic-bezier(0.2,0.8,0.4,1) forwards;
             }
+            /* Panel flotante de ajuste de opacidad */
+            #gc-ajuste-panel {
+                position:absolute;
+                bottom: 14px;
+                right: 14px;
+                z-index: 200;
+                background: rgba(10,10,20,0.82);
+                border: 1px solid rgba(255,255,255,0.18);
+                border-radius: 12px;
+                padding: 10px 14px 12px;
+                color: #fff;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.72rem;
+                letter-spacing: 0.06em;
+                user-select: none;
+                backdrop-filter: blur(6px);
+                min-width: 180px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            }
+            #gc-ajuste-panel label {
+                display:block;
+                margin-bottom: 4px;
+                color: rgba(255,255,255,0.7);
+                text-transform: uppercase;
+            }
+            #gc-ajuste-panel input[type=range] {
+                width: 100%;
+                accent-color: #ff6699;
+                cursor: pointer;
+            }
+            #gc-ajuste-panel .gc-fila {
+                margin-bottom: 8px;
+            }
+            #gc-ajuste-panel .gc-fila:last-child {
+                margin-bottom: 0;
+            }
         `;
         document.head.appendChild(st);
     }
 
     // --- CANVAS DEGRADADO FLOTANTE EN EL CORAZÓN ---
-    // Cada corazón flotante es un canvas que mezcla corazon.png
-    // con un degradado hue-rotado animado usando composite 'source-atop'
     function crearCanvasCorazon(size, hueOffset) {
         const wrap = document.createElement('div');
         wrap.className = 'gc-corazon-flotante';
@@ -2096,7 +2144,6 @@ const GalaxiaCorazones = (() => {
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, size, size);
 
-            // Degradado animado base
             hue = (hue + 0.8) % 360;
             const hue2 = (hue + 120) % 360;
             const hue3 = (hue + 240) % 360;
@@ -2107,12 +2154,10 @@ const GalaxiaCorazones = (() => {
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, size, size);
 
-            // Aplicar la máscara del corazón PNG
             if (img.complete && img.naturalWidth > 0) {
                 ctx.globalCompositeOperation = 'destination-in';
                 ctx.drawImage(img, 0, 0, size, size);
                 ctx.globalCompositeOperation = 'source-over';
-                // Brillo interior suave
                 const glow = ctx.createRadialGradient(size*0.5, size*0.38, 0, size*0.5, size*0.5, size*0.5);
                 glow.addColorStop(0,   'rgba(255,255,255,0.35)');
                 glow.addColorStop(0.5, 'rgba(255,255,255,0.08)');
@@ -2128,7 +2173,6 @@ const GalaxiaCorazones = (() => {
 
         img.onload  = () => dibujar();
         img.onerror = () => {
-            // Fallback: corazón emoji coloreado
             const ctx = canvas.getContext('2d');
             ctx.font = `${size*0.85}px serif`;
             ctx.textAlign = 'center';
@@ -2142,7 +2186,7 @@ const GalaxiaCorazones = (() => {
         return wrap;
     }
 
-    // --- EXPLOSIÓN DE PARTÍCULAS 3D (esferas de distintos tamaños) ---
+    // --- EXPLOSIÓN DE PARTÍCULAS ---
     function explosionParticulas(cx, cy, cont) {
         const colores = [
             '#38bdf8','#a78bfa','#f472b6','#34d399','#fbbf24',
@@ -2153,10 +2197,10 @@ const GalaxiaCorazones = (() => {
         for (let i = 0; i < n; i++) {
             const ang    = (Math.PI * 2 * i / n) + Math.random() * 0.4;
             const dist   = 30 + Math.random() * 80;
-            const size   = 5 + Math.random() * 14; // variedad de tamaños
-            const dur    = 0.7 + Math.random() * 0.3;
+            const size   = 5 + Math.random() * 14;
+            const dur    = 0.7 + Math.random() * 0.6;
             const color  = colores[Math.floor(Math.random() * colores.length)];
-            const pct    = Math.random(); // profundidad simulada
+            const pct    = Math.random();
             const bright = 60 + pct * 30;
 
             const p = document.createElement('div');
@@ -2178,7 +2222,9 @@ const GalaxiaCorazones = (() => {
         }
     }
 
-    // --- FONDO DEGRADADO DINÁMICO (canvas sobre el overlay) ---
+    // --- FONDO DEGRADADO DINÁMICO ---
+    // CAMBIO CLAVE: el canvas usa hsla con opacidad configurable en CFG.opacidadDegradado
+    // Así el mural se ve detrás del degradado animado en lugar de quedar completamente tapado.
     let bgCanvas = null;
     let bgHue    = 0;
     let bgRaf    = null;
@@ -2202,12 +2248,19 @@ const GalaxiaCorazones = (() => {
             const W = bgCanvas.width, H = bgCanvas.height;
             const ctx = bgCanvas.getContext('2d');
             const h1 = bgHue, h2 = (bgHue + 80) % 360, h3 = (bgHue + 160) % 360;
+
+            // ── CAMBIO: clearRect + hsla con opacidad configurable ──────────────
+            // Esto permite ver el mural oscurecido detrás del degradado animado.
+            ctx.clearRect(0, 0, W, H);
+            const op = CFG.opacidadDegradado;
             const g = ctx.createLinearGradient(0, 0, W, H);
-            g.addColorStop(0,    `hsl(${h1},70%,12%)`);
-            g.addColorStop(0.45, `hsl(${h2},65%,10%)`);
-            g.addColorStop(1,    `hsl(${h3},75%,14%)`);
+            g.addColorStop(0,    `hsla(${h1},70%,12%,${op})`);
+            g.addColorStop(0.45, `hsla(${h2},65%,10%,${op})`);
+            g.addColorStop(1,    `hsla(${h3},75%,14%,${op})`);
             ctx.fillStyle = g;
             ctx.fillRect(0, 0, W, H);
+            // ────────────────────────────────────────────────────────────────────
+
             bgRaf = requestAnimationFrame(drawBg);
         }
         drawBg();
@@ -2218,22 +2271,69 @@ const GalaxiaCorazones = (() => {
         };
     }
 
+    // --- PANEL DE AJUSTE DE OPACIDAD (slider en pantalla) ---
+    function crearPanelAjuste(contFr) {
+        const panel = document.createElement('div');
+        panel.id = 'gc-ajuste-panel';
+
+        // Slider: mural (brightness)
+        const filaMural = document.createElement('div');
+        filaMural.className = 'gc-fila';
+        const lblMural = document.createElement('label');
+        lblMural.textContent = 'Mural detrás';
+        const sliderMural = document.createElement('input');
+        sliderMural.type = 'range';
+        sliderMural.min  = '0';
+        sliderMural.max  = '100';
+        sliderMural.step = '1';
+        sliderMural.value = Math.round(CFG.brilloMural * 100);
+        sliderMural.addEventListener('input', () => {
+            CFG.brilloMural = sliderMural.value / 100;
+            const filtro = `brightness(${CFG.brilloMural})`;
+            document.querySelectorAll('.layer').forEach(l => {
+                if (CFG.selectorNina && l.matches(CFG.selectorNina)) return;
+                l.style.filter = filtro;
+            });
+        });
+        filaMural.appendChild(lblMural);
+        filaMural.appendChild(sliderMural);
+
+        // Slider: degradado animado (opacidad)
+        const filaDeg = document.createElement('div');
+        filaDeg.className = 'gc-fila';
+        const lblDeg = document.createElement('label');
+        lblDeg.textContent = 'Degradado color';
+        const sliderDeg = document.createElement('input');
+        sliderDeg.type = 'range';
+        sliderDeg.min  = '0';
+        sliderDeg.max  = '100';
+        sliderDeg.step = '1';
+        sliderDeg.value = Math.round(CFG.opacidadDegradado * 100);
+        sliderDeg.addEventListener('input', () => {
+            CFG.opacidadDegradado = sliderDeg.value / 100;
+            // drawBg() lee CFG.opacidadDegradado en cada frame, se actualiza sólo
+        });
+        filaDeg.appendChild(lblDeg);
+        filaDeg.appendChild(sliderDeg);
+
+        panel.appendChild(filaMural);
+        panel.appendChild(filaDeg);
+        contFr.appendChild(panel);
+    }
+
     // --- MOSTRAR PANTALLA FRASE ---
     function mostrarFrase(data, contFr, W, H, sizeBase) {
         modoPantalla = 'frase';
         if (rafFisica) { cancelAnimationFrame(rafFisica); rafFisica = null; }
 
-        // Pausa audio previo
         if (audioActual) { audioActual.pause(); audioActual.currentTime = 0; }
 
-        // Ocultar corazones flotantes
         contFr.querySelectorAll('.gc-corazon-flotante').forEach(el => {
             el.style.transition = 'opacity 0.25s ease';
             el.style.opacity    = '0';
             el.style.pointerEvents = 'none';
         });
 
-        // Panel de frase — aparece sobre el corazón base pero sin taparlo
         const panel = document.createElement('div');
         panel.id = 'gc-frase-panel';
         panel.style.cssText = `
@@ -2279,13 +2379,11 @@ const GalaxiaCorazones = (() => {
         panel.appendChild(sub);
         contFr.appendChild(panel);
 
-        // Corazón base — cambia a latido cristalino (solo escala, sin filtros borrosos)
         const baseEl = document.getElementById('gc-base-el');
         if (baseEl) {
             baseEl.style.animation = 'gc-latido-frase 1.4s ease-in-out infinite';
         }
 
-        // Toque en cualquier parte → regresa a corazones
         setTimeout(() => {
             contFr.style.cursor = 'pointer';
             const volver = (e) => {
@@ -2299,7 +2397,6 @@ const GalaxiaCorazones = (() => {
             contFr.addEventListener('touchstart', volver, { passive: false });
         }, 400);
 
-        // Reproducir audio de la frase
         try {
             const aud = new Audio(data.mp3);
             aud.volume = 0.9;
@@ -2313,17 +2410,14 @@ const GalaxiaCorazones = (() => {
         if (audioActual) { audioActual.pause(); audioActual.currentTime = 0; audioActual = null; }
         modoPantalla = 'corazones';
 
-        // Eliminar panel de frase
         const panel = document.getElementById('gc-frase-panel');
         if (panel) panel.remove();
 
-        // Restaurar corazón base a latido normal
         const baseEl = document.getElementById('gc-base-el');
         if (baseEl) {
             baseEl.style.animation = 'gc-latido-base 2s ease-in-out infinite';
         }
 
-        // Mostrar corazones flotantes no explotados
         contFr.querySelectorAll('.gc-corazon-flotante').forEach(el => {
             if (!el._explotado) {
                 el.style.transition  = 'opacity 0.3s ease';
@@ -2332,7 +2426,6 @@ const GalaxiaCorazones = (() => {
             }
         });
 
-        // Reanudar física
         iniciarFisica(contFr, W, H, sizeBase);
     }
 
@@ -2352,26 +2445,22 @@ const GalaxiaCorazones = (() => {
                 const o = _objs[i];
                 if (o.explotado) continue;
 
-                // Gravedad suave hacia el centro
                 const dxG = CX - o.x, dyG = CY - o.y;
                 const dG  = Math.sqrt(dxG*dxG + dyG*dyG) || 1;
                 o.vx += (dxG / dG) * CFG.gravedad;
                 o.vy += (dyG / dG) * CFG.gravedad;
 
-                // Límite de velocidad
                 const sp = Math.sqrt(o.vx*o.vx + o.vy*o.vy);
                 if (sp > CFG.velocidadMax) { o.vx = (o.vx/sp)*CFG.velocidadMax; o.vy = (o.vy/sp)*CFG.velocidadMax; }
                 if (sp < CFG.velocidadMin) { const a=Math.atan2(o.vy,o.vx); o.vx=Math.cos(a)*CFG.velocidadMin; o.vy=Math.sin(a)*CFG.velocidadMin; }
 
                 o.x += o.vx; o.y += o.vy;
 
-                // Rebote bordes
                 if (o.x - o.r < 0)    { o.x = o.r;     o.vx = Math.abs(o.vx);  sonarColision(); }
                 if (o.x + o.r > W)    { o.x = W - o.r; o.vx = -Math.abs(o.vx); sonarColision(); }
                 if (o.y - o.r < 0)    { o.y = o.r;     o.vy = Math.abs(o.vy);  sonarColision(); }
                 if (o.y + o.r > H)    { o.y = H - o.r; o.vy = -Math.abs(o.vy); sonarColision(); }
 
-                // Rebote contra corazón base central
                 const dx0 = o.x - CX, dy0 = o.y - CY;
                 const d0  = Math.sqrt(dx0*dx0 + dy0*dy0) || 1;
                 if (d0 < minDistBase + o.r) {
@@ -2382,7 +2471,6 @@ const GalaxiaCorazones = (() => {
                     sonarColision();
                 }
 
-                // Rebote entre corazones
                 for (let j = i+1; j < _objs.length; j++) {
                     const o2 = _objs[j];
                     if (o2.explotado) continue;
@@ -2423,24 +2511,31 @@ const GalaxiaCorazones = (() => {
         pausarAmbiente();
         inyectarEstilos();
 
-        // Oscurecer capas del mural
+        // ── CAMBIO: sin blur, solo brightness configurable ──────────────────────
+        // La niña (CFG.selectorNina) queda excluida del filtro para verse nítida.
         document.querySelectorAll('.layer').forEach(l => {
             l.dataset.filtroAnterior = l.style.filter || '';
             l.style.transition       = 'filter 0.6s ease';
-            l.style.filter           = 'blur(4px) brightness(0.25)';
+            if (CFG.selectorNina && l.matches(CFG.selectorNina)) {
+                // La niña no recibe filtro: queda al frente sin oscurecer
+                l.style.filter = '';
+            } else {
+                l.style.filter = `brightness(${CFG.brilloMural})`;
+            }
         });
+        // ────────────────────────────────────────────────────────────────────────
+
         document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = 'none');
 
         const overlay = document.getElementById('galaxia-overlay');
         const contFr  = document.getElementById('frases-container');
         const btnX    = document.getElementById('cerrar-galaxia');
 
-        // Iniciar fondo degradado animado dentro del overlay
         const stopFondo = iniciarFondo(overlay);
         overlay._stopFondo = stopFondo;
 
         overlay.style.display = 'block';
-        overlay.style.background = 'transparent'; // el canvas lo pinta
+        overlay.style.background = 'transparent';
         setTimeout(() => overlay.style.opacity = '1', 10);
 
         btnX.style.display = 'flex';
@@ -2480,6 +2575,9 @@ const GalaxiaCorazones = (() => {
         baseEl.appendChild(imgBase);
         contFr.appendChild(baseEl);
 
+        // ── PANEL DE AJUSTE (slider) ──────────────────────────
+        crearPanelAjuste(contFr);
+
         // ── CORAZONES FLOTANTES (canvas degradado) ────────────
         let hueOffset = 0;
         FRASES.forEach((data) => {
@@ -2487,7 +2585,6 @@ const GalaxiaCorazones = (() => {
             const wrap = crearCanvasCorazon(SIZE, hueOffset);
             contFr.appendChild(wrap);
 
-            // Posición inicial: esparcidos alrededor del centro
             const ang = Math.random() * Math.PI * 2;
             const rad = (Math.min(W, H) * 0.15) + Math.random() * (Math.min(W, H) * 0.28);
             const px  = Math.max(SIZE, Math.min(W - SIZE, W/2 + Math.cos(ang) * rad));
@@ -2533,7 +2630,6 @@ const GalaxiaCorazones = (() => {
             _objs.push(o);
         });
 
-        // Iniciar física
         iniciarFisica(contFr, W, H, SBASE);
     }
 
@@ -2548,15 +2644,12 @@ const GalaxiaCorazones = (() => {
         const contFr  = document.getElementById('frases-container');
         const btnX    = document.getElementById('cerrar-galaxia');
 
-        // Detener fondo animado
         if (overlay._stopFondo) { overlay._stopFondo(); delete overlay._stopFondo; }
 
-        // Detener canvas de corazones flotantes
         contFr.querySelectorAll('.gc-corazon-flotante').forEach(el => {
             if (el._stopCanvas) el._stopCanvas();
         });
 
-        // Restaurar capas del mural
         document.querySelectorAll('.layer').forEach(l => {
             l.style.filter = l.dataset.filtroAnterior || '';
             delete l.dataset.filtroAnterior;
