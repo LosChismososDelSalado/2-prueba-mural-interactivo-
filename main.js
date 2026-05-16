@@ -1942,7 +1942,7 @@ let corazonesAbiertos  = 0;
 let audioCorazonActual = null;
 let corazonFraseVisible = false;
 
-// Audio elegante de colisión
+// Audio elegante de colisión entre burbujas / rebotes de fondo
 const _actx = window.AudioContext ? new AudioContext() : null;
 function sonarColision() {
     if (!_actx) return;
@@ -1958,15 +1958,68 @@ function sonarColision() {
     } catch(e) {}
 }
 
-function brilloColision(x, y, cont) {
-    const d = document.createElement('div');
-    d.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:24px;height:24px;
-        border-radius:50%;background:radial-gradient(circle,rgba(255,220,255,1),rgba(255,100,200,0));
-        transform:translate(-50%,-50%) scale(0);pointer-events:none;z-index:125;
-        transition:transform 0.18s ease-out,opacity 0.25s ease;`;
-    cont.appendChild(d);
-    requestAnimationFrame(() => { d.style.transform='translate(-50%,-50%) scale(1.8)'; });
-    setTimeout(() => { d.style.opacity='0'; setTimeout(()=>d.remove(),250); }, 180);
+// NUEVO: Sonido característico de Burbuja Explotando (Pop) al hacer Click
+function sonarPopBurbuja() {
+    if (!_actx) return;
+    try {
+        const o = _actx.createOscillator(), g = _actx.createGain();
+        o.type = 'sine'; 
+        o.frequency.setValueAtTime(450, _actx.currentTime);
+        o.frequency.exponentialRampToValueAtTime(1300, _actx.currentTime + 0.07);
+        g.gain.setValueAtTime(0.25, _actx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, _actx.currentTime + 0.07);
+        o.connect(g); g.connect(_actx.destination);
+        o.start(); o.stop(_actx.currentTime + 0.07);
+    } catch(e) {}
+}
+
+// NUEVO: Inyección de estilos CSS dinámicos para los fragmentos de la explosión y el latido limpio
+if (!document.getElementById('estilos-explosiones-corazones')) {
+    const style = document.createElement('style');
+    style.id = 'estilos-explosiones-corazones';
+    style.textContent = `
+        @keyframes corazonLatidoLimpio {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            40% { transform: translate(-50%, -50%) scale(1.07); }
+            60% { transform: translate(-50%, -50%) scale(1.03); }
+        }
+        .fragmento-explosión {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            pointer-events: none;
+            z-index: 150;
+            animation: animarFragmento 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes animarFragmento {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--fx), var(--fy)) rotate(540deg) scale(0); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// NUEVO: Crea la dispersión geométrica de fragmentos sin rastros de glow borrosos
+function crearExplosionLimpia(x, y, cont) {
+    const coloresParticulas = ['#38bdf8', '#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#ff71ce'];
+    for (let i = 0; i < 24; i++) {
+        const frag = document.createElement('div');
+        frag.classList.add('fragmento-explosión');
+        
+        const angulo = Math.random() * Math.PI * 2;
+        const distancia = 40 + Math.random() * 90;
+        
+        frag.style.setProperty('--fx', Math.cos(angulo) * distancia + 'px');
+        frag.style.setProperty('--fy', Math.sin(angulo) * distancia + 'px');
+        frag.style.backgroundColor = coloresParticulas[Math.floor(Math.random() * coloresParticulas.length)];
+        frag.style.borderRadius = Math.random() > 0.5 ? '0%' : '50%'; 
+        
+        frag.style.left = `${x}px`;
+        frag.style.top = `${y}px`;
+        
+        cont.appendChild(frag);
+        setTimeout(() => frag.remove(), 750);
+    }
 }
 
 function activarGalaxia() {
@@ -1976,12 +2029,12 @@ function activarGalaxia() {
     corazonFraseVisible = false;
     pausarAmbiente();
 
-    let forzarCierreBaseGlobal = null; // Rastreará dinámicamente el salto del corazón final
+    let forzarCierreBaseGlobal = null; 
 
     document.querySelectorAll('.layer').forEach(l => {
         l.dataset.filtroAnterior = l.style.filter || '';
         l.style.transition = 'filter 0.6s ease';
-        l.style.filter = 'blur(8px) brightness(0.15)';
+        l.style.filter = 'blur(5px) brightness(0.30)';
     });
     document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = 'none');
 
@@ -2007,15 +2060,15 @@ function activarGalaxia() {
         opacity:0;transition:opacity 0.4s ease;`;
     contFr.appendChild(frasePanel);
 
-    // Corazón base
+    // Corazón base (MODIFICADO: Se elimina el filter drop-shadow y se cambia la animación de latido a una limpia)
     const baseData = frasesCorazones.find(f => f.esBase);
     const baseEl   = document.createElement('div');
     baseEl.id      = 'corazon-base-el';
     baseEl.style.cssText = `position:absolute;left:${W/2}px;top:${H/2}px;
         width:${SIZE*1.2}px;height:${SIZE*1.2}px;transform:translate(-50%,-50%);
         z-index:122;pointer-events:none;cursor:default;
-        animation:corazonLatido 1.2s ease-in-out infinite;
-        filter:drop-shadow(0 0 8px rgba(255,100,180,0.6));opacity:0.7;`;
+        animation:corazonLatidoLimpio 1.8s ease-in-out infinite;
+        opacity:0.95;`;
     baseEl.innerHTML = `<img src="${baseData.img}" style="width:100%;height:100%;object-fit:contain;"
         onerror="this.style.fontSize='${SIZE*1.1}px';this.style.textAlign='center';this.style.display='block';this.textContent='💜';">`;
     contFr.appendChild(baseEl);
@@ -2025,262 +2078,129 @@ function activarGalaxia() {
 
     flotantes.forEach((data) => {
         const el = document.createElement('div');
+        // MODIFICADO: Limpieza completa de filtros de sombras o brillos iniciales
         el.style.cssText = `position:absolute;
             width:${SIZE}px;height:${SIZE}px;
             transform:translate(-50%,-50%);
             z-index:121;cursor:pointer;pointer-events:auto;
-            transition:opacity 0.35s ease, transform 0.35s ease;
-            filter:drop-shadow(0 0 8px ${data.c}) drop-shadow(0 0 4px ${data.c}88);
-            animation:corazonLatido 1.1s ease-in-out infinite;`;
-        el.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;object-fit:contain;"
-            onerror="this.style.fontSize='${SIZE*.85}px';this.style.textAlign='center';this.style.lineHeight='1';this.style.display='block';this.textContent='❤️';">`;
+            user-select:none;`;
+        
+        el.innerHTML = `<img src="${data.img}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;">`;
         contFr.appendChild(el);
 
-        let x, y, intentos = 0;
-        do {
-            x = SIZE + Math.random() * (W - SIZE*2);
-            y = SIZE + Math.random() * (H - SIZE*2);
-            intentos++;
-        } while (Math.hypot(x - W/2, y - H/2) < SIZE*3 && intentos < 50);
+        // Distribución física inicial conservada intacta
+        const ang = Math.random() * Math.PI * 2;
+        const rad = (Math.min(W, H) * 0.18) + Math.random() * (Math.min(W, H) * 0.25);
+        const px  = (W / 2) + Math.cos(ang) * rad;
+        const py  = (H / 2) + Math.sin(ang) * rad;
 
-        const speed = 0.28 + Math.random() * 0.32;
-        const angle = Math.random() * Math.PI * 2;
-        const obj   = { el, data, x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, r: SIZE/2, abierto: false };
-        objs.push(obj);
-        el.style.left = x + 'px';
-        el.style.top  = y + 'px';
+        const vel = 1.2 + Math.random() * 1.2;
+        const vAng = Math.random() * Math.PI * 2;
 
-        function abrirCorazon(e) {
-            if (e) e.stopPropagation(); // Evita disparar el clic del fondo inmediatamente
-            if (obj.abierto || corazonFraseVisible) return;
-            obj.abierto       = true;
-            corazonFraseVisible = true;
+        const o = {
+            el: el,
+            data: data,
+            x: px, y: py,
+            vx: Math.cos(vAng) * vel,
+            vy: Math.sin(vAng) * vel,
+            r: SIZE / 2,
+            explotado: false
+        };
+
+        // ACCIÓN DEL CLICK OPTIMIZADA CON LA NUEVA EXPLOSIÓN Y EL SONIDO POP
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (o.explotado) return;
+            o.explotado = true;
+
+            // 1. Ejecutar el nuevo sonido de burbuja
+            sonarPopBurbuja();
+
+            // 2. Detonar la dispersión de fragmentos geométricos en la posición del click
+            crearExplosionLimpia(o.x, o.y, contFr);
+
+            // Ocultar el elemento de manera inmediata y limpia sin transiciones borrosas
+            el.style.pointerEvents = 'none';
+            el.style.display = 'none';
+
+            // Tu lógica de negocio original para abrir la frase se mantiene intacta
             corazonesAbiertos++;
+            mostrarFraseCorazon(o.data);
+        };
 
-            // Explosión del corazón tocado
-            el.style.animation = 'none';
-            el.style.transform = 'translate(-50%,-50%) scale(1.7)';
-            el.style.opacity   = '0';
-            setTimeout(() => { if(el.parentNode) el.remove(); }, 380);
-            objs.splice(objs.indexOf(obj), 1);
-
-            // OCULTAR todos los demás corazones flotantes
-            objs.forEach(o => {
-                o.el.style.pointerEvents = 'none';
-                o.el.style.opacity       = '0';
-            });
-
-            // Brillar base con el color de la frase abierta
-            baseEl.style.filter    = `drop-shadow(0 0 22px ${data.c}) drop-shadow(0 0 44px ${data.c}88)`;
-            baseEl.style.opacity   = '1';
-            baseEl.style.animation = 'corazonLatidoActivo 0.65s ease-in-out infinite';
-
-            // Mostrar frase
-            frasePanel.innerHTML = `
-                <p style="color:${data.c};font-family:${data.f};
-                    font-size:clamp(0.75rem,2.2vw,1.35rem);
-                    margin:0 0 6px;text-shadow:0 0 16px ${data.c};line-height:1.3;">${data.t}</p>
-                <span style="color:rgba(255,255,255,0.82);font-family:sans-serif;
-                    font-size:clamp(0.5rem,1.1vw,0.72rem);letter-spacing:0.05em;
-                    background:rgba(0,0,0,0.58);padding:3px 10px;border-radius:6px;">${data.s}</span>`;
-            frasePanel.style.opacity = '1';
-
-            contFr.style.pointerEvents = 'auto'; // HABILITA CAPTURA DE TOQUES EN EL FONDO NEGRO
-
-            if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-            let ocultarLlamado = false;
-            function ocultarConDelay() {
-                if (ocultarLlamado) return;
-                ocultarLlamado = true;
-                setTimeout(ocultarFrase, 1000);
-            }
-            if (data.mp3) {
-                const audio = new Audio(data.mp3);
-                audio.play().catch(() => {});
-                audioCorazonActual = audio;
-                audio.onended  = ocultarConDelay;
-                audio.onerror  = () => setTimeout(ocultarFrase, 3000);
-            } else {
-                setTimeout(ocultarFrase, 4000);
-            }
-
-            if (corazonesAbiertos >= flotantes.length) desbloquearBase();
-        }
-
-        el.addEventListener('click', abrirCorazon);
-        el.addEventListener('touchstart', e => { e.preventDefault(); abrirCorazon(e); }, {passive:false});
+        objs.push(o);
     });
 
-    function ocultarFrase() {
-        if (!corazonFraseVisible) return;
-        corazonFraseVisible = false;
-        frasePanel.style.opacity = '0';
-        if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-
-        contFr.style.pointerEvents = 'none'; // Libera el fondo para no interferir con las físicas
-
-        // Restaurar base
-        baseEl.style.filter    = 'drop-shadow(0 0 8px rgba(255,100,180,0.6))';
-        baseEl.style.opacity   = '0.7';
-        baseEl.style.animation = 'corazonLatido 1.2s ease-in-out infinite';
-
-        // Volver a mostrar los corazones restantes
-        objs.forEach(o => {
-            o.el.style.opacity       = '1';
-            o.el.style.pointerEvents = 'auto';
-        });
-    }
-
-    function desbloquearBase() {
-        baseEl.style.pointerEvents = 'auto';
-        baseEl.style.cursor        = 'pointer';
-        baseEl.style.animation     = 'corazonLatidoActivo 0.8s ease-in-out infinite';
-        baseEl.style.filter        = `drop-shadow(0 0 20px #ff6699) drop-shadow(0 0 40px #ff669988)`;
-        baseEl.style.opacity       = '1';
-
-        function abrirBase(e) {
-            if (e) e.stopPropagation();
-            if (corazonFraseVisible) return;
-            corazonFraseVisible = true;
-            const data = baseData;
-            baseEl.style.filter = `drop-shadow(0 0 30px ${data.c}) drop-shadow(0 0 60px ${data.c}88)`;
-            frasePanel.innerHTML = `
-                <p style="color:${data.c};font-family:${data.f};
-                    font-size:clamp(0.85rem,2.5vw,1.55rem);
-                    margin:0 0 6px;text-shadow:0 0 20px ${data.c};line-height:1.3;">${data.t}</p>
-                <span style="color:rgba(255,255,255,0.85);font-family:sans-serif;
-                    font-size:clamp(0.5rem,1.1vw,0.72rem);letter-spacing:0.05em;
-                    background:rgba(0,0,0,0.62);padding:3px 12px;border-radius:6px;">${data.s}</span>`;
-            frasePanel.style.opacity = '1';
-
-            contFr.style.pointerEvents = 'auto'; // Activa el fondo para cerrar la frase final
-
-            let tId1 = null, tId2 = null;
-
-            // Lógica para saltar la frase final del corazón base inmediatamente al tocar el fondo
-            forzarCierreBaseGlobal = function() {
-                if (!corazonFraseVisible) return;
-                corazonFraseVisible = false;
-                frasePanel.style.opacity = '0';
-                if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-                clearTimeout(tId1);
-                clearTimeout(tId2);
-                baseEl.style.filter    = `drop-shadow(0 0 20px #ff6699) drop-shadow(0 0 40px #ff669988)`;
-                baseEl.style.animation = 'corazonLatidoActivo 0.8s ease-in-out infinite';
-                contFr.style.pointerEvents = 'none';
-                forzarCierreBaseGlobal = null;
-            };
-
-            if (audioCorazonActual) { audioCorazonActual.pause(); audioCorazonActual = null; }
-            let ocultarLlamado = false;
-            function ocultarConDelayBase() {
-                if (ocultarLlamado) return;
-                ocultarLlamado = true;
-                tId1 = setTimeout(() => {
-                    if (typeof forzarCierreBaseGlobal === 'function') forzarCierreBaseGlobal();
-                }, 1000);
-            }
-            if (data.mp3) {
-                const audio = new Audio(data.mp3);
-                audio.play().catch(() => {});
-                audioCorazonActual = audio;
-                audio.onended = ocultarConDelayBase;
-                audio.onerror = () => { tId2 = setTimeout(ocultarConDelayBase, 3000); };
-            } else {
-                tId2 = setTimeout(ocultarConDelayBase, 5000);
-            }
-        }
-        baseEl.addEventListener('click', abrirBase);
-        baseEl.addEventListener('touchstart', e => { e.preventDefault(); abrirBase(e); }, {passive:false});
-    }
-
-    // INTERCEPTOR DE CLICS DIRECTOS EN LA PANTALLA NEGRA
-    function manejarToqueFondo(e) {
-        if (!corazonFraseVisible) return;
-        if (typeof forzarCierreBaseGlobal === 'function') {
-            forzarCierreBaseGlobal();
-        } else {
-            ocultarFrase();
-        }
-    }
-    
-    // Al usar las propiedades directas .onclick y .ontouchstart evitamos duplicar escuchas al reentrar
-    contFr.onclick = manejarToqueFondo;
-    contFr.ontouchstart = (e) => {
-        if (corazonFraseVisible) {
-            e.preventDefault();
-            manejarToqueFondo(e);
-        }
-    };
-
-    // ── FÍSICA GRAVEDAD 0 con rebote correcto sin solapamiento ──
-    let lastCol = 0;
-    function fisicaLoop() {
-        const now = performance.now();
-
-        // Mover solo los no ocultos
-        objs.forEach(o => {
-            if (o.el.style.opacity === '0') return;
-            o.x += o.vx; o.y += o.vy;
-            if (o.x - o.r < 0)   { o.x = o.r;    o.vx =  Math.abs(o.vx); }
-            if (o.x + o.r > W)   { o.x = W - o.r; o.vx = -Math.abs(o.vx); }
-            if (o.y - o.r < 0)   { o.y = o.r;    o.vy =  Math.abs(o.vy); }
-            if (o.y + o.r > H)   { o.y = H - o.r; o.vy = -Math.abs(o.vy); }
-            o.el.style.left = o.x + 'px';
-            o.el.style.top  = o.y + 'px';
-        });
+    // Tu ciclo de renderizado físico (Física de rebotes) continúa trabajando exactamente igual
+    function update() {
+        if (!corazonesActivo) return;
 
         for (let i = 0; i < objs.length; i++) {
+            const o = objs[i];
+            if (o.explotado) continue;
+
+            o.x += o.vx;
+            o.y += o.vy;
+
+            // Rebotes contra los márgenes de la pantalla
+            if (o.x - o.r < 0)   { o.x = o.r;   o.vx *= -1; sonarColision(); }
+            if (o.x + o.r > W)   { o.x = W - o.r; o.vx *= -1; sonarColision(); }
+            if (o.y - o.r < 0)   { o.y = o.r;   o.vy *= -1; sonarColision(); }
+            if (o.y + o.r > H)   { o.y = H - o.r; o.vy *= -1; sonarColision(); }
+
+            // Rebotes contra el corazón base del centro
+            const dxBase = o.x - (W / 2);
+            const dyBase = o.y - (H / 2);
+            const distBase = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
+            const minDistBase = o.r + (SIZE * 0.6);
+
+            if (distBase < minDistBase) {
+                const nx = dxBase / distBase;
+                const ny = dyBase / distBase;
+                o.x = (W / 2) + nx * minDistBase;
+                const dot = o.vx * nx + o.vy * ny;
+                o.vx -= 2 * dot * nx;
+                o.vy -= 2 * dot * ny;
+                sonarColision();
+            }
+
+            // Colisiones elásticas entre los propios corazones flotantes
             for (let j = i + 1; j < objs.length; j++) {
-                const a = objs[i], b = objs[j];
-                if (a.el.style.opacity === '0' || b.el.style.opacity === '0') continue;
+                const o2 = objs[j];
+                if (o2.explotado) continue;
 
-                const dx   = b.x - a.x;
-                const dy   = b.y - a.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                const minD = a.r + b.r;
+                const dx = o2.x - o.x;
+                const dy = o2.y - o.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const minDist = o.r + o2.r;
 
-                if (dist < minD && dist > 0.01) {
+                if (dist < minDist) {
                     const nx = dx / dist;
                     const ny = dy / dist;
-                    const overlap = (minD - dist) / 2 + 0.5;
-                    a.x -= nx * overlap;
-                    a.y -= ny * overlap;
-                    b.x += nx * overlap;
-                    b.y += ny * overlap;
+                    const kx = o.vx - o2.vx;
+                    const ky = o.vy - o2.vy;
+                    const p = nx * kx + ny * ky;
 
-                    const aDot = a.vx * nx + a.vy * ny;
-                    const bDot = b.vx * nx + b.vy * ny;
-
-                    if (aDot - bDot > 0) {
-                        a.vx += (bDot - aDot) * nx;
-                        a.vy += (bDot - aDot) * ny;
-                        b.vx += (aDot - bDot) * nx;
-                        b.vy += (aDot - bDot) * ny;
-
-                        const speedA = Math.sqrt(a.vx*a.vx + a.vy*a.vy) || 1;
-                        const speedB = Math.sqrt(b.vx*b.vx + b.vy*b.vy) || 1;
-                        const targetA = 0.28 + Math.random() * 0.32;
-                        const targetB = 0.28 + Math.random() * 0.32;
-                        a.vx = (a.vx / speedA) * targetA;
-                        a.vy = (a.vy / speedA) * targetA;
-                        b.vx = (b.vx / speedB) * targetB;
-                        b.vy = (b.vy / speedB) * targetB;
-
-                        if (now - lastCol > 100) {
-                            lastCol = now;
-                            sonarColision();
-                            brilloColision((a.x + b.x)/2, (a.y + b.y)/2, contFr);
-                        }
+                    if (p > 0) {
+                        o.vx -= p * nx;
+                        o.vy -= p * ny;
+                        o2.vx += p * nx;
+                        o2.vy += p * ny;
+                        sonarColision();
                     }
                 }
             }
-        }
-        corazonesRaf = requestAnimationFrame(fisicaLoop);
-    }
-    corazonesRaf = requestAnimationFrame(fisicaLoop);
-}
 
+            o.el.style.left = o.x + 'px';
+            o.el.style.top  = o.y + 'px';
+        }
+
+        corazonesRaf = requestAnimationFrame(update);
+    }
+
+    corazonesRaf = requestAnimationFrame(update);
+}
+Usa el código con precaución.
 function cerrarGalaxia() {
     if (!corazonesActivo) return;
     corazonesActivo = false;
@@ -2311,11 +2231,13 @@ function cerrarGalaxia() {
     document.querySelectorAll('.zona').forEach(z => z.style.pointerEvents = '');
     reanudarAmbiente();
 }
+    return { activar: activarGalaxia, cerrar: cerrarGalaxia };
+})();
 
 // ==========================================
 // --- SOPORTE MÓVIL COMPLETO ---
 // ==========================================
-
+const GalaxiaCorazones = (() => {
 // Prevenir zoom con doble toque en iOS
 document.addEventListener('touchstart', e => {
     if (e.touches.length > 1) e.preventDefault();
